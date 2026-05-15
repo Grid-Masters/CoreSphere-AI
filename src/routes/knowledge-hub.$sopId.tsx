@@ -321,6 +321,11 @@ function VideoTab({ sopId, title, fallback }: { sopId: string; title: string; fa
           <div className="absolute top-3 right-3 z-10 text-[10px] uppercase tracking-wider bg-primary text-primary-foreground px-2 py-1 rounded font-semibold">
             Internal Use Only
           </div>
+          {videoPct >= 100 && (
+            <div className="absolute top-12 right-3 z-20 text-[10px] uppercase tracking-wider bg-[color:var(--success)] text-white px-2 py-1 rounded font-semibold inline-flex items-center gap-1">
+              <CheckCircle2 className="h-3 w-3" /> Lecture Completed
+            </div>
+          )}
 
           {/* Repeating watermark grid (forensic) */}
           <div
@@ -381,9 +386,27 @@ function VideoTab({ sopId, title, fallback }: { sopId: string; title: string; fa
             </div>
           </div>
         </div>
-        <div className="mt-3 flex items-center gap-2 text-[11px] text-muted-foreground">
-          <Lock className="h-3 w-3" /> Download, screen recording, and sharing are disabled by
-          policy.
+        {resumeAt !== null && (
+          <button
+            onClick={() => {
+              const v = videoRef.current;
+              if (v && resumeAt !== null) {
+                v.currentTime = resumeAt;
+                v.play();
+              }
+              setResumeAt(null);
+            }}
+            className="mt-3 w-full text-xs h-9 rounded-md border border-primary/40 bg-primary/5 text-primary hover:bg-primary/10 inline-flex items-center justify-center gap-2"
+          >
+            <Play className="h-3.5 w-3.5 fill-current" /> Resume from {fmt(resumeAt)}
+          </button>
+        )}
+        <div className="mt-3 flex items-center justify-between gap-2 text-[11px] text-muted-foreground">
+          <span className="inline-flex items-center gap-2">
+            <Lock className="h-3 w-3" /> Download, screen recording, and sharing are disabled by
+            policy.
+          </span>
+          <span className="tabular-nums">Watched: {videoPct}%</span>
         </div>
       </div>
       <div className="space-y-4">
