@@ -20,7 +20,8 @@ export type SOP = {
   id: string;
   title: string;
   category: string;
-  progress: number;
+  theoryProgress: number;
+  videoProgress: number;
   updated: string;
   status: "Approved" | "Pending Approval" | "Archived";
   department: string;
@@ -28,15 +29,19 @@ export type SOP = {
 };
 
 export const sops: SOP[] = [
-  { id: "sop-001", title: "Card Block & Unblock Process", category: "Cards Operations", progress: 70, updated: "2026-05-02", status: "Approved", department: "FHD", summary: "End-to-end SOP for blocking and unblocking debit/credit cards including verification and audit trail." },
-  { id: "sop-002", title: "Fraud Containment First Response", category: "Containment", progress: 40, updated: "2026-04-21", status: "Approved", department: "FHD", summary: "First-response actions when suspicious activity is detected on a customer account." },
-  { id: "sop-003", title: "Inbound Call Handling Standards", category: "Customer Service", progress: 100, updated: "2026-03-18", status: "Approved", department: "Inbound", summary: "Quality and compliance standards for inbound voice interactions." },
-  { id: "sop-004", title: "Email Response Quality Framework", category: "Multimedia", progress: 55, updated: "2026-04-29", status: "Approved", department: "Multimedia", summary: "Tone, structure, SLA and compliance requirements for customer email responses." },
-  { id: "sop-005", title: "Live Chat Escalation Matrix", category: "Multimedia", progress: 25, updated: "2026-05-08", status: "Pending Approval", department: "Multimedia", summary: "Tiered escalation paths for live chat interactions across complaint categories." },
-  { id: "sop-006", title: "Social Media Crisis Protocol", category: "Reputation", progress: 0, updated: "2026-05-10", status: "Approved", department: "Social Media", summary: "Coordinated response protocol for reputational events on social channels." },
-  { id: "sop-007", title: "AML Red Flag Identification", category: "Compliance", progress: 85, updated: "2026-02-14", status: "Approved", department: "FHD", summary: "Indicators of money laundering, escalation procedure and regulatory reporting." },
-  { id: "sop-008", title: "Dispute Resolution SLA Guide", category: "Operations", progress: 60, updated: "2026-04-04", status: "Approved", department: "Inbound", summary: "Timelines, ownership and customer communication standards for transaction disputes." },
+  { id: "sop-001", title: "Card Block & Unblock Process", category: "Cards Operations", theoryProgress: 80, videoProgress: 60, updated: "2026-05-02", status: "Approved", department: "FHD", summary: "End-to-end SOP for blocking and unblocking debit/credit cards including verification and audit trail." },
+  { id: "sop-002", title: "Fraud Containment First Response", category: "Containment", theoryProgress: 55, videoProgress: 25, updated: "2026-04-21", status: "Approved", department: "FHD", summary: "First-response actions when suspicious activity is detected on a customer account." },
+  { id: "sop-003", title: "Inbound Call Handling Standards", category: "Customer Service", theoryProgress: 100, videoProgress: 100, updated: "2026-03-18", status: "Approved", department: "Inbound", summary: "Quality and compliance standards for inbound voice interactions." },
+  { id: "sop-004", title: "Email Response Quality Framework", category: "Multimedia", theoryProgress: 70, videoProgress: 40, updated: "2026-04-29", status: "Approved", department: "Multimedia", summary: "Tone, structure, SLA and compliance requirements for customer email responses." },
+  { id: "sop-005", title: "Live Chat Escalation Matrix", category: "Multimedia", theoryProgress: 35, videoProgress: 15, updated: "2026-05-08", status: "Pending Approval", department: "Multimedia", summary: "Tiered escalation paths for live chat interactions across complaint categories." },
+  { id: "sop-006", title: "Social Media Crisis Protocol", category: "Reputation", theoryProgress: 0, videoProgress: 0, updated: "2026-05-10", status: "Approved", department: "Social Media", summary: "Coordinated response protocol for reputational events on social channels." },
+  { id: "sop-007", title: "AML Red Flag Identification", category: "Compliance", theoryProgress: 90, videoProgress: 80, updated: "2026-02-14", status: "Approved", department: "FHD", summary: "Indicators of money laundering, escalation procedure and regulatory reporting." },
+  { id: "sop-008", title: "Dispute Resolution SLA Guide", category: "Operations", theoryProgress: 75, videoProgress: 45, updated: "2026-04-04", status: "Approved", department: "Inbound", summary: "Timelines, ownership and customer communication standards for transaction disputes." },
 ];
+
+export function overallProgress(sop: Pick<SOP, "theoryProgress" | "videoProgress">) {
+  return Math.round((sop.theoryProgress + sop.videoProgress) / 2);
+}
 
 export const announcements = [
   { id: 1, author: "Group Head, Customer Fulfilment", title: "FY2026 Service Excellence Charter", time: "2h ago", body: "Effective Monday, all customer-facing units will operate under the revised Service Excellence Charter. Team Leads to brief their teams before close of business Friday.", pinned: true },
