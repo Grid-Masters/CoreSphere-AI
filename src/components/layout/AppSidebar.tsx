@@ -14,8 +14,6 @@ import {
   MessagesSquare,
   GraduationCap,
 } from "lucide-react";
-import logo from "/assets/uba-logo.png?url";
-
 const groups: { label: string; items: { to: string; icon: any; label: string }[] }[] = [
   {
     label: "Operations",
@@ -57,7 +55,7 @@ export function AppSidebar() {
     <aside className="hidden lg:flex flex-col w-64 shrink-0 bg-sidebar text-sidebar-foreground border-r border-sidebar-border">
       <div className="h-16 flex items-center gap-3 px-5 border-b border-sidebar-border">
         <div className="h-9 w-9 rounded-md bg-primary flex items-center justify-center overflow-hidden">
-          <img src={logo} alt="UBA" className="h-9 w-9 object-contain" width={36} height={36} />
+          <img src="/assets/uba-logo.png" alt="UBA CoreSphere" className="h-9 w-9 object-contain" width={36} height={36} />
         </div>
         <div className="leading-tight">
           <div className="text-sm font-semibold tracking-wide">UBA CoreSphere</div>
