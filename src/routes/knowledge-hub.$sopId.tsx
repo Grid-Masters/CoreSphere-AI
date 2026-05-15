@@ -48,6 +48,9 @@ export const Route = createFileRoute("/knowledge-hub/$sopId")({
 function SopDetail() {
   const sop = Route.useLoaderData();
   const [tab, setTab] = useState<"theory" | "video">("theory");
+  const [theoryPct, setTheoryPct] = useTheoryProgress(sop.id, sop.theoryProgress);
+  const [videoPct] = useVideoProgress(sop.id, sop.videoProgress);
+  const overall = overallProgress({ theoryProgress: theoryPct, videoProgress: videoPct });
 
   return (
     <AppShell>
@@ -76,14 +79,36 @@ function SopDetail() {
         </div>
         <div className="bg-card border rounded-lg p-4 min-w-[220px]">
           <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
-            Your progress
+            Overall progress
           </div>
-          <div className="text-2xl font-semibold mt-1 tabular-nums">{sop.progress}%</div>
-          <div className="mt-2">
-            <ProgressBar value={sop.progress} tone="success" />
+          <div className="text-2xl font-semibold mt-1 tabular-nums">{overall}%</div>
+          <div className="mt-3 space-y-2">
+            <div>
+              <div className="flex items-center justify-between text-[11px]">
+                <span className="text-muted-foreground inline-flex items-center gap-1">
+                  <BookOpen className="h-3 w-3" /> Theory
+                </span>
+                <span className="tabular-nums font-medium">{theoryPct}%</span>
+              </div>
+              <ProgressBar value={theoryPct} tone="success" />
+            </div>
+            <div>
+              <div className="flex items-center justify-between text-[11px]">
+                <span className="text-muted-foreground inline-flex items-center gap-1">
+                  <PlayCircle className="h-3 w-3" /> Video
+                </span>
+                <span className="tabular-nums font-medium">{videoPct}%</span>
+              </div>
+              <ProgressBar value={videoPct} tone="primary" />
+            </div>
           </div>
-          <button className="mt-3 w-full h-9 text-sm rounded-md bg-primary text-primary-foreground inline-flex items-center justify-center gap-2 hover:bg-primary/90">
-            <CheckCircle2 className="h-4 w-4" /> Mark section complete
+          <button
+            onClick={() => setTheoryPct(100)}
+            disabled={theoryPct >= 100}
+            className="mt-3 w-full h-9 text-sm rounded-md bg-primary text-primary-foreground inline-flex items-center justify-center gap-2 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <CheckCircle2 className="h-4 w-4" />
+            {theoryPct >= 100 ? "Theory complete" : "Mark theory complete"}
           </button>
         </div>
       </div>
@@ -109,7 +134,7 @@ function SopDetail() {
         ))}
       </div>
 
-      {tab === "theory" ? <TheoryTab /> : <VideoTab title={sop.title} />}
+      {tab === "theory" ? <TheoryTab /> : <VideoTab sopId={sop.id} title={sop.title} fallback={sop.videoProgress} />}
     </AppShell>
   );
 }
