@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as KnowledgeHubIndexRouteImport } from './routes/knowledge-hub.index'
+import { Route as KnowledgeHubSopIdRouteImport } from './routes/knowledge-hub.$sopId'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -28,34 +29,43 @@ const KnowledgeHubIndexRoute = KnowledgeHubIndexRouteImport.update({
   path: '/knowledge-hub/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KnowledgeHubSopIdRoute = KnowledgeHubSopIdRouteImport.update({
+  id: '/knowledge-hub/$sopId',
+  path: '/knowledge-hub/$sopId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
   '/knowledge-hub/': typeof KnowledgeHubIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
   '/knowledge-hub': typeof KnowledgeHubIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
   '/knowledge-hub/': typeof KnowledgeHubIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/knowledge-hub/'
+  fullPaths: '/' | '/login' | '/knowledge-hub/$sopId' | '/knowledge-hub/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/knowledge-hub'
-  id: '__root__' | '/' | '/login' | '/knowledge-hub/'
+  to: '/' | '/login' | '/knowledge-hub/$sopId' | '/knowledge-hub'
+  id: '__root__' | '/' | '/login' | '/knowledge-hub/$sopId' | '/knowledge-hub/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
+  KnowledgeHubSopIdRoute: typeof KnowledgeHubSopIdRoute
   KnowledgeHubIndexRoute: typeof KnowledgeHubIndexRoute
 }
 
@@ -82,12 +92,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KnowledgeHubIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/knowledge-hub/$sopId': {
+      id: '/knowledge-hub/$sopId'
+      path: '/knowledge-hub/$sopId'
+      fullPath: '/knowledge-hub/$sopId'
+      preLoaderRoute: typeof KnowledgeHubSopIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
+  KnowledgeHubSopIdRoute: KnowledgeHubSopIdRoute,
   KnowledgeHubIndexRoute: KnowledgeHubIndexRoute,
 }
 export const routeTree = rootRouteImport

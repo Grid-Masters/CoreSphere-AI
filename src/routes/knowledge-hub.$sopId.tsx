@@ -1,0 +1,255 @@
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useState } from "react";
+import {
+  ArrowLeft,
+  Play,
+  ShieldCheck,
+  Lock,
+  AlertTriangle,
+  Clock,
+  ListChecks,
+  GitBranch,
+  MessageSquare,
+  CheckCircle2,
+} from "lucide-react";
+import { AppShell } from "@/components/layout/AppShell";
+import { PanelCard, ProgressBar, StatusBadge } from "@/components/ui-bits/Card";
+import { sops, currentUser } from "@/lib/mock-data";
+
+export const Route = createFileRoute("/knowledge-hub/$sopId")({
+  head: ({ params }) => ({
+    meta: [{ title: `${params.sopId} — UBA CoreSphere` }],
+  }),
+  component: SopDetail,
+  notFoundComponent: () => (
+    <AppShell>
+      <div className="text-center py-16">
+        <h2 className="text-xl font-semibold">SOP not found</h2>
+        <Link to="/knowledge-hub" className="text-primary text-sm hover:underline mt-2 inline-block">
+          Back to Knowledge Hub
+        </Link>
+      </div>
+    </AppShell>
+  ),
+  loader: ({ params }) => {
+    const s = sops.find((x) => x.id === params.sopId);
+    if (!s) throw notFound();
+    return s;
+  },
+});
+
+function SopDetail() {
+  const sop = Route.useLoaderData();
+  const [tab, setTab] = useState<"theory" | "video">("theory");
+
+  return (
+    <AppShell>
+      <Link
+        to="/knowledge-hub"
+        className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground mb-4"
+      >
+        <ArrowLeft className="h-3.5 w-3.5" /> Knowledge Hub
+      </Link>
+
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+            {sop.category} • {sop.department}
+          </div>
+          <h1 className="text-2xl font-semibold tracking-tight mt-1">{sop.title}</h1>
+          <p className="text-sm text-muted-foreground mt-1 max-w-2xl">{sop.summary}</p>
+          <div className="flex flex-wrap items-center gap-2 mt-3">
+            <StatusBadge status={sop.status} />
+            <span className="text-[11px] text-muted-foreground">Updated {sop.updated}</span>
+            <span className="text-[11px] text-muted-foreground">•</span>
+            <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+              <Lock className="h-3 w-3" /> View-only
+            </span>
+          </div>
+        </div>
+        <div className="bg-card border rounded-lg p-4 min-w-[220px]">
+          <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+            Your progress
+          </div>
+          <div className="text-2xl font-semibold mt-1 tabular-nums">{sop.progress}%</div>
+          <div className="mt-2">
+            <ProgressBar value={sop.progress} tone="success" />
+          </div>
+          <button className="mt-3 w-full h-9 text-sm rounded-md bg-primary text-primary-foreground inline-flex items-center justify-center gap-2 hover:bg-primary/90">
+            <CheckCircle2 className="h-4 w-4" /> Mark section complete
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-6 border-b flex gap-1">
+        {(
+          [
+            { id: "theory" as const, label: "Theory Guide" },
+            { id: "video" as const, label: "Video Lecture" },
+          ]
+        ).map((t) => (
+          <button
+            key={t.id}
+            onClick={() => setTab(t.id)}
+            className={`px-4 h-10 text-sm border-b-2 -mb-px transition-colors ${
+              tab === t.id
+                ? "border-primary text-foreground font-medium"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {tab === "theory" ? <TheoryTab /> : <VideoTab title={sop.title} />}
+    </AppShell>
+  );
+}
+
+function TheoryTab() {
+  return (
+    <div className="grid lg:grid-cols-3 gap-4 mt-6">
+      <div className="lg:col-span-2 space-y-4">
+        <PanelCard title="Process Overview">
+          <div className="prose prose-sm max-w-none text-sm leading-relaxed text-foreground/90">
+            <p>
+              This SOP defines the end-to-end process, control points, and escalation paths required
+              to operate within UBA's enterprise risk and customer experience standards. All
+              activities must be logged, time-stamped, and traceable to an authorised operator.
+            </p>
+            <p>
+              Operators are required to validate customer identity using the approved 3-step
+              verification before initiating any account-impacting action. Deviations require Team
+              Lead authorisation and must be captured in the daily exception log.
+            </p>
+          </div>
+        </PanelCard>
+
+        <PanelCard title="Process Flow" action={<GitBranch className="h-4 w-4 text-muted-foreground" />}>
+          <ol className="space-y-3">
+            {[
+              "Authenticate caller using 3-step verification",
+              "Capture intent and classify into approved category",
+              "Action request within authorised limits",
+              "Document outcome in core system + audit log",
+              "Acknowledge customer with reference number",
+            ].map((step, i) => (
+              <li key={i} className="flex gap-3">
+                <div className="h-7 w-7 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-semibold shrink-0">
+                  {i + 1}
+                </div>
+                <div className="text-sm pt-1">{step}</div>
+              </li>
+            ))}
+          </ol>
+        </PanelCard>
+
+        <PanelCard title="Recommended Scripts" action={<MessageSquare className="h-4 w-4 text-muted-foreground" />}>
+          <div className="space-y-3 text-sm">
+            <div className="p-3 rounded-md bg-muted/50 border border-dashed">
+              "Thank you for calling UBA. May I please confirm your full name and account number for
+              verification?"
+            </div>
+            <div className="p-3 rounded-md bg-muted/50 border border-dashed">
+              "I understand your concern. To resolve this securely, I'll be initiating a card block
+              right away. You'll receive an SMS confirmation within 60 seconds."
+            </div>
+          </div>
+        </PanelCard>
+      </div>
+
+      <div className="space-y-4">
+        <PanelCard title="Escalation Path" action={<AlertTriangle className="h-4 w-4 text-[color:var(--warning)]" />}>
+          <ol className="space-y-2 text-sm">
+            <li className="flex justify-between"><span>L1 — Team Lead</span><span className="text-muted-foreground">5 min</span></li>
+            <li className="flex justify-between"><span>L2 — Supervisor</span><span className="text-muted-foreground">15 min</span></li>
+            <li className="flex justify-between"><span>L3 — Unit Head</span><span className="text-muted-foreground">1 hr</span></li>
+            <li className="flex justify-between"><span>L4 — Group Head</span><span className="text-muted-foreground">4 hr</span></li>
+          </ol>
+        </PanelCard>
+
+        <PanelCard title="SLA Timelines" action={<Clock className="h-4 w-4 text-muted-foreground" />}>
+          <ul className="text-sm space-y-2">
+            <li className="flex justify-between"><span>First response</span><span className="font-medium tabular-nums">≤ 30s</span></li>
+            <li className="flex justify-between"><span>Resolution (Tier 1)</span><span className="font-medium tabular-nums">≤ 5 min</span></li>
+            <li className="flex justify-between"><span>Resolution (Tier 2)</span><span className="font-medium tabular-nums">≤ 4 hrs</span></li>
+            <li className="flex justify-between"><span>Customer follow-up</span><span className="font-medium tabular-nums">≤ 24 hrs</span></li>
+          </ul>
+        </PanelCard>
+
+        <PanelCard title="Compliance Notes" action={<ShieldCheck className="h-4 w-4 text-[color:var(--success)]" />}>
+          <ul className="text-sm space-y-2 text-muted-foreground">
+            <li className="flex gap-2"><ListChecks className="h-4 w-4 mt-0.5 text-foreground" />CBN consumer protection guidelines apply.</li>
+            <li className="flex gap-2"><ListChecks className="h-4 w-4 mt-0.5 text-foreground" />Never request full PIN or OTP from customer.</li>
+            <li className="flex gap-2"><ListChecks className="h-4 w-4 mt-0.5 text-foreground" />Audit trail mandatory; retain 7 years.</li>
+          </ul>
+        </PanelCard>
+      </div>
+    </div>
+  );
+}
+
+function VideoTab({ title }: { title: string }) {
+  return (
+    <div className="grid lg:grid-cols-3 gap-4 mt-6">
+      <div className="lg:col-span-2">
+        <div className="relative rounded-xl overflow-hidden border bg-black aspect-video flex items-center justify-center group">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-black/40" />
+          <button className="relative h-16 w-16 rounded-full bg-white/95 text-primary flex items-center justify-center hover:scale-105 transition-transform shadow-2xl">
+            <Play className="h-7 w-7 fill-current" />
+          </button>
+          <div className="absolute top-3 left-3 text-[10px] uppercase tracking-wider bg-black/60 text-white px-2 py-1 rounded backdrop-blur">
+            Secure Stream
+          </div>
+          <div className="absolute top-3 right-3 text-[10px] uppercase tracking-wider bg-primary text-primary-foreground px-2 py-1 rounded font-semibold">
+            Internal Use Only
+          </div>
+          <div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none flex items-center justify-center text-white/10 text-5xl font-bold rotate-[-20deg] select-none"
+          >
+            UBA • {currentUser.email}
+          </div>
+          <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/80 to-transparent text-white">
+            <div className="text-sm font-medium">{title}</div>
+            <div className="text-[11px] text-white/70">12:45 / 24:30 • Captions on</div>
+          </div>
+        </div>
+        <div className="mt-3 flex items-center gap-2 text-[11px] text-muted-foreground">
+          <Lock className="h-3 w-3" /> Download, screen recording, and sharing are disabled by
+          policy.
+        </div>
+      </div>
+      <div className="space-y-4">
+        <PanelCard title="Trainer">
+          <div className="flex items-center gap-3">
+            <div className="h-12 w-12 rounded-full bg-primary/10 text-primary flex items-center justify-center font-semibold">
+              OA
+            </div>
+            <div>
+              <div className="text-sm font-medium">Olamide Akande</div>
+              <div className="text-[11px] text-muted-foreground">Senior L&D Facilitator</div>
+            </div>
+          </div>
+        </PanelCard>
+        <PanelCard title="Timestamps">
+          <ul className="text-sm space-y-2">
+            {[
+              ["00:00", "Introduction & objectives"],
+              ["03:12", "Verification process"],
+              ["08:45", "Decision tree walkthrough"],
+              ["15:20", "Common exceptions"],
+              ["20:10", "Q&A and recap"],
+            ].map(([t, l]) => (
+              <li key={t} className="flex gap-3">
+                <span className="text-primary font-medium tabular-nums">{t}</span>
+                <span className="text-muted-foreground">{l}</span>
+              </li>
+            ))}
+          </ul>
+        </PanelCard>
+      </div>
+    </div>
+  );
+}
