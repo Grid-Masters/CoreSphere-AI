@@ -281,12 +281,25 @@ function VideoTab({ sopId, title, fallback }: { sopId: string; title: string; fa
             disablePictureInPicture
             onPlay={() => setPlaying(true)}
             onPause={() => setPlaying(false)}
-            onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
+            onLoadedMetadata={(e) => {
+              const d = e.currentTarget.duration;
+              setDuration(d);
+              if (!resumeOfferedRef.current && videoPct > 5 && videoPct < 95 && isFinite(d)) {
+                setResumeAt((videoPct / 100) * d);
+                resumeOfferedRef.current = true;
+              }
+            }}
             onTimeUpdate={(e) => {
               const v = e.currentTarget;
               setCurrent(v.currentTime);
-              setProgress(v.duration ? (v.currentTime / v.duration) * 100 : 0);
+              const pct = v.duration ? (v.currentTime / v.duration) * 100 : 0;
+              setProgress(pct);
+              if (pct - lastWriteRef.current >= 1 || pct >= 90) {
+                lastWriteRef.current = pct;
+                setVideoPct(pct >= 90 ? 100 : pct);
+              }
             }}
+            onEnded={() => setVideoPct(100)}
           />
 
           {/* Center play overlay */}
