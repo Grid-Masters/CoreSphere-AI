@@ -15,10 +15,13 @@ import {
   Volume2,
   VolumeX,
   Maximize2,
+  BookOpen,
+  PlayCircle,
 } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, ProgressBar, StatusBadge } from "@/components/ui-bits/Card";
-import { sops, currentUser } from "@/lib/mock-data";
+import { sops, currentUser, overallProgress } from "@/lib/mock-data";
+import { useTheoryProgress, useVideoProgress } from "@/lib/progress-store";
 
 export const Route = createFileRoute("/knowledge-hub/$sopId")({
   head: ({ params }) => ({
