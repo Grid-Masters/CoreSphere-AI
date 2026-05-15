@@ -222,13 +222,17 @@ function TheoryTab() {
   );
 }
 
-function VideoTab({ title }: { title: string }) {
+function VideoTab({ sopId, title, fallback }: { sopId: string; title: string; fallback: number }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [current, setCurrent] = useState(0);
+  const [videoPct, setVideoPct] = useVideoProgress(sopId, fallback);
+  const lastWriteRef = useRef(0);
+  const resumeOfferedRef = useRef(false);
+  const [resumeAt, setResumeAt] = useState<number | null>(null);
 
   // Block right-click & common shortcuts (best-effort)
   useEffect(() => {
