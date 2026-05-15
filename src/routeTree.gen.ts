@@ -9,14 +9,74 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TownhallRouteImport } from './routes/townhall'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ScoreBuddyRouteImport } from './routes/score-buddy'
+import { Route as QaCoachingRouteImport } from './routes/qa-coaching'
+import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as MemosRouteImport } from './routes/memos'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as LeadershipRouteImport } from './routes/leadership'
+import { Route as AssessmentsRouteImport } from './routes/assessments'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as KnowledgeHubIndexRouteImport } from './routes/knowledge-hub.index'
 import { Route as KnowledgeHubSopIdRouteImport } from './routes/knowledge-hub.$sopId'
 
+const TownhallRoute = TownhallRouteImport.update({
+  id: '/townhall',
+  path: '/townhall',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScoreBuddyRoute = ScoreBuddyRouteImport.update({
+  id: '/score-buddy',
+  path: '/score-buddy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QaCoachingRoute = QaCoachingRouteImport.update({
+  id: '/qa-coaching',
+  path: '/qa-coaching',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MemosRoute = MemosRouteImport.update({
+  id: '/memos',
+  path: '/memos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeadershipRoute = LeadershipRouteImport.update({
+  id: '/leadership',
+  path: '/leadership',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssessmentsRoute = AssessmentsRouteImport.update({
+  id: '/assessments',
+  path: '/assessments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyticsRoute = AnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -37,45 +97,198 @@ const KnowledgeHubSopIdRoute = KnowledgeHubSopIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/analytics': typeof AnalyticsRoute
+  '/assessments': typeof AssessmentsRoute
+  '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
+  '/memos': typeof MemosRoute
+  '/notifications': typeof NotificationsRoute
+  '/qa-coaching': typeof QaCoachingRoute
+  '/score-buddy': typeof ScoreBuddyRoute
+  '/settings': typeof SettingsRoute
+  '/townhall': typeof TownhallRoute
   '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
   '/knowledge-hub/': typeof KnowledgeHubIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/analytics': typeof AnalyticsRoute
+  '/assessments': typeof AssessmentsRoute
+  '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
+  '/memos': typeof MemosRoute
+  '/notifications': typeof NotificationsRoute
+  '/qa-coaching': typeof QaCoachingRoute
+  '/score-buddy': typeof ScoreBuddyRoute
+  '/settings': typeof SettingsRoute
+  '/townhall': typeof TownhallRoute
   '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
   '/knowledge-hub': typeof KnowledgeHubIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/analytics': typeof AnalyticsRoute
+  '/assessments': typeof AssessmentsRoute
+  '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
+  '/memos': typeof MemosRoute
+  '/notifications': typeof NotificationsRoute
+  '/qa-coaching': typeof QaCoachingRoute
+  '/score-buddy': typeof ScoreBuddyRoute
+  '/settings': typeof SettingsRoute
+  '/townhall': typeof TownhallRoute
   '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
   '/knowledge-hub/': typeof KnowledgeHubIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/knowledge-hub/$sopId' | '/knowledge-hub/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/analytics'
+    | '/assessments'
+    | '/leadership'
+    | '/login'
+    | '/memos'
+    | '/notifications'
+    | '/qa-coaching'
+    | '/score-buddy'
+    | '/settings'
+    | '/townhall'
+    | '/knowledge-hub/$sopId'
+    | '/knowledge-hub/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/knowledge-hub/$sopId' | '/knowledge-hub'
-  id: '__root__' | '/' | '/login' | '/knowledge-hub/$sopId' | '/knowledge-hub/'
+  to:
+    | '/'
+    | '/admin'
+    | '/analytics'
+    | '/assessments'
+    | '/leadership'
+    | '/login'
+    | '/memos'
+    | '/notifications'
+    | '/qa-coaching'
+    | '/score-buddy'
+    | '/settings'
+    | '/townhall'
+    | '/knowledge-hub/$sopId'
+    | '/knowledge-hub'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/analytics'
+    | '/assessments'
+    | '/leadership'
+    | '/login'
+    | '/memos'
+    | '/notifications'
+    | '/qa-coaching'
+    | '/score-buddy'
+    | '/settings'
+    | '/townhall'
+    | '/knowledge-hub/$sopId'
+    | '/knowledge-hub/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  AnalyticsRoute: typeof AnalyticsRoute
+  AssessmentsRoute: typeof AssessmentsRoute
+  LeadershipRoute: typeof LeadershipRoute
   LoginRoute: typeof LoginRoute
+  MemosRoute: typeof MemosRoute
+  NotificationsRoute: typeof NotificationsRoute
+  QaCoachingRoute: typeof QaCoachingRoute
+  ScoreBuddyRoute: typeof ScoreBuddyRoute
+  SettingsRoute: typeof SettingsRoute
+  TownhallRoute: typeof TownhallRoute
   KnowledgeHubSopIdRoute: typeof KnowledgeHubSopIdRoute
   KnowledgeHubIndexRoute: typeof KnowledgeHubIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/townhall': {
+      id: '/townhall'
+      path: '/townhall'
+      fullPath: '/townhall'
+      preLoaderRoute: typeof TownhallRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/score-buddy': {
+      id: '/score-buddy'
+      path: '/score-buddy'
+      fullPath: '/score-buddy'
+      preLoaderRoute: typeof ScoreBuddyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/qa-coaching': {
+      id: '/qa-coaching'
+      path: '/qa-coaching'
+      fullPath: '/qa-coaching'
+      preLoaderRoute: typeof QaCoachingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/memos': {
+      id: '/memos'
+      path: '/memos'
+      fullPath: '/memos'
+      preLoaderRoute: typeof MemosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/leadership': {
+      id: '/leadership'
+      path: '/leadership'
+      fullPath: '/leadership'
+      preLoaderRoute: typeof LeadershipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assessments': {
+      id: '/assessments'
+      path: '/assessments'
+      fullPath: '/assessments'
+      preLoaderRoute: typeof AssessmentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -104,7 +317,17 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
+  AnalyticsRoute: AnalyticsRoute,
+  AssessmentsRoute: AssessmentsRoute,
+  LeadershipRoute: LeadershipRoute,
   LoginRoute: LoginRoute,
+  MemosRoute: MemosRoute,
+  NotificationsRoute: NotificationsRoute,
+  QaCoachingRoute: QaCoachingRoute,
+  ScoreBuddyRoute: ScoreBuddyRoute,
+  SettingsRoute: SettingsRoute,
+  TownhallRoute: TownhallRoute,
   KnowledgeHubSopIdRoute: KnowledgeHubSopIdRoute,
   KnowledgeHubIndexRoute: KnowledgeHubIndexRoute,
 }
