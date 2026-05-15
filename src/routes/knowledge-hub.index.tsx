@@ -1,9 +1,42 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
-import { Search, Filter, ShieldCheck, BookOpen, Sparkles, ArrowRight } from "lucide-react";
+import {
+  Search,
+  Filter,
+  ShieldCheck,
+  Sparkles,
+  PlayCircle,
+  Lock,
+  CreditCard,
+  ShieldAlert,
+  Headphones,
+  Mail,
+  MessageSquare,
+  Megaphone,
+  Scale,
+  FileText,
+  BookOpen,
+} from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, ProgressBar, StatusBadge } from "@/components/ui-bits/Card";
-import { sops } from "@/lib/mock-data";
+import { sops, currentUser } from "@/lib/mock-data";
+
+const categoryStyles: Record<
+  string,
+  { gradient: string; icon: any }
+> = {
+  "Cards Operations": { gradient: "from-rose-600 via-red-700 to-rose-900", icon: CreditCard },
+  Containment: { gradient: "from-amber-500 via-orange-600 to-red-700", icon: ShieldAlert },
+  "Customer Service": { gradient: "from-sky-600 via-blue-700 to-indigo-800", icon: Headphones },
+  Multimedia: { gradient: "from-fuchsia-600 via-purple-700 to-indigo-800", icon: Mail },
+  Reputation: { gradient: "from-emerald-600 via-teal-700 to-slate-800", icon: Megaphone },
+  Compliance: { gradient: "from-slate-700 via-slate-800 to-zinc-900", icon: Scale },
+  Operations: { gradient: "from-cyan-600 via-blue-700 to-slate-800", icon: FileText },
+};
+
+function thumbFor(cat: string) {
+  return categoryStyles[cat] ?? { gradient: "from-primary via-primary/80 to-rose-900", icon: BookOpen };
+}
 
 export const Route = createFileRoute("/knowledge-hub/")({
   head: () => ({ meta: [{ title: "Knowledge Hub — UBA CoreSphere" }] }),
@@ -70,44 +103,68 @@ function KnowledgeHub() {
         </div>
       </div>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.map((s) => (
-          <Link
-            key={s.id}
-            to="/knowledge-hub/$sopId"
-            params={{ sopId: s.id }}
-            className="group bg-card border rounded-xl p-5 shadow-sm hover:border-primary/40 hover:shadow-md transition-all flex flex-col"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="h-10 w-10 rounded-md bg-primary/10 text-primary flex items-center justify-center">
-                <BookOpen className="h-5 w-5" />
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        {filtered.map((s) => {
+          const { gradient, icon: Icon } = thumbFor(s.category);
+          return (
+            <Link
+              key={s.id}
+              to="/knowledge-hub/$sopId"
+              params={{ sopId: s.id }}
+              className="group bg-card border rounded-xl overflow-hidden shadow-sm hover:border-primary/50 hover:shadow-lg transition-all flex flex-col"
+            >
+              {/* Thumbnail */}
+              <div className={`relative aspect-[16/10] bg-gradient-to-br ${gradient} overflow-hidden`}>
+                <div className="absolute inset-0 opacity-30 mix-blend-overlay [background-image:radial-gradient(circle_at_20%_20%,white,transparent_45%),radial-gradient(circle_at_80%_70%,white,transparent_50%)]" />
+                <div className="absolute inset-0 [background-image:linear-gradient(white_1px,transparent_1px),linear-gradient(90deg,white_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.07]" />
+                <Icon className="absolute right-4 bottom-4 h-20 w-20 text-white/15" strokeWidth={1.2} />
+                <div className="absolute top-3 left-3 flex items-center gap-1.5">
+                  <span className="text-[10px] uppercase tracking-wider bg-black/40 text-white px-2 py-1 rounded backdrop-blur-sm font-medium">
+                    {s.category}
+                  </span>
+                </div>
+                <div className="absolute top-3 right-3">
+                  <StatusBadge status={s.status} />
+                </div>
+                <div className="absolute bottom-3 left-3 flex items-center gap-2 text-white">
+                  <PlayCircle className="h-5 w-5 drop-shadow" />
+                  <span className="text-[11px] font-medium drop-shadow">Theory + Video</span>
+                </div>
+                <div
+                  aria-hidden
+                  className="absolute inset-0 flex items-center justify-center text-white/10 text-2xl font-bold rotate-[-18deg] select-none pointer-events-none tracking-widest"
+                >
+                  UBA • INTERNAL
+                </div>
               </div>
-              <StatusBadge status={s.status} />
-            </div>
-            <h3 className="mt-4 text-base font-semibold leading-snug group-hover:text-primary transition-colors">
-              {s.title}
-            </h3>
-            <div className="text-[11px] uppercase tracking-wider text-muted-foreground mt-1">
-              {s.category}
-            </div>
-            <p className="text-xs text-muted-foreground mt-3 line-clamp-2">{s.summary}</p>
-            <div className="mt-5">
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Progress</span>
-                <span className="tabular-nums font-medium">{s.progress}%</span>
+
+              {/* Body */}
+              <div className="p-4 flex flex-col flex-1">
+                <h3 className="text-sm font-semibold leading-snug group-hover:text-primary transition-colors line-clamp-2">
+                  {s.title}
+                </h3>
+                <p className="text-xs text-muted-foreground mt-2 line-clamp-2 flex-1">
+                  {s.summary}
+                </p>
+                <div className="mt-3">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="text-muted-foreground">Progress</span>
+                    <span className="tabular-nums font-medium">{s.progress}%</span>
+                  </div>
+                  <div className="mt-1">
+                    <ProgressBar value={s.progress} tone="success" />
+                  </div>
+                </div>
+                <div className="mt-3 pt-3 border-t flex items-center justify-between text-[10px] text-muted-foreground">
+                  <span>Updated {s.updated}</span>
+                  <span className="inline-flex items-center gap-1">
+                    <Lock className="h-3 w-3" /> {currentUser.department}
+                  </span>
+                </div>
               </div>
-              <div className="mt-1.5">
-                <ProgressBar value={s.progress} tone="success" />
-              </div>
-            </div>
-            <div className="mt-4 pt-3 border-t flex items-center justify-between text-[11px] text-muted-foreground">
-              <span>Updated {s.updated}</span>
-              <span className="inline-flex items-center gap-1 text-primary font-medium opacity-0 group-hover:opacity-100 transition">
-                Open <ArrowRight className="h-3 w-3" />
-              </span>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
 
       <PanelCard
