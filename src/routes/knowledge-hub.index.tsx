@@ -20,6 +20,7 @@ import {
 import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, ProgressBar, StatusBadge } from "@/components/ui-bits/Card";
 import { sops, currentUser } from "@/lib/mock-data";
+import { useVideoProgress, useTheoryProgress } from "@/lib/progress-store";
 
 const categoryStyles: Record<
   string,
@@ -104,15 +105,42 @@ function KnowledgeHub() {
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-        {filtered.map((s) => {
-          const { gradient, icon: Icon } = thumbFor(s.category);
-          return (
-            <Link
-              key={s.id}
-              to="/knowledge-hub/$sopId"
-              params={{ sopId: s.id }}
-              className="group bg-card border rounded-xl overflow-hidden shadow-sm hover:border-primary/50 hover:shadow-lg transition-all flex flex-col"
-            >
+        {filtered.map((s) => (
+          <SopCard key={s.id} sop={s} />
+        ))}
+      </div>
+
+      <PanelCard
+        className="mt-6 bg-gradient-to-br from-primary/5 to-transparent"
+        title="Ask CoreSphere AI"
+        description="Find the right SOP, summarise a policy, or get instant operational guidance."
+        action={<Sparkles className="h-4 w-4 text-primary" />}
+      >
+        <p className="text-sm text-muted-foreground">
+          Try: "What's the escalation path for a suspected card-not-present fraud?" or "Quiz me on
+          Live Chat tone standards."
+        </p>
+      </PanelCard>
+    </AppShell>
+  );
+}
+
+function SopCard({ sop: s }: { sop: (typeof sops)[number] }) {
+  const { gradient, icon: Icon } = thumbFor(s.category);
+  const [theoryPct] = useTheoryProgress(s.id, s.theoryProgress);
+  const [videoPct] = useVideoProgress(s.id, s.videoProgress);
+  return (
+    <div className="relative">
+      {/* Soft ground shadow */}
+      <div
+        aria-hidden
+        className="absolute -bottom-2 left-3 right-3 h-3 rounded-full bg-foreground/15 blur-md opacity-60 group-hover:opacity-90 transition-opacity"
+      />
+      <Link
+        to="/knowledge-hub/$sopId"
+        params={{ sopId: s.id }}
+        className="group relative block bg-card border rounded-xl overflow-hidden shadow-md shadow-black/5 hover:border-primary/50 hover:shadow-xl hover:-translate-y-0.5 transition-all flex flex-col"
+      >
               {/* Thumbnail */}
               <div className={`relative aspect-[16/10] bg-gradient-to-br ${gradient} overflow-hidden`}>
                 <div className="absolute inset-0 opacity-30 mix-blend-overlay [background-image:radial-gradient(circle_at_20%_20%,white,transparent_45%),radial-gradient(circle_at_80%_70%,white,transparent_50%)]" />
@@ -146,13 +174,28 @@ function KnowledgeHub() {
                 <p className="text-xs text-muted-foreground mt-2 line-clamp-2 flex-1">
                   {s.summary}
                 </p>
-                <div className="mt-3">
-                  <div className="flex items-center justify-between text-[11px]">
-                    <span className="text-muted-foreground">Progress</span>
-                    <span className="tabular-nums font-medium">{s.progress}%</span>
+                <div className="mt-3 space-y-2">
+                  <div>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-muted-foreground inline-flex items-center gap-1">
+                        <BookOpen className="h-3 w-3" /> Theory
+                      </span>
+                      <span className="tabular-nums font-medium">{theoryPct}%</span>
+                    </div>
+                    <div className="mt-1">
+                      <ProgressBar value={theoryPct} tone="success" />
+                    </div>
                   </div>
-                  <div className="mt-1">
-                    <ProgressBar value={s.progress} tone="success" />
+                  <div>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-muted-foreground inline-flex items-center gap-1">
+                        <PlayCircle className="h-3 w-3" /> Video
+                      </span>
+                      <span className="tabular-nums font-medium">{videoPct}%</span>
+                    </div>
+                    <div className="mt-1">
+                      <ProgressBar value={videoPct} tone="primary" />
+                    </div>
                   </div>
                 </div>
                 <div className="mt-3 pt-3 border-t flex items-center justify-between text-[10px] text-muted-foreground">
@@ -162,22 +205,7 @@ function KnowledgeHub() {
                   </span>
                 </div>
               </div>
-            </Link>
-          );
-        })}
-      </div>
-
-      <PanelCard
-        className="mt-6 bg-gradient-to-br from-primary/5 to-transparent"
-        title="Ask CoreSphere AI"
-        description="Find the right SOP, summarise a policy, or get instant operational guidance."
-        action={<Sparkles className="h-4 w-4 text-primary" />}
-      >
-        <p className="text-sm text-muted-foreground">
-          Try: "What's the escalation path for a suspected card-not-present fraud?" or "Quiz me on
-          Live Chat tone standards."
-        </p>
-      </PanelCard>
-    </AppShell>
+      </Link>
+    </div>
   );
 }
