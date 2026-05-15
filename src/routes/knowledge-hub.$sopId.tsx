@@ -1,8 +1,9 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   ArrowLeft,
   Play,
+  Pause,
   ShieldCheck,
   Lock,
   AlertTriangle,
@@ -11,6 +12,9 @@ import {
   GitBranch,
   MessageSquare,
   CheckCircle2,
+  Volume2,
+  VolumeX,
+  Maximize2,
 } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, ProgressBar, StatusBadge } from "@/components/ui-bits/Card";
@@ -191,29 +195,145 @@ function TheoryTab() {
 }
 
 function VideoTab({ title }: { title: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
+  const [muted, setMuted] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [current, setCurrent] = useState(0);
+
+  // Block right-click & common shortcuts (best-effort)
+  useEffect(() => {
+    const block = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && ["s", "u", "p"].includes(e.key.toLowerCase())) {
+        e.preventDefault();
+      }
+    };
+    window.addEventListener("keydown", block);
+    return () => window.removeEventListener("keydown", block);
+  }, []);
+
+  const toggle = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) {
+      v.play();
+      setPlaying(true);
+    } else {
+      v.pause();
+      setPlaying(false);
+    }
+  };
+
+  const fmt = (s: number) => {
+    if (!isFinite(s)) return "00:00";
+    const m = Math.floor(s / 60).toString().padStart(2, "0");
+    const r = Math.floor(s % 60).toString().padStart(2, "0");
+    return `${m}:${r}`;
+  };
+
   return (
     <div className="grid lg:grid-cols-3 gap-4 mt-6">
       <div className="lg:col-span-2">
-        <div className="relative rounded-xl overflow-hidden border bg-black aspect-video flex items-center justify-center group">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-black/40" />
-          <button className="relative h-16 w-16 rounded-full bg-white/95 text-primary flex items-center justify-center hover:scale-105 transition-transform shadow-2xl">
-            <Play className="h-7 w-7 fill-current" />
-          </button>
-          <div className="absolute top-3 left-3 text-[10px] uppercase tracking-wider bg-black/60 text-white px-2 py-1 rounded backdrop-blur">
-            Secure Stream
+        <div
+          className="relative rounded-xl overflow-hidden border bg-black aspect-video group select-none"
+          onContextMenu={(e) => e.preventDefault()}
+        >
+          <video
+            ref={videoRef}
+            className="absolute inset-0 h-full w-full object-cover"
+            src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4"
+            preload="metadata"
+            playsInline
+            controlsList="nodownload noremoteplayback noplaybackrate"
+            disablePictureInPicture
+            onPlay={() => setPlaying(true)}
+            onPause={() => setPlaying(false)}
+            onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
+            onTimeUpdate={(e) => {
+              const v = e.currentTarget;
+              setCurrent(v.currentTime);
+              setProgress(v.duration ? (v.currentTime / v.duration) * 100 : 0);
+            }}
+          />
+
+          {/* Center play overlay */}
+          {!playing && (
+            <button
+              onClick={toggle}
+              className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-[1px] z-20"
+            >
+              <span className="h-16 w-16 rounded-full bg-white/95 text-primary flex items-center justify-center hover:scale-105 transition-transform shadow-2xl">
+                <Play className="h-7 w-7 fill-current" />
+              </span>
+            </button>
+          )}
+
+          {/* Tags */}
+          <div className="absolute top-3 left-3 z-10 text-[10px] uppercase tracking-wider bg-black/60 text-white px-2 py-1 rounded backdrop-blur inline-flex items-center gap-1">
+            <ShieldCheck className="h-3 w-3" /> Secure Stream
           </div>
-          <div className="absolute top-3 right-3 text-[10px] uppercase tracking-wider bg-primary text-primary-foreground px-2 py-1 rounded font-semibold">
+          <div className="absolute top-3 right-3 z-10 text-[10px] uppercase tracking-wider bg-primary text-primary-foreground px-2 py-1 rounded font-semibold">
             Internal Use Only
           </div>
+
+          {/* Repeating watermark grid (forensic) */}
           <div
             aria-hidden
-            className="absolute inset-0 pointer-events-none flex items-center justify-center text-white/10 text-5xl font-bold rotate-[-20deg] select-none"
+            className="absolute inset-0 z-10 pointer-events-none overflow-hidden text-white/10 select-none"
           >
-            UBA • {currentUser.email}
+            <div className="absolute inset-[-25%] grid grid-cols-3 gap-10 rotate-[-22deg] text-[11px] font-semibold tracking-widest">
+              {Array.from({ length: 24 }).map((_, i) => (
+                <span key={i} className="whitespace-nowrap">
+                  UBA • {currentUser.email} • {new Date().toISOString().slice(0, 10)}
+                </span>
+              ))}
+            </div>
           </div>
-          <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/80 to-transparent text-white">
-            <div className="text-sm font-medium">{title}</div>
-            <div className="text-[11px] text-white/70">12:45 / 24:30 • Captions on</div>
+
+          {/* Custom controls */}
+          <div className="absolute bottom-0 inset-x-0 z-20 p-3 bg-gradient-to-t from-black/90 via-black/60 to-transparent text-white">
+            <div className="flex items-center gap-2 mb-2">
+              <button
+                onClick={toggle}
+                className="h-8 w-8 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center"
+              >
+                {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 fill-current" />}
+              </button>
+              <button
+                onClick={() => {
+                  const v = videoRef.current;
+                  if (!v) return;
+                  v.muted = !v.muted;
+                  setMuted(v.muted);
+                }}
+                className="h-8 w-8 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center"
+              >
+                {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+              </button>
+              <div className="text-[11px] tabular-nums text-white/80">
+                {fmt(current)} / {fmt(duration)}
+              </div>
+              <div className="ml-auto text-[11px] font-medium truncate max-w-[40%]">{title}</div>
+              <button
+                onClick={() => videoRef.current?.requestFullscreen?.()}
+                className="h-8 w-8 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center"
+              >
+                <Maximize2 className="h-4 w-4" />
+              </button>
+            </div>
+            <div
+              className="h-1 w-full rounded-full bg-white/20 overflow-hidden cursor-pointer"
+              onClick={(e) => {
+                const v = videoRef.current;
+                if (!v || !duration) return;
+                const rect = e.currentTarget.getBoundingClientRect();
+                const pct = (e.clientX - rect.left) / rect.width;
+                v.currentTime = pct * duration;
+              }}
+            >
+              <div className="h-full bg-primary" style={{ width: `${progress}%` }} />
+            </div>
           </div>
         </div>
         <div className="mt-3 flex items-center gap-2 text-[11px] text-muted-foreground">
