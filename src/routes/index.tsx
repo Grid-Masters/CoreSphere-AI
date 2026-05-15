@@ -24,6 +24,7 @@ import {
   memos,
   qaScores,
   sops,
+  overallProgress,
   teamLeadsOnDuty,
 } from "@/lib/mock-data";
 
@@ -228,10 +229,10 @@ function Dashboard() {
                     >
                       {s.title}
                     </Link>
-                    <span className="text-xs text-muted-foreground tabular-nums">{s.progress}%</span>
+                    <span className="text-xs text-muted-foreground tabular-nums">{overallProgress(s)}%</span>
                   </div>
                   <div className="mt-2">
-                    <ProgressBar value={s.progress} tone="success" />
+                    <ProgressBar value={overallProgress(s)} tone="success" />
                   </div>
                   <div className="text-[11px] text-muted-foreground mt-1.5">
                     {s.category} • Updated {s.updated}
