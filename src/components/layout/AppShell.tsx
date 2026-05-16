@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouterState } from "@tanstack/react-router";
 import { AppSidebar } from "./AppSidebar";
 import { TopBar } from "./TopBar";
+import { ActivityTicker } from "./ActivityTicker";
 import { CoreSphereAI } from "@/components/CoreSphereAI";
 
 const STORAGE_KEY = "coresphere.sidebar.collapsed";
@@ -39,6 +40,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           onToggleCollapsed={() => setCollapsed((c) => !c)}
           collapsed={collapsed}
         />
+        <ActivityTicker />
         <main className="flex-1 overflow-y-auto">
           <div className="p-4 lg:p-8 max-w-[1500px] mx-auto w-full">{children}</div>
         </main>

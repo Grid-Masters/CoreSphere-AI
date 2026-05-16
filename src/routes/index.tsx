@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, StatCard, ProgressBar, StatusBadge } from "@/components/ui-bits/Card";
+import { PromotionsStrip } from "@/components/PromotionsStrip";
 import {
   announcements,
   champions,
@@ -206,6 +207,10 @@ function Dashboard() {
             <div className="text-xs text-muted-foreground mt-0.5">{c.detail}</div>
           </div>
         ))}
+      </div>
+
+      <div className="mt-6">
+        <PromotionsStrip />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
