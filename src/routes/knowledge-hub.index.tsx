@@ -3,7 +3,6 @@ import { useState, useMemo } from "react";
 import {
   Search,
   Filter,
-  ShieldCheck,
   Sparkles,
   PlayCircle,
   Lock,
@@ -70,9 +69,6 @@ function KnowledgeHub() {
           <p className="text-sm text-muted-foreground mt-1">
             Approved SOPs, policies, and operational playbooks for your role.
           </p>
-        </div>
-        <div className="flex items-center gap-2 text-[11px] text-muted-foreground border rounded-md px-3 py-1.5 bg-card">
-          <ShieldCheck className="h-3.5 w-3.5" /> Internal Banking Use Only • No download
         </div>
       </div>
 
