@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Sparkles, X, Send, ShieldCheck } from "lucide-react";
+import { Sparkles, X, Send } from "lucide-react";
 
 const suggested = [
   "Summarize the Card Block SOP",
@@ -99,7 +99,7 @@ export function CoreSphereAI() {
               </div>
             )}
           </div>
-          <div className="border-t p-3 space-y-2">
+          <div className="border-t p-3">
             <div className="flex items-center gap-2">
               <input
                 value={input}
@@ -114,10 +114,6 @@ export function CoreSphereAI() {
               >
                 <Send className="h-4 w-4" />
               </button>
-            </div>
-            <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
-              <ShieldCheck className="h-3 w-3" /> Internal Banking Use Only • Conversations are
-              logged for compliance.
             </div>
           </div>
         </div>
