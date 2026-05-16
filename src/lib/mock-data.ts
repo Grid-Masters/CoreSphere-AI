@@ -108,7 +108,7 @@ export type BankPromotion = {
 };
 
 export const bankPromotions: BankPromotion[] = [
-  { id: "p1", category: "Product", title: "UBA LEO — Your AI Banker", title_: "", tagline: "Bank by chat 24/7 on WhatsApp, Facebook & Apple Business Chat.", cta: "Discover LEO" } as any,
+  { id: "p1", category: "Product", title: "UBA LEO — Your AI Banker", tagline: "Bank by chat 24/7 on WhatsApp, Facebook & Apple Business Chat.", cta: "Discover LEO" },
   { id: "p2", category: "News", title: "UBA Wins Best Digital Bank — Africa 2026", tagline: "Recognised at the Global Finance Awards for digital innovation.", cta: "Read story" },
   { id: "p3", category: "Product", title: "NextGen Account", tagline: "Zero-balance account built for students & first jobbers across Africa.", cta: "Open account" },
   { id: "p4", category: "Campaign", title: "Wise Savers Promo", tagline: "Save ₦50k monthly for 6 months and win up to ₦5M in cash prizes.", cta: "Join promo" },
