@@ -98,3 +98,38 @@ export const coachingThreads = [
   { id: "c2", coach: "Femi Adebayo", role: "QA Officer", lastMessage: "Coaching session scheduled for Friday 14:00.", time: "Yesterday", unread: 0 },
   { id: "c3", coach: "Aisha Bello", role: "Senior QA", lastMessage: "Please acknowledge your April scorecard.", time: "Mon", unread: 1 },
 ];
+
+export type BankPromotion = {
+  id: string;
+  category: "Product" | "News" | "Campaign";
+  title: string;
+  tagline: string;
+  cta: string;
+};
+
+export const bankPromotions: BankPromotion[] = [
+  { id: "p1", category: "Product", title: "UBA LEO — Your AI Banker", title_: "", tagline: "Bank by chat 24/7 on WhatsApp, Facebook & Apple Business Chat.", cta: "Discover LEO" } as any,
+  { id: "p2", category: "News", title: "UBA Wins Best Digital Bank — Africa 2026", tagline: "Recognised at the Global Finance Awards for digital innovation.", cta: "Read story" },
+  { id: "p3", category: "Product", title: "NextGen Account", tagline: "Zero-balance account built for students & first jobbers across Africa.", cta: "Open account" },
+  { id: "p4", category: "Campaign", title: "Wise Savers Promo", tagline: "Save ₦50k monthly for 6 months and win up to ₦5M in cash prizes.", cta: "Join promo" },
+  { id: "p5", category: "Product", title: "U-Mobile 4.0", tagline: "Faster transfers, biometric login and instant card controls.", cta: "Update app" },
+  { id: "p6", category: "News", title: "UBA Expands to Saudi Arabia", tagline: "New representative office opens in Riyadh — strengthening trade corridors.", cta: "Press release" },
+];
+
+export type TickerItem = {
+  id: string;
+  kind: "deadline" | "assessment" | "memo" | "announcement";
+  text: string;
+  from: string;
+  due?: string;
+  href: "/assessments" | "/memos" | "/leadership" | "/knowledge-hub";
+};
+
+export const tickerItems: TickerItem[] = [
+  { id: "t1", kind: "assessment", text: "Monthly L&D Assessment — Compliance is pending", from: "L&D", due: "Today", href: "/assessments" },
+  { id: "t2", kind: "deadline", text: "Live Chat Tone & QA Standards quiz due", from: "QA", due: "Fri", href: "/assessments" },
+  { id: "t3", kind: "memo", text: "Acknowledge: Mandatory AML Refresher — Cohort 7", from: "Compliance", due: "May 30", href: "/memos" },
+  { id: "t4", kind: "announcement", text: "FY2026 Service Excellence Charter is live", from: "Group Head, Customer Fulfilment", href: "/leadership" },
+  { id: "t5", kind: "memo", text: "Acknowledge: Updated Block Card Decision Tree", from: "Operations", due: "Jun 15", href: "/memos" },
+  { id: "t6", kind: "announcement", text: "Q2 Operations Townhall — Thursday 10:00 WAT", from: "Group Head, Operations", href: "/leadership" },
+];
