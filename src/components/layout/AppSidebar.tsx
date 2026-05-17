@@ -19,38 +19,43 @@ import {
   X,
 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useActiveUser } from "@/lib/active-user";
+import type { Role } from "@/lib/directory";
 
-const groups: { label: string; items: { to: string; icon: any; label: string }[] }[] = [
+type NavItem = { to: string; icon: any; label: string; roles?: Role[] };
+const ALL: Role[] = ["staff", "qa", "ld", "team_lead", "group_head"];
+
+const groups: { label: string; items: NavItem[] }[] = [
   {
     label: "Operations",
     items: [
-      { to: "/", icon: LayoutDashboard, label: "Dashboard" },
-      { to: "/knowledge-hub", icon: BookOpen, label: "Knowledge Hub" },
-      { to: "/assessments", icon: GraduationCap, label: "Assessments" },
+      { to: "/", icon: LayoutDashboard, label: "Dashboard", roles: ALL },
+      { to: "/knowledge-hub", icon: BookOpen, label: "Knowledge Hub", roles: ALL },
+      { to: "/assessments", icon: GraduationCap, label: "Assessments", roles: ALL },
     ],
   },
   {
     label: "Performance",
     items: [
-      { to: "/score-buddy", icon: Award, label: "Score Buddy" },
-      { to: "/qa-coaching", icon: MessagesSquare, label: "QA Coaching Hub" },
+      { to: "/score-buddy", icon: Award, label: "Score Buddy", roles: ALL },
+      { to: "/qa-coaching", icon: MessagesSquare, label: "QA Coaching Hub", roles: ALL },
     ],
   },
   {
     label: "Communication",
     items: [
-      { to: "/leadership", icon: Megaphone, label: "Leadership Board" },
-      { to: "/memos", icon: StickyNote, label: "Operations Memos" },
-      { to: "/townhall", icon: Video, label: "Townhall Hub" },
-      { to: "/notifications", icon: Bell, label: "Notifications" },
+      { to: "/leadership", icon: Megaphone, label: "Leadership Board", roles: ALL },
+      { to: "/memos", icon: StickyNote, label: "Operations Memos", roles: ALL },
+      { to: "/townhall", icon: Video, label: "Townhall Hub", roles: ALL },
+      { to: "/notifications", icon: Bell, label: "Notifications", roles: ALL },
     ],
   },
   {
     label: "Administration",
     items: [
-      { to: "/analytics", icon: BarChart3, label: "Analytics" },
-      { to: "/admin", icon: ShieldCheck, label: "Admin Panel" },
-      { to: "/settings", icon: Settings, label: "Settings" },
+      { to: "/analytics", icon: BarChart3, label: "Analytics", roles: ["qa", "ld", "team_lead", "group_head"] },
+      { to: "/admin", icon: ShieldCheck, label: "Admin Panel", roles: ["ld", "group_head"] },
+      { to: "/settings", icon: Settings, label: "Settings", roles: ALL },
     ],
   },
 ];
@@ -64,6 +69,10 @@ type Props = {
 
 export function AppSidebar({ collapsed, mobileOpen, onCloseMobile, onToggleCollapsed }: Props) {
   const path = useRouterState({ select: (s) => s.location.pathname });
+  const user = useActiveUser();
+  const visibleGroups = groups
+    .map((g) => ({ ...g, items: g.items.filter((i) => !i.roles || i.roles.includes(user.role)) }))
+    .filter((g) => g.items.length > 0);
 
   useEffect(() => {
     if (!mobileOpen) return;
@@ -78,7 +87,7 @@ export function AppSidebar({ collapsed, mobileOpen, onCloseMobile, onToggleColla
 
   const NavBody = ({ compact, onItemClick }: { compact: boolean; onItemClick?: () => void }) => (
     <nav className="flex-1 overflow-y-auto py-4 px-2 space-y-6">
-      {groups.map((g) => (
+      {visibleGroups.map((g) => (
         <div key={g.label}>
           {!compact && (
             <div className="px-3 mb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-sidebar-foreground/50">
