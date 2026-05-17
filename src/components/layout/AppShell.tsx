@@ -4,6 +4,7 @@ import { AppSidebar } from "./AppSidebar";
 import { TopBar } from "./TopBar";
 import { ActivityTicker } from "./ActivityTicker";
 import { CoreSphereAI } from "@/components/CoreSphereAI";
+import { useActiveUser } from "@/lib/active-user";
 
 const STORAGE_KEY = "coresphere.sidebar.collapsed";
 
@@ -14,6 +15,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   });
   const [mobileOpen, setMobileOpen] = useState(false);
   const path = useRouterState({ select: (s) => s.location.pathname });
+  const user = useActiveUser();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -41,7 +43,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           collapsed={collapsed}
         />
         <ActivityTicker />
-        <main className="flex-1 overflow-y-auto">
+        <main key={user.email} className="flex-1 overflow-y-auto">
           <div className="p-4 lg:p-8 max-w-[1500px] mx-auto w-full">{children}</div>
         </main>
       </div>
