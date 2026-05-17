@@ -1,11 +1,24 @@
-export const currentUser = {
-  name: "Adaeze Okafor",
-  role: "Customer Experience Executive",
-  department: "FHD",
-  unit: "FHD Core",
-  initials: "AO",
-  email: "a.okafor@ubagroup.com",
+import { getActiveUser } from "./active-user";
+
+// `currentUser` is a live proxy of the demo-mode active user. Reads always
+// resolve to the user currently selected via the role switcher. The shape
+// mirrors the original mock object (role -> roleLabel) for backwards compat.
+type LegacyCurrentUser = {
+  name: string;
+  role: string;
+  department: string;
+  unit: string;
+  initials: string;
+  email: string;
 };
+
+export const currentUser: LegacyCurrentUser = new Proxy({} as LegacyCurrentUser, {
+  get(_t, prop: keyof LegacyCurrentUser) {
+    const u = getActiveUser();
+    if (prop === "role") return u.roleLabel;
+    return u[prop as keyof typeof u] as never;
+  },
+}) as LegacyCurrentUser;
 
 export const departments = [
   { name: "FHD", units: ["FHD Core", "Containment", "Block Card"] },
