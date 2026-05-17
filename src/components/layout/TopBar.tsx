@@ -1,5 +1,5 @@
 import { Bell, Search, HelpCircle, Menu, PanelLeftClose, PanelLeftOpen } from "lucide-react";
-import { currentUser } from "@/lib/mock-data";
+import { RoleSwitcher } from "@/components/RoleSwitcher";
 
 type Props = {
   onOpenMobile: () => void;
@@ -39,16 +39,8 @@ export function TopBar({ onOpenMobile, onToggleCollapsed, collapsed }: Props) {
           <Bell className="h-4 w-4" />
           <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary" />
         </button>
-        <div className="hidden sm:flex items-center gap-3 pl-3 ml-1 border-l">
-          <div className="text-right leading-tight">
-            <div className="text-sm font-medium">{currentUser.name}</div>
-            <div className="text-[11px] text-muted-foreground">
-              {currentUser.role} • {currentUser.department}
-            </div>
-          </div>
-          <div className="h-9 w-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-semibold">
-            {currentUser.initials}
-          </div>
+        <div className="pl-2 ml-1 border-l">
+          <RoleSwitcher />
         </div>
       </div>
     </header>
