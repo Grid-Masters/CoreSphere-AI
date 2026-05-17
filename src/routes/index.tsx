@@ -40,6 +40,9 @@ function Dashboard() {
   const maxScore = Math.max(...qaScores.map((s) => s.score));
   return (
     <AppShell>
+      <div className="mb-6">
+        <PromotionsStrip />
+      </div>
       <div className="flex items-end justify-between mb-6 flex-wrap gap-3">
         <div>
           <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
@@ -207,10 +210,6 @@ function Dashboard() {
             <div className="text-xs text-muted-foreground mt-0.5">{c.detail}</div>
           </div>
         ))}
-      </div>
-
-      <div className="mt-6">
-        <PromotionsStrip />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
