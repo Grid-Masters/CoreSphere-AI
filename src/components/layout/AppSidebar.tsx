@@ -21,6 +21,7 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useActiveUser } from "@/lib/active-user";
 import type { Role } from "@/lib/directory";
+import { UbaLogo } from "@/components/brand/UbaLogo";
 
 type NavItem = { to: string; icon: any; label: string; roles?: Role[] };
 const ALL: Role[] = ["staff", "qa", "ld", "team_lead", "group_head"];
@@ -135,13 +136,13 @@ export function AppSidebar({ collapsed, mobileOpen, onCloseMobile, onToggleColla
 
   const Brand = ({ compact }: { compact: boolean }) => (
     <div className={`h-16 flex items-center ${compact ? "justify-center px-0" : "gap-3 px-5"} border-b border-sidebar-border`}>
-      <div className="h-9 w-9 rounded-md bg-primary flex items-center justify-center overflow-hidden shrink-0">
-        <img src="/assets/uba-logo.png" alt="UBA CoreSphere" className="h-9 w-9 object-contain" width={36} height={36} />
-      </div>
+      <UbaLogo variant="mark" size={36} />
       {!compact && (
         <div className="leading-tight">
-          <div className="text-sm font-semibold tracking-wide">UBA CoreSphere</div>
-          <div className="text-[10px] uppercase tracking-[0.18em] text-sidebar-foreground/60">Workforce OS</div>
+          <div className="text-sm font-semibold tracking-wide">CoreSphere AI</div>
+          <div className="text-[10px] uppercase tracking-[0.18em] text-sidebar-foreground/60">
+            Operations Intelligence
+          </div>
         </div>
       )}
     </div>
