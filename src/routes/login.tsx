@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { ShieldCheck, Lock, Mail, ArrowRight } from "lucide-react";
+import { UbaLogo } from "@/components/brand/UbaLogo";
 
 export const Route = createFileRoute("/login")({
   head: () => ({ meta: [{ title: "Sign in — UBA CoreSphere" }] }),
@@ -17,11 +18,11 @@ function LoginPage() {
         <div className="absolute -right-20 -top-20 h-80 w-80 rounded-full bg-primary/20 blur-3xl" />
         <div className="absolute -left-10 bottom-10 h-60 w-60 rounded-full bg-primary/10 blur-3xl" />
         <div className="relative flex items-center gap-3">
-          <img src="/assets/uba-logo.png" alt="UBA" className="h-10 w-10" width={40} height={40} />
+          <UbaLogo variant="mark" size={44} />
           <div>
-            <div className="text-base font-semibold">UBA CoreSphere</div>
+            <div className="text-base font-semibold">CoreSphere AI</div>
             <div className="text-[10px] uppercase tracking-[0.2em] text-sidebar-foreground/60">
-              Workforce Operations OS
+              Enterprise Operations Intelligence
             </div>
           </div>
         </div>
@@ -30,7 +31,7 @@ function LoginPage() {
             Intelligent Workforce Operations
           </div>
           <h2 className="text-3xl font-semibold mt-3 leading-tight">
-            One operational ecosystem for the United Bank for Africa workforce.
+            The enterprise operations intelligence & knowledge ecosystem for United Bank for Africa.
           </h2>
           <p className="text-sm text-sidebar-foreground/70 mt-4 leading-relaxed">
             Knowledge, learning, QA, leadership communication and AI assistance — secured,
@@ -50,8 +51,8 @@ function LoginPage() {
           className="w-full max-w-sm"
         >
           <div className="lg:hidden flex items-center gap-3 mb-8">
-            <img src="/assets/uba-logo.png" alt="UBA" className="h-9 w-9" width={36} height={36} />
-            <div className="text-base font-semibold">UBA CoreSphere</div>
+            <UbaLogo variant="mark" size={36} />
+            <div className="text-base font-semibold">CoreSphere AI</div>
           </div>
           <h1 className="text-2xl font-semibold tracking-tight">Sign in</h1>
           <p className="text-sm text-muted-foreground mt-1">
