@@ -14,16 +14,312 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      acknowledgments: {
+        Row: {
+          acknowledged_at: string | null
+          confirmation_text: string | null
+          id: string
+          target_id: string
+          target_kind: string
+          target_version: string | null
+          user_id: string
+          viewed_at: string
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          confirmation_text?: string | null
+          id?: string
+          target_id: string
+          target_kind: string
+          target_version?: string | null
+          user_id: string
+          viewed_at?: string
+        }
+        Update: {
+          acknowledged_at?: string | null
+          confirmation_text?: string | null
+          id?: string
+          target_id?: string
+          target_kind?: string
+          target_version?: string | null
+          user_id?: string
+          viewed_at?: string
+        }
+        Relationships: []
+      }
+      certificates: {
+        Row: {
+          badge_key: string | null
+          cert_type: string
+          id: string
+          issued_at: string
+          score: number | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          badge_key?: string | null
+          cert_type: string
+          id?: string
+          issued_at?: string
+          score?: number | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          badge_key?: string | null
+          cert_type?: string
+          id?: string
+          issued_at?: string
+          score?: number | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      failed_searches: {
+        Row: {
+          department: string | null
+          id: string
+          occurred_at: string
+          query: string
+          user_id: string | null
+        }
+        Insert: {
+          department?: string | null
+          id?: string
+          occurred_at?: string
+          query: string
+          user_id?: string | null
+        }
+        Update: {
+          department?: string | null
+          id?: string
+          occurred_at?: string
+          query?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      feedback: {
+        Row: {
+          context_id: string
+          context_type: string
+          created_at: string
+          id: string
+          note: string | null
+          rating: string
+          user_id: string
+        }
+        Insert: {
+          context_id: string
+          context_type: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          rating: string
+          user_id: string
+        }
+        Update: {
+          context_id?: string
+          context_type?: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          rating?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      incident_banners: {
+        Row: {
+          active_from: string
+          active_to: string | null
+          affected_systems: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          message: string
+          severity: string
+          title: string
+        }
+        Insert: {
+          active_from?: string
+          active_to?: string | null
+          affected_systems?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          message: string
+          severity: string
+          title: string
+        }
+        Update: {
+          active_from?: string
+          active_to?: string | null
+          affected_systems?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          message?: string
+          severity?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      onboarding_progress: {
+        Row: {
+          completed_at: string
+          id: string
+          milestone_key: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          id?: string
+          milestone_key: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          id?: string
+          milestone_key?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          department: string | null
+          display_name: string | null
+          id: string
+          role_label: string | null
+          unit: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          department?: string | null
+          display_name?: string | null
+          id?: string
+          role_label?: string | null
+          unit?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          department?: string | null
+          display_name?: string | null
+          id?: string
+          role_label?: string | null
+          unit?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      risk_snapshots: {
+        Row: {
+          computed_at: string
+          factors: Json | null
+          id: string
+          level: string
+          score: number
+          user_id: string
+        }
+        Insert: {
+          computed_at?: string
+          factors?: Json | null
+          id?: string
+          level: string
+          score: number
+          user_id: string
+        }
+        Update: {
+          computed_at?: string
+          factors?: Json | null
+          id?: string
+          level?: string
+          score?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      sop_versions: {
+        Row: {
+          approved_by: string | null
+          archived: boolean
+          change_summary: string | null
+          id: string
+          published_at: string
+          sop_id: string
+          updated_by: string
+          version: string
+        }
+        Insert: {
+          approved_by?: string | null
+          archived?: boolean
+          change_summary?: string | null
+          id?: string
+          published_at?: string
+          sop_id: string
+          updated_by: string
+          version: string
+        }
+        Update: {
+          approved_by?: string | null
+          archived?: boolean
+          change_summary?: string | null
+          id?: string
+          published_at?: string
+          sop_id?: string
+          updated_by?: string
+          version?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "staff" | "qa" | "ld" | "team_lead" | "group_head"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +446,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["staff", "qa", "ld", "team_lead", "group_head"],
+    },
   },
 } as const
