@@ -38,7 +38,7 @@ const groups: { label: string; items: NavItem[] }[] = [
   {
     label: "Performance",
     items: [
-      { to: "/score-buddy", icon: Award, label: "Score Buddy", roles: ALL },
+      { to: "/performance-intelligence", icon: Award, label: "Performance Intelligence", roles: ALL },
       { to: "/qa-coaching", icon: MessagesSquare, label: "QA Coaching Hub", roles: ALL },
     ],
   },
