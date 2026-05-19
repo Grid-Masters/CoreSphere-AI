@@ -24,6 +24,9 @@ import {
 } from "lucide-react";
 import { PanelCard, ProgressBar, StatCard, StatusBadge } from "@/components/ui-bits/Card";
 import { PromotionsStrip } from "@/components/PromotionsStrip";
+import { ProductsAndNews } from "@/components/ProductsAndNews";
+import { pickQuote, greetingForHour } from "@/lib/quotes";
+import { useEffect, useState } from "react";
 import {
   announcements,
   assessments,
@@ -37,17 +40,29 @@ import {
 import { directory, type DirectoryEntry } from "@/lib/directory";
 
 function Greeting({ user, subtitle }: { user: DirectoryEntry; subtitle: string }) {
+  const [quote, setQuote] = useState(() => pickQuote(new Date(0)));
+  const [hello, setHello] = useState("Good morning");
+  useEffect(() => {
+    const now = new Date();
+    setQuote(pickQuote(now));
+    setHello(greetingForHour(now.getHours()));
+  }, []);
   return (
-    <div className="flex items-end justify-between mb-6 flex-wrap gap-3">
+    <div className="mb-6">
+      <div className="flex items-end justify-between flex-wrap gap-3">
       <div>
         <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
           {user.department} • {user.unit}
         </div>
         <h1 className="text-2xl font-semibold tracking-tight mt-1">
-          Good morning, {user.name.split(" ")[0]}
+          {hello}, {user.name.split(" ")[0]} <span aria-hidden>👋</span>
         </h1>
         <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>
       </div>
+      </div>
+      <blockquote className="mt-3 text-sm italic text-muted-foreground border-l-2 border-primary/40 pl-3">
+        “{quote}”
+      </blockquote>
     </div>
   );
 }
@@ -62,14 +77,14 @@ export function StaffDashboard({ user }: { user: DirectoryEntry }) {
   return (
     <>
       <div className="mb-6">
-        <PromotionsStrip />
+        <ProductsAndNews />
       </div>
       <Greeting user={user} subtitle="Here's your operational snapshot for today's shift." />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard label="Assigned SOPs" value={sops.length} delta="+2 this month" icon={BookOpen} tone="primary" />
         <StatCard label="SOP Completion" value="68%" delta="Across assigned" icon={CheckCircle2} tone="success" />
-        <StatCard label="Weekly Quizzes" value={3} delta="1 due today" icon={CalendarDays} tone="warning" />
+        <StatCard label="Monthly Assessments" value={3} delta="1 due this week" icon={CalendarDays} tone="warning" />
         <StatCard label="My QA Score (May)" value="93%" delta="+2 vs Apr" icon={Award} tone="primary" />
       </div>
 
@@ -169,11 +184,12 @@ export function QADashboard({ user }: { user: DirectoryEntry }) {
 
   return (
     <>
+      <div className="mb-6"><ProductsAndNews /></div>
       <Greeting user={user} subtitle="Audit, score and coach your assigned operational staff for the month." />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard label="Assigned Staff" value={assignedStaff.length || 6} delta="This month" icon={Users} tone="primary" />
-        <StatCard label="Audits This Week" value={28} delta="+6 vs last week" icon={ClipboardCheck} tone="success" />
+        <StatCard label="Audits This Month" value={112} delta="+18 vs last month" icon={ClipboardCheck} tone="success" />
         <StatCard label="Compliance Failures" value={4} delta="Open coaching" icon={ShieldAlert} tone="warning" />
         <StatCard label="Avg Scorecard" value="87.4%" delta="Department-wide" icon={Award} />
       </div>
@@ -256,12 +272,13 @@ export function QADashboard({ user }: { user: DirectoryEntry }) {
 export function LDDashboard({ user }: { user: DirectoryEntry }) {
   return (
     <>
-      <Greeting user={user} subtitle="Manage SOPs, training content, quizzes and assessments. Maker-checker enforced." />
+      <div className="mb-6"><ProductsAndNews /></div>
+      <Greeting user={user} subtitle="Manage SOPs, training content and assessments. Maker-checker enforced: L&D uploads → Unit Head approves → Publish." />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard label="Published SOPs" value={sops.filter((s) => s.status === "Approved").length} delta="Org-wide" icon={BookOpen} tone="primary" />
         <StatCard label="Pending Approval" value={sops.filter((s) => s.status === "Pending Approval").length} delta="Awaiting Unit Head" icon={ShieldCheck} tone="warning" />
-        <StatCard label="Active Quizzes" value={5} delta="Weekly + Monthly" icon={CalendarRange} tone="success" />
+        <StatCard label="Active Assessments" value={5} delta="Monthly cycle" icon={CalendarRange} tone="success" />
         <StatCard label="Avg Completion" value="71%" delta="Across departments" icon={CheckCircle2} />
       </div>
 
@@ -289,7 +306,7 @@ export function LDDashboard({ user }: { user: DirectoryEntry }) {
           <div className="grid grid-cols-2 gap-2">
             <ActionTile icon={Upload} label="Upload SOP PDF" />
             <ActionTile icon={Video} label="Upload Video Lecture" />
-            <ActionTile icon={CalendarDays} label="Create Weekly Quiz" />
+            <ActionTile icon={CalendarDays} label="Create Monthly Quiz" />
             <ActionTile icon={CalendarRange} label="Create Assessment" />
             <ActionTile icon={Megaphone} label="Push Training Update" />
             <ActionTile icon={BarChart3} label="Completion Analytics" />
@@ -341,7 +358,8 @@ export function TeamLeadDashboard({ user }: { user: DirectoryEntry }) {
   const team = directory.filter((d) => d.reportsTo === user.email);
   return (
     <>
-      <Greeting user={user} subtitle={`Operational overview for your ${user.department} team.`} />
+      <div className="mb-6"><ProductsAndNews /></div>
+      <Greeting user={user} subtitle={`Visibility scoped to ${user.department}. Monitor your team's operations, QA performance and departmental knowledge.`} />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard label="Team Size" value={team.length || 8} delta="Direct reports" icon={Users} tone="primary" />
@@ -417,7 +435,8 @@ export function TeamLeadDashboard({ user }: { user: DirectoryEntry }) {
 export function GroupHeadDashboard({ user }: { user: DirectoryEntry }) {
   return (
     <>
-      <Greeting user={user} subtitle="Enterprise view across Customer Fulfilment. Only you can publish group-wide announcements." />
+      <div className="mb-6"><ProductsAndNews /></div>
+      <Greeting user={user} subtitle="Executive Operations Center — you oversee enterprise operational communications and executive intelligence across Customer Fulfilment." />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard label="Active Users" value="1,284" delta="+4.2% WoW" icon={Users} tone="primary" />
