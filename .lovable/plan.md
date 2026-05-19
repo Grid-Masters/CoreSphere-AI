@@ -1,137 +1,80 @@
+## CoreSphere AI — Governance, Hierarchy & UX Refinement Pass
 
-# CoreSphere AI — Enterprise Intelligence Build
+A focused presentation-layer pass to bring the app in line with the corrected enterprise hierarchy, governance rules, and UX polish. No new backend tables — this is hierarchy/wording/role-experience refinement plus a few small client features (theme, greeting rotator, products & news).
 
-One-pass build of all 20+ features. Hybrid data: metrics computed from mock data, user actions persisted to Lovable Cloud. AI features routed through Lovable AI Gateway. Official UBA logo fetched from the web (red wordmark) and bundled as the brand asset; if the fetch returns nothing usable, fall back to a generated UBA-styled placeholder mark and flag it.
+### 1. Role hierarchy correction (`src/lib/directory.ts`, `src/components/RoleSwitcher.tsx`)
+- Replace `qa` role label "Senior QA Officer" → "QA Team Lead". No more "Senior QA" anywhere.
+- Add `sysadmin` role + one demo entry (System Administrator).
+- Standardize every non-Group-Head `roleLabel` to the format **"Customer Experience Executive • <Operational Role>"**:
+  - Adaeze Okafor → `Customer Experience Executive • FHD Service Officer`
+  - Musa Bello → `Customer Experience Executive • Inbound Service Officer`
+  - Esther James → `Customer Experience Executive • Multimedia Service Officer`
+  - Tunde Aina → `Customer Experience Executive • Social Media Service Officer`
+  - QA officers → `Customer Experience Executive • QA Team Lead`
+  - L&D → `Customer Experience Executive • Learning & Development Officer`
+  - Team Lead → `Customer Experience Executive • Team Lead, <Dept>`
+  - Group Head → keep `Group Head, Customer Fulfilment`
+- Update `roleLabels` map accordingly.
 
-## 1. UBA Brand System
+### 2. Login-first experience
+- `src/router.tsx`: redirect unauthenticated visits to `/login`. "Authenticated" = a flag in localStorage set by login submit.
+- Remove the demo role switcher from the top bar (`TopBar.tsx`).
+- Move role switching into a hidden **Admin** option only available when logged in as the System Administrator demo user (so demos still work), accessible from settings.
+- Login form: typing any seeded email auto-resolves to that profile (case-insensitive lookup in `directory`). Unknown email shows inline error.
 
-- Fetch the official UBA logo (red wordmark + lion mark variant). Save to `src/assets/uba-logo.svg` (or `.png` with transparency). Add `uba-logo-mono.svg` for dark surfaces.
-- Create `src/components/brand/UbaLogo.tsx` — single source of truth, `size` + `variant="full"|"mark"|"mono"` props, responsive scaling, proper aspect ratio.
-- Wire into: TopBar, AppSidebar (Brand), login, onboarding, AI assistant panel header, certificates, executive dashboard, loading screens, protected SOP viewer watermark layer, assessment header, QA header, coaching header, announcements, incident banners, mobile drawer.
-- Tighten tokens in `src/styles.css`: UBA red scale (`--uba-red-50..900`), enterprise neutrals, executive surface tokens, KPI tones, risk tones (low/mod/high), heatmap scale.
-- Fix the SSR hydration mismatch in `AppSidebar` (nav item order/icons differ server vs client — comes from reading `useActiveUser` during SSR). Hydrate nav from a stable default and swap to role-filtered nav after mount, OR gate the role-dependent items with a `useIsHydrated` flag.
+### 3. Monthly QA terminology
+- Rename "Weekly Quizzes" → "Monthly Assessments", "weekly scorecard" → "monthly scorecard", "Audits This Week" → "Audits This Month", etc., across `RoleDashboards.tsx`, `qa-coaching.tsx`, `assessments.tsx`, `mock-data.ts` (`qaScores` already monthly; just adjust labels).
+- `score-buddy.tsx` recent items already monthly; update copy.
 
-## 2. Lovable Cloud schema (user-action persistence)
+### 4. Rename "Score Buddy" → "Performance Intelligence"
+- Rename route file `src/routes/score-buddy.tsx` → `src/routes/performance-intelligence.tsx`.
+- Update sidebar nav entry, page title, hero copy. Keep old route as a redirect for safety.
 
-Tables (all RLS-scoped to `auth.uid()`; `app_role` enum + `user_roles` + `has_role()` security-definer per the user-roles convention):
+### 5. Group Head → Executive Operations Center
+- Rewrite `GroupHeadDashboard`:
+  - Title: **"Executive Operations Center"**, subtitle: *"You oversee enterprise operational communications and executive intelligence."* (removes the "Only you can publish…" line).
+  - Remove any "my QA score / coaching / assessments" widgets for this role.
+  - 12 KPI tiles: Department KPI overview, Enterprise Health Index, Department QA trends, Compliance risk, Operational heatmaps, Coaching effectiveness, SLA performance, Learning completion, Fraud escalation, AI usage, Department engagement rankings, Knowledge intelligence.
+  - Each tile is a `<button>` that opens a `Sheet` drill-down with mock department/staff breakdown tables, mini sparkline, and "Top performers / Watch list". One reusable `<KpiDrillSheet>` component.
 
-- `profiles` — display name, department, unit, role label, avatar.
-- `user_roles` — `app_role` enum: staff, qa, ld, team_lead, group_head.
-- `acknowledgments` — sop/announcement id, user_id, viewed_at, acknowledged_at, confirmation_text.
-- `sop_versions` — sop_id, version, updated_by, approved_by, change_summary, archived, published_at.
-- `onboarding_progress` — user_id, milestone_key, completed_at.
-- `certificates` — user_id, type, title, issued_at, score, badge_key.
-- `feedback` — context_type (coaching/sop/assessment), context_id, rating (helpful/neutral/needs_clarification), note.
-- `failed_searches` — query, user_id, department, occurred_at.
-- `incident_banners` — title, severity, affected_systems, active_from, active_to, created_by.
-- `risk_snapshots` — user_id, score, level, computed_at (rebuilt by a server fn from missed assessments + overdue SOPs + QA failures).
+### 6. Team Lead scope lock-down
+- `TeamLeadDashboard` filters strictly by `user.department` (already does for roster; tighten copy to make scope explicit: *"Visibility scoped to <Dept>."*).
+- Add a **"Departmental FAQs"** panel with mock list + "Upload FAQ" / "New Guidance" buttons (client-only mock — opens a dialog that pushes to local state). Add note: "Visible only to <Dept> staff."
 
-Demo seeder server fn populates a baseline so dashboards aren't empty.
+### 7. L&D maker-checker (copy only)
+- Reinforce wording: *"L&D uploads → Unit Head approves → Publish."* No functional change required beyond labels.
 
-## 3. Operational Health Index
+### 8. Settings page (`src/routes/settings.tsx`)
+- Remove "Password" row entirely. Add note: *"Authentication is managed via your UBA enterprise email credentials."*
+- **Theme picker**: wire Light/Dark/Auto buttons to a real theme controller. Add `useTheme` hook + `<html class="dark">` toggle, persist to `localStorage` under `coresphere.theme`. Apply on first paint via inline script in `__root.tsx`'s shell to avoid FOUC. Ensure `src/styles.css` already has dark tokens (verify; add if missing).
+- **Notifications panel**: for non-Group-Head users, lock critical toggles (Leadership announcements, Compliance alerts, Mandatory enterprise notifications) — render as disabled with a small lock icon + tooltip "Managed by Group Head per UBA InfoSec policy". Group Head sees them editable.
 
-- `src/lib/health-index.ts` — pure functions computing per-department score from SOP completion, QA trend, assessment pass rate, compliance acknowledgment %, overdue training, engagement, learning participation. Weighted, capped 0–100.
-- Components: `DepartmentHealthGrid`, `HealthHeatmap` (CSS grid, no chart lib), `HealthTrendChart` (lightweight inline SVG sparkline + Recharts where useful).
-- Mount on Group Head + Team Lead + L&D dashboards.
+### 9. Dynamic motivational greeting (`src/components/dashboards/RoleDashboards.tsx`)
+- New `<Greeting>` component (replaces existing):
+  - Time-of-day aware ("Good morning/afternoon/evening, <First> 👋").
+  - Rotating quote from a curated pool of ~20 banking-professional quotes (`src/lib/quotes.ts`).
+  - Rotation: pick on mount using `Date.now() / (1000*60*15)` so it changes ~every 15 min without hydration mismatch; fade-in via CSS.
 
-## 4. Acknowledgment Tracking
+### 10. Global Products & News strip
+- New `src/components/ProductsAndNews.tsx` rendering scrolling/horizontal cards with: title, body, priority (Critical/Important/Info), department tag, timestamp, pinned flag.
+- Data source: mock array in `src/lib/news.ts` (~10 entries covering product launches, fraud bulletins, regulatory notices, service updates, campaigns).
+- Mounted into every role dashboard at the top (above greeting for Staff, below KPI strip for leadership) so it's visible to all roles including sysadmin.
+- Pinned cards shown first; non-pinned auto-scroll horizontally (CSS marquee with `prefers-reduced-motion` respect).
 
-- Acknowledge modal triggered from SOP viewer + announcement banners + compliance notices: read confirmation + "I understand" checkbox + signature line → writes to `acknowledgments`.
-- `AcknowledgmentAnalytics` panel (Team Lead/L&D/Group Head): viewed vs acknowledged vs overdue, per item and per department.
+### 11. Sidebar / TopBar polish
+- Sidebar: replace any "Score Buddy" entry with "Performance Intelligence".
+- TopBar: drop demo role pill; show real `roleLabel` under name.
 
-## 5. SOP Versioning & Audit
+### Out of scope (acknowledged, deferred)
+- Real auth (signup/JWT); we keep the existing localStorage demo gate.
+- Drill-down KPI sheets use mock data only — no Supabase queries.
+- No new migrations.
 
-- Extend `sops` mock with `version`, `updatedBy`, `approvedBy`, `revisionHistory[]`, `archivedVersions[]`, `changeSummary`.
-- SOP viewer adds a "Version" tab: current metadata + revision timeline + rollback-view (read-only) of archived versions.
+### Technical notes
+- Theme: add `dark` class strategy and dark CSS variables in `src/styles.css` if not already present.
+- Quote rotation must be SSR-safe → pick the index from a `useEffect` after mount, so SSR renders quote #0 and client swaps in the time-bucketed one.
+- All wording changes are i18n-free string updates.
 
-## 6. Proactive AI Learning Recommendations
-
-- Server fn `recommendLearning` (Lovable AI Gateway, `google/gemini-3-flash-preview`) — input: user QA scores, failed quizzes, missed assessments, compliance gaps; output (structured via `Output.object`): `{ recommendations: [{ sopId, type, reason, confidence }] }`.
-- `RecommendationsPanel` on Staff dashboard.
-
-## 7. Incident Banners
-
-- `IncidentBanner` (animated pinned strip, severity-colored, dismissable per user). Reads active `incident_banners`. Group Head/L&D can publish via a small "Publish Incident" dialog.
-
-## 8. Staff Compliance Risk Scoring
-
-- `src/lib/risk.ts` computes Low/Moderate/High from snapshots. Stored to `risk_snapshots` for trend.
-- `RiskRoster` for Team Lead + QA: sortable staff list with risk pill, contributing factors, "Open coaching" action.
-
-## 9. AI SOP Simplification
-
-- Server fn `simplifySop` — strict prompt: preserve compliance accuracy, plain English, bullet structure, mandatory "Compliance disclaimer: refer to official SOP v{version}".
-- Button "Explain This SOP Simply" on every SOP viewer; result rendered inline with confidence + source badge (see §19).
-
-## 10. Guided Onboarding
-
-- `/onboarding` route + onboarding dashboard widget. Roadmap (mandatory SOPs, welcome video, required assessments, mentor card), progress %, milestone completion writes to `onboarding_progress`.
-
-## 11. Failed-Search Analytics
-
-- Knowledge Hub search logs misses to `failed_searches`.
-- L&D dashboard panel: top unfulfilled queries, frequency, department breakdown, "Create SOP" CTA.
-
-## 12. AI-Assisted QA Evaluation
-
-- In QA Coaching: "AI assist" panel calls `qaInsights` server fn → structured output `{ coachingInsights, complianceMisses, empathyConcerns, recommendedActions, summary }`. Pure recommendation — QA officer still scores manually.
-
-## 13. Feedback Capture
-
-- `<FeedbackChips>` (Helpful / Neutral / Needs Clarification) appended to coaching sessions, training pages, assessment results, SOP viewer. Writes to `feedback`.
-- L&D analytics widget shows aggregate satisfaction.
-
-## 14. Departmental Knowledge Intelligence
-
-- Per-department rolled-up score (avg assessment, SOP completion %, participation). `KnowledgeIntelligenceBoard` with rankings + trends on Group Head + L&D dashboards.
-
-## 15. AI Escalation Recommendation
-
-- Server fn `recommendEscalation` (structured output): `{ path, priority, owner, slaHours, reasoning }`. Wired into a small "Suggest escalation" affordance in QA Coaching + complaint flows.
-
-## 16. Certificates & Achievements
-
-- On milestone (SOP completion, fraud completion, assessment distinction, compliance mastery, CX excellence), insert to `certificates`.
-- `/certificates` page: badge grid + printable certificate view (UBA-branded). Leaderboard pulls latest issuances.
-
-## 17. "Today's 60-Second SOP Tip"
-
-- Server fn `sopTipOfTheDay` generates a rotating ≤60-word tip from a random eligible SOP for the user's department, cached daily per user. Dashboard widget at top-right.
-
-## 18. Team Lead / QA Intervention View
-
-- `InterventionBoard` aggregating struggling staff (high risk OR overdue learning OR low QA), with coaching priority badge + "Schedule coaching" action.
-
-## 19. Executive Heatmaps
-
-- Group Head route: heatmaps for most-searched SOPs, complaint concentration by department/unit, fraud concern areas, performance weaknesses, operational bottlenecks, engagement patterns. Cell-based CSS grid + Recharts where appropriate.
-
-## 20. AI Response Trust Badges
-
-- Shared `<AiTrustBadge>` rendering `Confidence: High|Medium|Low`, `Source: SOP v{n}`, `Verified Internal Procedure`. All AI server fns return these fields and components render them under every AI response (CoreSphere AI, recommendations, simplifier, escalation, QA assist, tip).
-
-## 21. Future-Ready Offline Architecture (visual + scaffolding)
-
-- Service-worker scaffold (registered but feature-flagged off). Cache layer interface (`src/lib/offline-cache.ts`) with adapters. Architecture diagram in `/admin` → "Architecture" tab showing cached SOP previews, offline learning summaries, low-bandwidth mode toggle (UI present, behavior stubbed).
-
-## 22. Positioning & Polish
-
-- Rename product surface to **"Enterprise Operations Intelligence & Knowledge Ecosystem"** across login, sidebar tagline, root meta, footer.
-- Loading screens, login, onboarding, executive dashboard re-skinned with new tokens.
-- Verify SSR hydration is clean after the role-dependent nav fix.
-
-## Technical Notes (for the engineer)
-
-- AI: `src/lib/ai-gateway.ts` exporting `createLovableAiGatewayProvider` per the gateway knowledge. All AI work in `*.functions.ts` server fns using `streamText`/`generateText` + `Output.object` for structured trust-badged responses. Wire `attachSupabaseAuth` in `src/start.ts` (verify; add if missing).
-- Hybrid data: metrics components read from `src/lib/mock-data.ts` + computed selectors; user-action components read from Supabase via `requireSupabaseAuth`-protected server fns invoked through `useQuery`.
-- Role gating: continue using `useActiveUser` for demo role switching; persisted reads still scope by `auth.uid()` so real auth keeps working.
-- Logo: try `lovable_docs`/`websearch` for an official UBA SVG; if blocked, generate a high-fidelity UBA-red wordmark PNG and mark it placeholder in `UbaLogo`.
-- Fix the current hydration mismatch (sidebar order) before shipping — confirmed by the runtime error.
-
-## Out of scope this pass
-
-- Real SSO / SAML (mocked login only).
-- Mobile app shell beyond responsive web.
-- Live websocket realtime collaboration.
-
-Approve to start implementation.
+### Files touched
+Edited: `src/lib/directory.ts`, `src/lib/mock-data.ts`, `src/components/RoleSwitcher.tsx`, `src/components/layout/TopBar.tsx`, `src/components/layout/AppSidebar.tsx`, `src/components/dashboards/RoleDashboards.tsx`, `src/routes/__root.tsx`, `src/routes/login.tsx`, `src/routes/settings.tsx`, `src/routes/qa-coaching.tsx`, `src/routes/assessments.tsx`, `src/routes/score-buddy.tsx` (→ redirect), `src/styles.css`, `src/router.tsx`.
+Created: `src/lib/quotes.ts`, `src/lib/news.ts`, `src/lib/theme.ts`, `src/components/ProductsAndNews.tsx`, `src/components/exec/KpiDrillSheet.tsx`, `src/routes/performance-intelligence.tsx`.
