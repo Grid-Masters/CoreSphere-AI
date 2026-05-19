@@ -109,7 +109,7 @@ export const townhallSessions = [
 export const coachingThreads = [
   { id: "c1", coach: "Ngozi Umeh", role: "QA Officer", lastMessage: "Reviewed your call from yesterday — strong opening, work on hold etiquette.", time: "10:42", unread: 2 },
   { id: "c2", coach: "Femi Adebayo", role: "QA Officer", lastMessage: "Coaching session scheduled for Friday 14:00.", time: "Yesterday", unread: 0 },
-  { id: "c3", coach: "Aisha Bello", role: "Senior QA", lastMessage: "Please acknowledge your April scorecard.", time: "Mon", unread: 1 },
+  { id: "c3", coach: "Aisha Bello", role: "QA Team Lead", lastMessage: "Please acknowledge your April scorecard.", time: "Mon", unread: 1 },
 ];
 
 export type BankPromotion = {

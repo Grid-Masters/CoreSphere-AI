@@ -24,7 +24,7 @@ import type { Role } from "@/lib/directory";
 import { UbaLogo } from "@/components/brand/UbaLogo";
 
 type NavItem = { to: string; icon: any; label: string; roles?: Role[] };
-const ALL: Role[] = ["staff", "qa", "ld", "team_lead", "group_head"];
+const ALL: Role[] = ["staff", "qa", "ld", "team_lead", "group_head", "sysadmin"];
 
 const groups: { label: string; items: NavItem[] }[] = [
   {
@@ -38,7 +38,7 @@ const groups: { label: string; items: NavItem[] }[] = [
   {
     label: "Performance",
     items: [
-      { to: "/score-buddy", icon: Award, label: "Score Buddy", roles: ALL },
+      { to: "/performance-intelligence", icon: Award, label: "Performance Intelligence", roles: ALL },
       { to: "/qa-coaching", icon: MessagesSquare, label: "QA Coaching Hub", roles: ALL },
     ],
   },

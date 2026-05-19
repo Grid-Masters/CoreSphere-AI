@@ -1,4 +1,4 @@
-export type Role = "staff" | "qa" | "ld" | "team_lead" | "group_head";
+export type Role = "staff" | "qa" | "ld" | "team_lead" | "group_head" | "sysadmin";
 
 export type DirectoryEntry = {
   email: string;
@@ -13,11 +13,12 @@ export type DirectoryEntry = {
 };
 
 export const roleLabels: Record<Role, string> = {
-  staff: "Regular Staff",
-  qa: "QA Officer",
-  ld: "L&D",
+  staff: "Customer Experience Executive",
+  qa: "QA Team Lead",
+  ld: "Learning & Development Officer",
   team_lead: "Team Lead",
   group_head: "Group Head",
+  sysadmin: "System Administrator",
 };
 
 // Simulated UBA enterprise directory. Role, department and reporting line are
@@ -28,7 +29,7 @@ export const directory: DirectoryEntry[] = [
     name: "Adaeze Okafor",
     initials: "AO",
     role: "staff",
-    roleLabel: "Customer Experience Executive",
+    roleLabel: "Customer Experience Executive • FHD Service Officer",
     department: "FHD",
     unit: "FHD Core",
     reportsTo: "s.eze@ubagroup.com",
@@ -39,7 +40,7 @@ export const directory: DirectoryEntry[] = [
     name: "Musa Bello",
     initials: "MB",
     role: "staff",
-    roleLabel: "Inbound Service Officer",
+    roleLabel: "Customer Experience Executive • Inbound Service Officer",
     department: "Inbound",
     unit: "Inbound Voice",
     reportsTo: "s.eze@ubagroup.com",
@@ -50,7 +51,7 @@ export const directory: DirectoryEntry[] = [
     name: "Esther James",
     initials: "EJ",
     role: "staff",
-    roleLabel: "Live Chat Specialist",
+    roleLabel: "Customer Experience Executive • Multimedia Service Officer",
     department: "Multimedia",
     unit: "Live Chat",
     reportsTo: "s.eze@ubagroup.com",
@@ -61,7 +62,7 @@ export const directory: DirectoryEntry[] = [
     name: "Tunde Aina",
     initials: "TA",
     role: "staff",
-    roleLabel: "Social Media Officer",
+    roleLabel: "Customer Experience Executive • Social Media Service Officer",
     department: "Social Media",
     unit: "Reputation",
     reportsTo: "s.eze@ubagroup.com",
@@ -72,7 +73,7 @@ export const directory: DirectoryEntry[] = [
     name: "Daniel Obi",
     initials: "DO",
     role: "qa",
-    roleLabel: "QA Officer",
+    roleLabel: "Customer Experience Executive • QA Team Lead",
     department: "QA",
     unit: "QA — FHD & Multimedia",
     reportsTo: "a.yusuf@ubagroup.com",
@@ -82,7 +83,7 @@ export const directory: DirectoryEntry[] = [
     name: "Rita Adeyemi",
     initials: "RA",
     role: "qa",
-    roleLabel: "Senior QA Officer",
+    roleLabel: "Customer Experience Executive • QA Team Lead",
     department: "QA",
     unit: "QA — Inbound & Social",
     reportsTo: "a.yusuf@ubagroup.com",
@@ -92,7 +93,7 @@ export const directory: DirectoryEntry[] = [
     name: "Chioma Paul",
     initials: "CP",
     role: "ld",
-    roleLabel: "L&D Lead",
+    roleLabel: "Customer Experience Executive • Learning & Development Officer",
     department: "L&D",
     unit: "Operational Learning",
     reportsTo: "a.yusuf@ubagroup.com",
@@ -102,7 +103,7 @@ export const directory: DirectoryEntry[] = [
     name: "Sani Eze",
     initials: "SE",
     role: "team_lead",
-    roleLabel: "Team Lead",
+    roleLabel: "Customer Experience Executive • Team Lead, FHD",
     department: "FHD",
     unit: "FHD Core",
     reportsTo: "a.yusuf@ubagroup.com",
@@ -115,6 +116,15 @@ export const directory: DirectoryEntry[] = [
     roleLabel: "Group Head, Customer Fulfilment",
     department: "Group Head",
     unit: "Executive Office",
+  },
+  {
+    email: "admin@ubagroup.com",
+    name: "System Administrator",
+    initials: "SA",
+    role: "sysadmin",
+    roleLabel: "System Administrator",
+    department: "IT Governance",
+    unit: "Platform Operations",
   },
 ];
 

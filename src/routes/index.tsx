@@ -23,6 +23,7 @@ function Dashboard() {
       {user.role === "ld" && <LDDashboard user={user} />}
       {user.role === "team_lead" && <TeamLeadDashboard user={user} />}
       {user.role === "group_head" && <GroupHeadDashboard user={user} />}
+      {user.role === "sysadmin" && <GroupHeadDashboard user={user} />}
     </AppShell>
   );
 }
