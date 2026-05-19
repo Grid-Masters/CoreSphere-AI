@@ -11,8 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TownhallRouteImport } from './routes/townhall'
 import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as ScoreBuddyRouteImport } from './routes/score-buddy'
 import { Route as QaCoachingRouteImport } from './routes/qa-coaching'
+import { Route as PerformanceIntelligenceRouteImport } from './routes/performance-intelligence'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MemosRouteImport } from './routes/memos'
 import { Route as LoginRouteImport } from './routes/login'
@@ -34,14 +34,14 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ScoreBuddyRoute = ScoreBuddyRouteImport.update({
-  id: '/score-buddy',
-  path: '/score-buddy',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const QaCoachingRoute = QaCoachingRouteImport.update({
   id: '/qa-coaching',
   path: '/qa-coaching',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerformanceIntelligenceRoute = PerformanceIntelligenceRouteImport.update({
+  id: '/performance-intelligence',
+  path: '/performance-intelligence',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NotificationsRoute = NotificationsRouteImport.update({
@@ -104,8 +104,8 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/memos': typeof MemosRoute
   '/notifications': typeof NotificationsRoute
+  '/performance-intelligence': typeof PerformanceIntelligenceRoute
   '/qa-coaching': typeof QaCoachingRoute
-  '/score-buddy': typeof ScoreBuddyRoute
   '/settings': typeof SettingsRoute
   '/townhall': typeof TownhallRoute
   '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
@@ -120,8 +120,8 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/memos': typeof MemosRoute
   '/notifications': typeof NotificationsRoute
+  '/performance-intelligence': typeof PerformanceIntelligenceRoute
   '/qa-coaching': typeof QaCoachingRoute
-  '/score-buddy': typeof ScoreBuddyRoute
   '/settings': typeof SettingsRoute
   '/townhall': typeof TownhallRoute
   '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
@@ -137,8 +137,8 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/memos': typeof MemosRoute
   '/notifications': typeof NotificationsRoute
+  '/performance-intelligence': typeof PerformanceIntelligenceRoute
   '/qa-coaching': typeof QaCoachingRoute
-  '/score-buddy': typeof ScoreBuddyRoute
   '/settings': typeof SettingsRoute
   '/townhall': typeof TownhallRoute
   '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
@@ -155,8 +155,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/memos'
     | '/notifications'
+    | '/performance-intelligence'
     | '/qa-coaching'
-    | '/score-buddy'
     | '/settings'
     | '/townhall'
     | '/knowledge-hub/$sopId'
@@ -171,8 +171,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/memos'
     | '/notifications'
+    | '/performance-intelligence'
     | '/qa-coaching'
-    | '/score-buddy'
     | '/settings'
     | '/townhall'
     | '/knowledge-hub/$sopId'
@@ -187,8 +187,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/memos'
     | '/notifications'
+    | '/performance-intelligence'
     | '/qa-coaching'
-    | '/score-buddy'
     | '/settings'
     | '/townhall'
     | '/knowledge-hub/$sopId'
@@ -204,8 +204,8 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   MemosRoute: typeof MemosRoute
   NotificationsRoute: typeof NotificationsRoute
+  PerformanceIntelligenceRoute: typeof PerformanceIntelligenceRoute
   QaCoachingRoute: typeof QaCoachingRoute
-  ScoreBuddyRoute: typeof ScoreBuddyRoute
   SettingsRoute: typeof SettingsRoute
   TownhallRoute: typeof TownhallRoute
   KnowledgeHubSopIdRoute: typeof KnowledgeHubSopIdRoute
@@ -228,18 +228,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/score-buddy': {
-      id: '/score-buddy'
-      path: '/score-buddy'
-      fullPath: '/score-buddy'
-      preLoaderRoute: typeof ScoreBuddyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/qa-coaching': {
       id: '/qa-coaching'
       path: '/qa-coaching'
       fullPath: '/qa-coaching'
       preLoaderRoute: typeof QaCoachingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/performance-intelligence': {
+      id: '/performance-intelligence'
+      path: '/performance-intelligence'
+      fullPath: '/performance-intelligence'
+      preLoaderRoute: typeof PerformanceIntelligenceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/notifications': {
@@ -324,8 +324,8 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   MemosRoute: MemosRoute,
   NotificationsRoute: NotificationsRoute,
+  PerformanceIntelligenceRoute: PerformanceIntelligenceRoute,
   QaCoachingRoute: QaCoachingRoute,
-  ScoreBuddyRoute: ScoreBuddyRoute,
   SettingsRoute: SettingsRoute,
   TownhallRoute: TownhallRoute,
   KnowledgeHubSopIdRoute: KnowledgeHubSopIdRoute,
@@ -334,3 +334,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
