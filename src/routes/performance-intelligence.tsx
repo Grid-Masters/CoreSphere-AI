@@ -1,30 +1,32 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Award, TrendingUp, ThumbsUp, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Award, TrendingUp, ThumbsUp, AlertCircle, CheckCircle2, Sparkles } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, StatCard } from "@/components/ui-bits/Card";
 import { qaScores } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/performance-intelligence")({
-  head: () => ({ meta: [{ title: "Score Buddy — UBA CoreSphere" }] }),
-  component: ScoreBuddy,
+  head: () => ({ meta: [{ title: "Performance Intelligence — UBA CoreSphere" }] }),
+  component: PerformanceIntelligence,
 });
 
 const recent = [
-  { id: 1, period: "May 2026 — Week 2", score: 94, evaluator: "Ngozi Umeh", status: "Acknowledged" },
-  { id: 2, period: "May 2026 — Week 1", score: 91, evaluator: "Femi Adebayo", status: "Pending" },
-  { id: 3, period: "Apr 2026 — Week 4", score: 88, evaluator: "Ngozi Umeh", status: "Acknowledged" },
-  { id: 4, period: "Apr 2026 — Week 3", score: 85, evaluator: "Aisha Bello", status: "Acknowledged" },
+  { id: 1, period: "May 2026", score: 94, evaluator: "Ngozi Umeh", status: "Acknowledged" },
+  { id: 2, period: "April 2026", score: 91, evaluator: "Femi Adebayo", status: "Pending" },
+  { id: 3, period: "March 2026", score: 88, evaluator: "Ngozi Umeh", status: "Acknowledged" },
+  { id: 4, period: "February 2026", score: 85, evaluator: "Aisha Bello", status: "Acknowledged" },
 ];
 
-function ScoreBuddy() {
+function PerformanceIntelligence() {
   const max = Math.max(...qaScores.map((s) => s.score));
   return (
     <AppShell>
       <div className="mb-6">
-        <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">QA Performance</div>
-        <h1 className="text-2xl font-semibold tracking-tight mt-1">Score Buddy</h1>
+        <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground inline-flex items-center gap-2">
+          <Sparkles className="h-3 w-3 text-primary" /> AI-Powered • Monthly Performance Intelligence
+        </div>
+        <h1 className="text-2xl font-semibold tracking-tight mt-1">Performance Intelligence</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Your personal QA performance companion — scorecards, trends, and coaching notes.
+          Enterprise performance insights — monthly scorecards, trends, and AI-assisted coaching notes.
         </p>
       </div>
 
