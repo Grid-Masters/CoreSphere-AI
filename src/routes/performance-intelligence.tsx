@@ -4,7 +4,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, StatCard } from "@/components/ui-bits/Card";
 import { qaScores } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/score-buddy")({
+export const Route = createFileRoute("/performance-intelligence")({
   head: () => ({ meta: [{ title: "Score Buddy — UBA CoreSphere" }] }),
   component: ScoreBuddy,
 });
