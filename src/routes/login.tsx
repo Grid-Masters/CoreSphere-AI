@@ -2,6 +2,9 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { ShieldCheck, Lock, Mail, ArrowRight } from "lucide-react";
 import { UbaLogo } from "@/components/brand/UbaLogo";
+import { findByEmail } from "@/lib/directory";
+import { setActiveUser } from "@/lib/active-user";
+import { markAuthed } from "@/lib/auth-gate";
 
 export const Route = createFileRoute("/login")({
   head: () => ({ meta: [{ title: "Sign in — UBA CoreSphere" }] }),
@@ -12,6 +15,7 @@ function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
       <aside className="hidden lg:flex flex-col justify-between p-12 bg-sidebar text-sidebar-foreground relative overflow-hidden">
@@ -46,6 +50,13 @@ function LoginPage() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
+            const found = findByEmail(email.trim());
+            if (!found) {
+              setError("Unknown enterprise email. Use one of the seeded UBA accounts.");
+              return;
+            }
+            setActiveUser(found.email);
+            markAuthed();
             navigate({ to: "/" });
           }}
           className="w-full max-w-sm"
@@ -87,6 +98,9 @@ function LoginPage() {
                 />
               </div>
             </div>
+            {error && (
+              <div className="text-xs text-[color:var(--destructive)]">{error}</div>
+            )}
             <div className="flex items-center justify-between text-xs">
               <label className="flex items-center gap-2 text-muted-foreground">
                 <input type="checkbox" className="rounded border-input" /> Remember this device
