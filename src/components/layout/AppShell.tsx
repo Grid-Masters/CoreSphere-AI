@@ -5,10 +5,12 @@ import { TopBar } from "./TopBar";
 import { ActivityTicker } from "./ActivityTicker";
 import { CoreSphereAI } from "@/components/CoreSphereAI";
 import { useActiveUser } from "@/lib/active-user";
+import { useAuthGate } from "@/lib/auth-gate";
 
 const STORAGE_KEY = "coresphere.sidebar.collapsed";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
+  useAuthGate();
   const [collapsed, setCollapsed] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
     return window.localStorage.getItem(STORAGE_KEY) === "1";
