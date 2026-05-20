@@ -1,80 +1,93 @@
-## CoreSphere AI — Governance, Hierarchy & UX Refinement Pass
+## CoreSphere AI — Operational Realism & Enterprise Intelligence Pass
 
-A focused presentation-layer pass to bring the app in line with the corrected enterprise hierarchy, governance rules, and UX polish. No new backend tables — this is hierarchy/wording/role-experience refinement plus a few small client features (theme, greeting rotator, products & news).
+This pass focuses on wiring the existing scaffolding into a believable daily-use banking operations ecosystem. All changes are frontend/presentation with mock-data realism; no new tables required.
 
-### 1. Role hierarchy correction (`src/lib/directory.ts`, `src/components/RoleSwitcher.tsx`)
-- Replace `qa` role label "Senior QA Officer" → "QA Team Lead". No more "Senior QA" anywhere.
-- Add `sysadmin` role + one demo entry (System Administrator).
-- Standardize every non-Group-Head `roleLabel` to the format **"Customer Experience Executive • <Operational Role>"**:
-  - Adaeze Okafor → `Customer Experience Executive • FHD Service Officer`
-  - Musa Bello → `Customer Experience Executive • Inbound Service Officer`
-  - Esther James → `Customer Experience Executive • Multimedia Service Officer`
-  - Tunde Aina → `Customer Experience Executive • Social Media Service Officer`
-  - QA officers → `Customer Experience Executive • QA Team Lead`
-  - L&D → `Customer Experience Executive • Learning & Development Officer`
-  - Team Lead → `Customer Experience Executive • Team Lead, <Dept>`
-  - Group Head → keep `Group Head, Customer Fulfilment`
-- Update `roleLabels` map accordingly.
+### 1. Daily Workflow Intelligence Panels
 
-### 2. Login-first experience
-- `src/router.tsx`: redirect unauthenticated visits to `/login`. "Authenticated" = a flag in localStorage set by login submit.
-- Remove the demo role switcher from the top bar (`TopBar.tsx`).
-- Move role switching into a hidden **Admin** option only available when logged in as the System Administrator demo user (so demos still work), accessible from settings.
-- Login form: typing any seeded email auto-resolves to that profile (case-insensitive lookup in `directory`). Unknown email shows inline error.
+New component `src/components/workflow/TodaysWorkflow.tsx` — role-aware task panel with due dates, priority dots, status pills, and quick action buttons. Mounted into each role dashboard in `RoleDashboards.tsx`.
 
-### 3. Monthly QA terminology
-- Rename "Weekly Quizzes" → "Monthly Assessments", "weekly scorecard" → "monthly scorecard", "Audits This Week" → "Audits This Month", etc., across `RoleDashboards.tsx`, `qa-coaching.tsx`, `assessments.tsx`, `mock-data.ts` (`qaScores` already monthly; just adjust labels).
-- `score-buddy.tsx` recent items already monthly; update copy.
+Role task sets in `src/lib/workflows.ts`:
+- **Staff**: KYC Refresher SOP, Fraud Escalation review, QA coaching ack, Monthly Assessment, Product Update, New Training Video
+- **QA Team Lead**: 6 Pending Evaluations, 3 Coaching Sessions, 2 Compliance Flags, 4 Staff Awaiting Review, Monthly Audit Progress
+- **Team Lead**: 4 Staff Pending SOP, 2 Escalated Complaints, SLA Warning, Compliance Follow-Up, Team Assessment Review — scoped to `user.department`
+- **L&D**: Pending SOP Approval, Video Upload, Monthly Assessment Rollout, Completion Analytics, Knowledge Gap, Content Review
+- **Group Head**: Enterprise Compliance Review, Lowest Performing Department, Training Drop, SLA Risk, Fraud Spike, Operational Risk
 
-### 4. Rename "Score Buddy" → "Performance Intelligence"
-- Rename route file `src/routes/score-buddy.tsx` → `src/routes/performance-intelligence.tsx`.
-- Update sidebar nav entry, page title, hero copy. Keep old route as a redirect for safety.
+### 2. Compliance Health Indicator
 
-### 5. Group Head → Executive Operations Center
-- Rewrite `GroupHeadDashboard`:
-  - Title: **"Executive Operations Center"**, subtitle: *"You oversee enterprise operational communications and executive intelligence."* (removes the "Only you can publish…" line).
-  - Remove any "my QA score / coaching / assessments" widgets for this role.
-  - 12 KPI tiles: Department KPI overview, Enterprise Health Index, Department QA trends, Compliance risk, Operational heatmaps, Coaching effectiveness, SLA performance, Learning completion, Fraud escalation, AI usage, Department engagement rankings, Knowledge intelligence.
-  - Each tile is a `<button>` that opens a `Sheet` drill-down with mock department/staff breakdown tables, mini sparkline, and "Top performers / Watch list". One reusable `<KpiDrillSheet>` component.
+New `src/components/governance/ComplianceHealth.tsx` — large circular gauge with 92% score, trend delta, risk color coding, and metric breakdown (SOP completion, assessment completion, ack rate, open flags, overdue training). Clickable to open drill-down sheet. Mounted on QA/Team Lead/L&D/Group Head dashboards.
 
-### 6. Team Lead scope lock-down
-- `TeamLeadDashboard` filters strictly by `user.department` (already does for roster; tighten copy to make scope explicit: *"Visibility scoped to <Dept>."*).
-- Add a **"Departmental FAQs"** panel with mock list + "Upload FAQ" / "New Guidance" buttons (client-only mock — opens a dialog that pushes to local state). Add note: "Visible only to <Dept> staff."
+### 3. AI-Powered At-Risk Staff Detection
 
-### 7. L&D maker-checker (copy only)
-- Reinforce wording: *"L&D uploads → Unit Head approves → Publish."* No functional change required beyond labels.
+New `src/components/governance/AtRiskStaff.tsx` — leverages mock `src/lib/at-risk.ts` with deterministic risk scoring (low SOP %, declining QA, missed acks, assessment fail risk, escalation count). Each staff card shows risk band, top contributing factors, and AI-generated recommendations (coaching / learning path / intervention). Visible to QA Team Lead, Team Lead (filtered by department), Group Head.
 
-### 8. Settings page (`src/routes/settings.tsx`)
-- Remove "Password" row entirely. Add note: *"Authentication is managed via your UBA enterprise email credentials."*
-- **Theme picker**: wire Light/Dark/Auto buttons to a real theme controller. Add `useTheme` hook + `<html class="dark">` toggle, persist to `localStorage` under `coresphere.theme`. Apply on first paint via inline script in `__root.tsx`'s shell to avoid FOUC. Ensure `src/styles.css` already has dark tokens (verify; add if missing).
-- **Notifications panel**: for non-Group-Head users, lock critical toggles (Leadership announcements, Compliance alerts, Mandatory enterprise notifications) — render as disabled with a small lock icon + tooltip "Managed by Group Head per UBA InfoSec policy". Group Head sees them editable.
+### 4. Acknowledgement Tracking
 
-### 9. Dynamic motivational greeting (`src/components/dashboards/RoleDashboards.tsx`)
-- New `<Greeting>` component (replaces existing):
-  - Time-of-day aware ("Good morning/afternoon/evening, <First> 👋").
-  - Rotating quote from a curated pool of ~20 banking-professional quotes (`src/lib/quotes.ts`).
-  - Rotation: pick on mount using `Date.now() / (1000*60*15)` so it changes ~every 15 min without hydration mismatch; fade-in via CSS.
+New `src/components/governance/AckTracker.tsx` and `src/components/governance/AckButton.tsx`. Critical content (SOPs, fraud alerts, advisories) gets an "Acknowledge & Mark as Read" button that persists to existing `acknowledgments` Supabase table. Leader view shows ack rates per department + overdue list (mock aggregates for now, real own-acks persisted).
 
-### 10. Global Products & News strip
-- New `src/components/ProductsAndNews.tsx` rendering scrolling/horizontal cards with: title, body, priority (Critical/Important/Info), department tag, timestamp, pinned flag.
-- Data source: mock array in `src/lib/news.ts` (~10 entries covering product launches, fraud bulletins, regulatory notices, service updates, campaigns).
-- Mounted into every role dashboard at the top (above greeting for Staff, below KPI strip for leadership) so it's visible to all roles including sysadmin.
-- Pinned cards shown first; non-pinned auto-scroll horizontally (CSS marquee with `prefers-reduced-motion` respect).
+### 5. Enterprise Search Upgrade
 
-### 11. Sidebar / TopBar polish
-- Sidebar: replace any "Score Buddy" entry with "Performance Intelligence".
-- TopBar: drop demo role pill; show real `roleLabel` under name.
+Refactor TopBar search into a command-palette `src/components/search/EnterpriseSearch.tsx` (Cmd/Ctrl+K). Searches across mock corpus (SOPs, policies, FAQs, coaching, videos, assessments, announcements, advisories) with typo-tolerant fuzzy ranking, category grouping, recent searches, and "AI Answer" affordance. Logs zero-result queries to `failed_searches`.
 
-### Out of scope (acknowledged, deferred)
-- Real auth (signup/JWT); we keep the existing localStorage demo gate.
-- Drill-down KPI sheets use mock data only — no Supabase queries.
-- No new migrations.
+### 6. AI Response Format Upgrade
 
-### Technical notes
-- Theme: add `dark` class strategy and dark CSS variables in `src/styles.css` if not already present.
-- Quote rotation must be SSR-safe → pick the index from a `useEffect` after mount, so SSR renders quote #0 and client swaps in the time-bucketed one.
-- All wording changes are i18n-free string updates.
+Refactor `CoreSphereAI.tsx` so assistant replies render structured banking-operations blocks: Summary, Required Actions, Escalation Path, SLA Timeline, Compliance Notes, Related SOPs, Warnings, Recommended Next Steps. Use Lovable AI Gateway (`google/gemini-3-flash-preview`) via a new TanStack server function `src/lib/coresphere-ai.functions.ts` with strict system prompt grounding responses in our mock SOP catalog (passed in context).
 
-### Files touched
-Edited: `src/lib/directory.ts`, `src/lib/mock-data.ts`, `src/components/RoleSwitcher.tsx`, `src/components/layout/TopBar.tsx`, `src/components/layout/AppSidebar.tsx`, `src/components/dashboards/RoleDashboards.tsx`, `src/routes/__root.tsx`, `src/routes/login.tsx`, `src/routes/settings.tsx`, `src/routes/qa-coaching.tsx`, `src/routes/assessments.tsx`, `src/routes/score-buddy.tsx` (→ redirect), `src/styles.css`, `src/router.tsx`.
-Created: `src/lib/quotes.ts`, `src/lib/news.ts`, `src/lib/theme.ts`, `src/components/ProductsAndNews.tsx`, `src/components/exec/KpiDrillSheet.tsx`, `src/routes/performance-intelligence.tsx`.
+### 7. Executive Snapshot Mode (Group Head only)
+
+Rebuild `GroupHeadDashboard` into an executive command center with:
+- Enterprise Operational Health hero gauge
+- Strongest / Weakest department cards with sparklines
+- Learning completion trend, compliance gap heatmap, fraud escalation trend, AI usage metrics, staff engagement trend, operational efficiency tiles
+- Each tile opens `KpiDrillSheet` (already exists) with department/staff breakdowns
+
+### 8. Realistic Enterprise Activity Feed
+
+New `src/components/feed/EnterpriseActivityFeed.tsx` with simulated rolling events (SOP Updated, Fraud Alert Issued, Product Update Released, Team Completed Assessment, Compliance Deadline Reminder, QA Coaching Completed, Monthly Audit Closed). Auto-prepends a new entry every ~25s using `useEffect` interval. Mounted on all dashboards in a side rail.
+
+### 9. Scenario-Based Operational Intelligence
+
+New `src/components/ops/ScenarioBanner.tsx` — rotates through simulated operational scenarios (Failed Transfer Spike, Fraud Escalation Surge, Product Outage, Compliance Deadline, SLA Breach Risk, High Complaint Volume). Shows scenario + recommended actions + escalation guidance. Mounted at top of relevant dashboards.
+
+### 10. Micro-Interactions & Polish
+
+- `src/components/ui-bits/AnimatedCounter.tsx` — count-up KPI numbers (respects `prefers-reduced-motion`)
+- Add `animate-pulse` notification dots, hover lift on cards, skeleton loaders
+- Subtle keyframes added to `styles.css`: `fade-up`, `count-shimmer`, `pulse-soft`
+
+### Files to Create
+- `src/components/workflow/TodaysWorkflow.tsx`
+- `src/components/governance/ComplianceHealth.tsx`
+- `src/components/governance/AtRiskStaff.tsx`
+- `src/components/governance/AckTracker.tsx`
+- `src/components/governance/AckButton.tsx`
+- `src/components/search/EnterpriseSearch.tsx`
+- `src/components/feed/EnterpriseActivityFeed.tsx`
+- `src/components/ops/ScenarioBanner.tsx`
+- `src/components/ui-bits/AnimatedCounter.tsx`
+- `src/lib/workflows.ts`
+- `src/lib/at-risk.ts`
+- `src/lib/compliance-health.ts`
+- `src/lib/search-corpus.ts`
+- `src/lib/activity-feed.ts`
+- `src/lib/scenarios.ts`
+- `src/lib/coresphere-ai.functions.ts`
+- `src/routes/api/coresphere.ts` (fallback route — actual path TBD based on stack)
+
+### Files to Edit
+- `src/components/dashboards/RoleDashboards.tsx` — mount new panels per role
+- `src/components/CoreSphereAI.tsx` — structured response rendering + gateway call
+- `src/components/layout/TopBar.tsx` — Cmd-K enterprise search trigger
+- `src/styles.css` — micro-interaction keyframes
+- `src/start.ts` — verify `attachSupabaseAuth` is registered (read-only check)
+
+### Out of Scope
+- No new database tables. Existing `acknowledgments` and `failed_searches` are reused.
+- No real auth integration changes.
+- No real-time streaming for activity feed (interval-based mock).
+- Drill-down sheets remain mock-data backed.
+
+### Technical Notes
+- Lovable AI Gateway is called server-side via `createServerFn` + Lovable AI provider helper (`google/gemini-3-flash-preview`).
+- All visibility rules for Team Lead remain `user.department` scoped on the client (matches existing pattern).
+- Animation respects `prefers-reduced-motion`.

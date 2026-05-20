@@ -25,6 +25,11 @@ import {
 import { PanelCard, ProgressBar, StatCard, StatusBadge } from "@/components/ui-bits/Card";
 import { PromotionsStrip } from "@/components/PromotionsStrip";
 import { ProductsAndNews } from "@/components/ProductsAndNews";
+import { TodaysWorkflow } from "@/components/workflow/TodaysWorkflow";
+import { ComplianceHealth } from "@/components/governance/ComplianceHealth";
+import { AtRiskStaff } from "@/components/governance/AtRiskStaff";
+import { ScenarioBanner } from "@/components/ops/ScenarioBanner";
+import { EnterpriseActivityFeed } from "@/components/feed/EnterpriseActivityFeed";
 import { pickQuote, greetingForHour } from "@/lib/quotes";
 import { useEffect, useState } from "react";
 import {
@@ -81,11 +86,18 @@ export function StaffDashboard({ user }: { user: DirectoryEntry }) {
       </div>
       <Greeting user={user} subtitle="Here's your operational snapshot for today's shift." />
 
+      <ScenarioBanner />
+
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard label="Assigned SOPs" value={sops.length} delta="+2 this month" icon={BookOpen} tone="primary" />
         <StatCard label="SOP Completion" value="68%" delta="Across assigned" icon={CheckCircle2} tone="success" />
         <StatCard label="Monthly Assessments" value={3} delta="1 due this week" icon={CalendarDays} tone="warning" />
         <StatCard label="My QA Score (May)" value="93%" delta="+2 vs Apr" icon={Award} tone="primary" />
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-4 mt-4">
+        <div className="lg:col-span-2"><TodaysWorkflow role="staff" /></div>
+        <EnterpriseActivityFeed />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
@@ -187,11 +199,23 @@ export function QADashboard({ user }: { user: DirectoryEntry }) {
       <div className="mb-6"><ProductsAndNews /></div>
       <Greeting user={user} subtitle="Audit, score and coach your assigned operational staff for the month." />
 
+      <ScenarioBanner />
+
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard label="Assigned Staff" value={assignedStaff.length || 6} delta="This month" icon={Users} tone="primary" />
         <StatCard label="Audits This Month" value={112} delta="+18 vs last month" icon={ClipboardCheck} tone="success" />
         <StatCard label="Compliance Failures" value={4} delta="Open coaching" icon={ShieldAlert} tone="warning" />
         <StatCard label="Avg Scorecard" value="87.4%" delta="Department-wide" icon={Award} />
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-4 mt-4">
+        <div className="lg:col-span-2"><TodaysWorkflow role="qa" /></div>
+        <ComplianceHealth scope="QA Portfolio" />
+      </div>
+
+      <div className="grid lg:grid-cols-2 gap-4 mt-4">
+        <AtRiskStaff />
+        <EnterpriseActivityFeed />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
@@ -283,6 +307,11 @@ export function LDDashboard({ user }: { user: DirectoryEntry }) {
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
+        <div className="lg:col-span-2"><TodaysWorkflow role="ld" /></div>
+        <ComplianceHealth scope="Enterprise Learning" />
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-4 mt-4">
         <PanelCard className="lg:col-span-2" title="Content Pipeline" description="Maker-checker: L&D uploads, Unit Head approves before publish">
           <ul className="divide-y -my-2">
             {sops.slice(0, 6).map((s) => (
@@ -361,11 +390,23 @@ export function TeamLeadDashboard({ user }: { user: DirectoryEntry }) {
       <div className="mb-6"><ProductsAndNews /></div>
       <Greeting user={user} subtitle={`Visibility scoped to ${user.department}. Monitor your team's operations, QA performance and departmental knowledge.`} />
 
+      <ScenarioBanner />
+
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard label="Team Size" value={team.length || 8} delta="Direct reports" icon={Users} tone="primary" />
         <StatCard label="SOP Completion" value="74%" delta="Team average" icon={CheckCircle2} tone="success" />
         <StatCard label="QA Average" value="89%" delta="+3 vs last month" icon={Award} />
         <StatCard label="Escalations Open" value={3} delta="Awaiting your action" icon={ShieldAlert} tone="warning" />
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-4 mt-4">
+        <div className="lg:col-span-2"><TodaysWorkflow role="team_lead" /></div>
+        <ComplianceHealth scope={`${user.department} Department`} department={user.department} />
+      </div>
+
+      <div className="grid lg:grid-cols-2 gap-4 mt-4">
+        <AtRiskStaff department={user.department} />
+        <EnterpriseActivityFeed />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
@@ -438,11 +479,23 @@ export function GroupHeadDashboard({ user }: { user: DirectoryEntry }) {
       <div className="mb-6"><ProductsAndNews /></div>
       <Greeting user={user} subtitle="Executive Operations Center — you oversee enterprise operational communications and executive intelligence across Customer Fulfilment." />
 
+      <ScenarioBanner />
+
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard label="Active Users" value="1,284" delta="+4.2% WoW" icon={Users} tone="primary" />
         <StatCard label="LMS Adoption" value="92%" delta="Across 8 departments" icon={CheckCircle2} tone="success" />
         <StatCard label="Avg QA (Group)" value="88.6%" delta="+1.4 vs last month" icon={Award} />
         <StatCard label="Compliance Rate" value="96%" delta="Memo acknowledgements" icon={ShieldCheck} tone="success" />
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-4 mt-4">
+        <div className="lg:col-span-2"><TodaysWorkflow role="group_head" /></div>
+        <ComplianceHealth scope="Enterprise" />
+      </div>
+
+      <div className="grid lg:grid-cols-2 gap-4 mt-4">
+        <AtRiskStaff />
+        <EnterpriseActivityFeed />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
