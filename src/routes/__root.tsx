@@ -83,8 +83,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:site", content: "@UBAGroup" },
       { name: "twitter:title", content: "CoreSphere AI — UBA Enterprise Operations Intelligence" },
       { name: "twitter:description", content: "CoreSphere AI — Enterprise Operations Intelligence & Knowledge Ecosystem for United Bank for Africa." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/984d5c84-c6d6-4fb4-916a-1cee9f343862/id-preview-cc505b2f--22d92d5c-d31f-427f-9f00-5c9e88499e04.lovable.app-1779257962565.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/984d5c84-c6d6-4fb4-916a-1cee9f343862/id-preview-cc505b2f--22d92d5c-d31f-427f-9f00-5c9e88499e04.lovable.app-1779257962565.png" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/be9c6ec6-e2d0-4e61-bd1e-7701c2fcdc90" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/be9c6ec6-e2d0-4e61-bd1e-7701c2fcdc90" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
