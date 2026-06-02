@@ -1,5 +1,12 @@
 import { Bell, Search, HelpCircle, Menu, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { RoleSwitcher } from "@/components/RoleSwitcher";
+import { OPEN_SEARCH_EVENT } from "@/components/search/EnterpriseSearch";
+
+function openSearch() {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent(OPEN_SEARCH_EVENT));
+  }
+}
 
 type Props = {
   onOpenMobile: () => void;
@@ -24,12 +31,17 @@ export function TopBar({ onOpenMobile, onToggleCollapsed, collapsed }: Props) {
       >
         {collapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
       </button>
-      <div className="flex-1 max-w-xl relative">
-        <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-        <input
-          placeholder="Search SOPs, policies, memos, people…"
-          className="w-full h-10 pl-10 pr-4 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring/40"
-        />
+      <div className="flex-1 max-w-xl">
+        <button
+          onClick={openSearch}
+          className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm text-muted-foreground flex items-center gap-2 hover:border-primary/40 transition-colors"
+        >
+          <Search className="h-4 w-4 shrink-0" />
+          <span className="truncate">Search SOPs, policies, memos…</span>
+          <kbd className="ml-auto hidden sm:inline-flex items-center gap-0.5 rounded border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+            ⌘K
+          </kbd>
+        </button>
       </div>
       <div className="flex items-center gap-2">
         <button className="hidden sm:flex h-10 w-10 rounded-md hover:bg-muted items-center justify-center text-muted-foreground">
