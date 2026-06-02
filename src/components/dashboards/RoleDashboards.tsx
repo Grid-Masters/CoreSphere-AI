@@ -415,6 +415,10 @@ export function TeamLeadDashboard({ user }: { user: DirectoryEntry }) {
         <EnterpriseActivityFeed />
       </div>
 
+      <div className="mt-4">
+        <AckTracker department={user.department} />
+      </div>
+
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
         <PanelCard className="lg:col-span-2" title="Team Roster" description="Completion + QA per direct report">
           <ul className="divide-y -my-2">
