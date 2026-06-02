@@ -11,7 +11,6 @@ import {
   CheckCircle2,
   ClipboardCheck,
   FileUp,
-  Gauge,
   GraduationCap,
   Headphones,
   Megaphone,
