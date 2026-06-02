@@ -14,7 +14,7 @@ import {
   Clock,
 } from "lucide-react";
 import {
-  CommandDialog,
+  Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
@@ -22,6 +22,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { searchCorpus, type CorpusEntry } from "@/lib/search-corpus";
 import { supabase } from "@/integrations/supabase/client";
 import { getActiveUser } from "@/lib/active-user";
@@ -114,13 +115,19 @@ export function EnterpriseSearch() {
   };
 
   return (
-    <CommandDialog open={open} onOpenChange={setOpen}>
-      <CommandInput
-        placeholder="Search SOPs, policies, FAQs, coaching, advisories…"
-        value={query}
-        onValueChange={setQuery}
-      />
-      <CommandList>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="overflow-hidden p-0">
+        <DialogTitle className="sr-only">Enterprise search</DialogTitle>
+        <Command
+          shouldFilter={false}
+          className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5"
+        >
+          <CommandInput
+            placeholder="Search SOPs, policies, FAQs, coaching, advisories…"
+            value={query}
+            onValueChange={setQuery}
+          />
+          <CommandList>
         {!query && recent.length > 0 && (
           <CommandGroup heading="Recent searches">
             {recent.map((r) => (
@@ -165,7 +172,9 @@ export function EnterpriseSearch() {
             </CommandGroup>
           </div>
         ))}
-      </CommandList>
-    </CommandDialog>
+          </CommandList>
+        </Command>
+      </DialogContent>
+    </Dialog>
   );
 }
