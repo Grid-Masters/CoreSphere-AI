@@ -22,13 +22,14 @@ export function AckTracker({ department }: { department?: string }) {
   const liveAcks = useAllAcks();
 
   const rows = memos.map((m) => {
-    const base = baselineRate(m.id);
-    const live = liveAcks.filter((a) => a.targetId === m.id).length;
+    const id = String(m.id);
+    const base = baselineRate(id);
+    const live = liveAcks.filter((a) => a.targetId === id).length;
     // Each live ack nudges the displayed rate slightly upward (capped at 100).
     const rate = Math.min(100, base + Math.min(live, 5));
     const acknowledged = Math.round((rate / 100) * WORKFORCE);
     const overdue = WORKFORCE - acknowledged;
-    return { ...m, rate, acknowledged, overdue };
+    return { ...m, id, rate, acknowledged, overdue };
   });
 
   const avg = Math.round(rows.reduce((s, r) => s + r.rate, 0) / (rows.length || 1));
@@ -62,7 +63,7 @@ export function AckTracker({ department }: { department?: string }) {
               <span className="tabular-nums text-muted-foreground shrink-0">{r.rate}%</span>
             </div>
             <div className="mt-1">
-              <ProgressBar value={r.rate} tone={r.rate >= 90 ? "success" : r.rate >= 80 ? "primary" : "warning"} />
+              <ProgressBar value={r.rate} tone={r.rate >= 90 ? "success" : "primary"} />
             </div>
           </li>
         ))}
