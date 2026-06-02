@@ -33,8 +33,11 @@ import { ProductsAndNews } from "@/components/ProductsAndNews";
 import { TodaysWorkflow } from "@/components/workflow/TodaysWorkflow";
 import { ComplianceHealth } from "@/components/governance/ComplianceHealth";
 import { AtRiskStaff } from "@/components/governance/AtRiskStaff";
+import { AckTracker } from "@/components/governance/AckTracker";
 import { ScenarioBanner } from "@/components/ops/ScenarioBanner";
 import { EnterpriseActivityFeed } from "@/components/feed/EnterpriseActivityFeed";
+import { KpiDrillSheet, type KpiDrill } from "@/components/exec/KpiDrillSheet";
+import { AnimatedCounter } from "@/components/ui-bits/AnimatedCounter";
 import { pickQuote, greetingForHour } from "@/lib/quotes";
 import { useEffect, useState } from "react";
 import {
