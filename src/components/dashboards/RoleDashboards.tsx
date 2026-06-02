@@ -5,7 +5,6 @@ import {
   BarChart3,
   BookOpen,
   Bot,
-  Building2,
   CalendarDays,
   CalendarRange,
   CheckCircle2,
