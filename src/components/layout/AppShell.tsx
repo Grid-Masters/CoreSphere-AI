@@ -4,6 +4,7 @@ import { AppSidebar } from "./AppSidebar";
 import { TopBar } from "./TopBar";
 import { ActivityTicker } from "./ActivityTicker";
 import { CoreSphereAI } from "@/components/CoreSphereAI";
+import { EnterpriseSearch } from "@/components/search/EnterpriseSearch";
 import { useActiveUser } from "@/lib/active-user";
 import { useAuthGate } from "@/lib/auth-gate";
 
@@ -50,6 +51,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </main>
       </div>
       <CoreSphereAI />
+      <EnterpriseSearch />
     </div>
   );
 }

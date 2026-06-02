@@ -4,11 +4,13 @@ import {
   Award,
   BarChart3,
   BookOpen,
+  Bot,
   CalendarDays,
   CalendarRange,
   CheckCircle2,
   ClipboardCheck,
   FileUp,
+  GraduationCap,
   Headphones,
   Megaphone,
   MessagesSquare,
@@ -17,6 +19,7 @@ import {
   ShieldCheck,
   Sparkles,
   StickyNote,
+  TrendingUp,
   Trophy,
   Upload,
   Users,
@@ -28,8 +31,11 @@ import { ProductsAndNews } from "@/components/ProductsAndNews";
 import { TodaysWorkflow } from "@/components/workflow/TodaysWorkflow";
 import { ComplianceHealth } from "@/components/governance/ComplianceHealth";
 import { AtRiskStaff } from "@/components/governance/AtRiskStaff";
+import { AckTracker } from "@/components/governance/AckTracker";
 import { ScenarioBanner } from "@/components/ops/ScenarioBanner";
 import { EnterpriseActivityFeed } from "@/components/feed/EnterpriseActivityFeed";
+import { KpiDrillSheet, type KpiDrill } from "@/components/exec/KpiDrillSheet";
+import { AnimatedCounter } from "@/components/ui-bits/AnimatedCounter";
 import { pickQuote, greetingForHour } from "@/lib/quotes";
 import { useEffect, useState } from "react";
 import {
@@ -409,6 +415,10 @@ export function TeamLeadDashboard({ user }: { user: DirectoryEntry }) {
         <EnterpriseActivityFeed />
       </div>
 
+      <div className="mt-4">
+        <AckTracker department={user.department} />
+      </div>
+
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
         <PanelCard className="lg:col-span-2" title="Team Roster" description="Completion + QA per direct report">
           <ul className="divide-y -my-2">
@@ -474,23 +484,99 @@ export function TeamLeadDashboard({ user }: { user: DirectoryEntry }) {
 // Group Head Dashboard
 // ────────────────────────────────────────────────────────────────────────────
 export function GroupHeadDashboard({ user }: { user: DirectoryEntry }) {
+  const [drill, setDrill] = useState<Omit<KpiDrill, "open" | "onOpenChange"> | null>(null);
+
+  const tiles: Array<{
+    label: string;
+    value: number;
+    suffix?: string;
+    decimals?: number;
+    icon: any;
+    tone: "primary" | "success" | "warning";
+    delta: string;
+    drill: Omit<KpiDrill, "open" | "onOpenChange">;
+  }> = [
+    {
+      label: "Active Workforce", value: 1284, icon: Users, tone: "primary", delta: "+4.2% WoW",
+      drill: { title: "Active Workforce", description: "Daily active staff across Customer Fulfilment", metric: "1,284", delta: "+4.2% week-on-week", sparkline: [1180, 1205, 1222, 1240, 1260, 1284], rows: [
+        { label: "FHD", primary: 412, trend: 5 }, { label: "Inbound", primary: 386, trend: 3 }, { label: "Multimedia", primary: 268, trend: 6 }, { label: "Social Media", primary: 218, trend: 2 },
+      ] },
+    },
+    {
+      label: "LMS Adoption", value: 92, suffix: "%", icon: GraduationCap, tone: "success", delta: "8 departments",
+      drill: { title: "Learning Adoption", description: "SOP & training completion enterprise-wide", metric: "92%", delta: "+3 pts vs last month", sparkline: [81, 84, 86, 88, 90, 92], rows: [
+        { label: "FHD", primary: "94%", trend: 2 }, { label: "Inbound", primary: "90%", trend: 4 }, { label: "Multimedia", primary: "88%", trend: 3 },
+      ], watchlist: [{ label: "Social Media", primary: "83%", secondary: "Below 85% target", trend: -1 }] },
+    },
+    {
+      label: "Group QA Average", value: 88.6, suffix: "%", decimals: 1, icon: Award, tone: "primary", delta: "+1.4 vs last month",
+      drill: { title: "Quality Assurance", description: "Rolling QA scorecards by department", metric: "88.6%", delta: "+1.4 pts month-on-month", sparkline: [85, 86, 86.5, 87, 88, 88.6], rows: [
+        { label: "FHD", primary: "91%", trend: 1 }, { label: "Video Validation", primary: "90%", trend: 2 }, { label: "Inbound", primary: "87%", trend: 1 },
+      ], watchlist: [{ label: "Social Media", primary: "84%", secondary: "Coaching in progress", trend: -2 }] },
+    },
+    {
+      label: "Compliance Rate", value: 96, suffix: "%", icon: ShieldCheck, tone: "success", delta: "Memo acks",
+      drill: { title: "Compliance & Acknowledgements", description: "Critical-content read receipts", metric: "96%", delta: "+2 pts vs last month", sparkline: [90, 91, 93, 94, 95, 96], rows: [
+        { label: "AML Refresher", primary: "97%", trend: 3 }, { label: "Block Card Tree", primary: "95%", trend: 2 },
+      ], watchlist: [{ label: "KPI Review memo", primary: "88%", secondary: "147 outstanding", trend: -1 }] },
+    },
+    {
+      label: "Fraud Advisories", value: 7, icon: ShieldAlert, tone: "warning", delta: "2 active this week",
+      drill: { title: "Fraud & Risk Advisories", description: "Live typologies and escalations", metric: "7", delta: "2 active this week", rows: [
+        { label: "SIM-swap impersonation", primary: "Active", trend: 0 }, { label: "Refund social-engineering", primary: "Active", trend: 0 }, { label: "Card-not-present spike", primary: "Monitoring", trend: 0 },
+      ] },
+    },
+    {
+      label: "AI Assist Usage", value: 3421, icon: Bot, tone: "primary", delta: "+18% WoW",
+      drill: { title: "CoreSphere AI Usage", description: "Operational queries answered this month", metric: "3,421", delta: "+18% week-on-week", sparkline: [2400, 2650, 2800, 3050, 3200, 3421], rows: [
+        { label: "SOP lookups", primary: 1480, trend: 12 }, { label: "Coaching drafts", primary: 902, trend: 22 }, { label: "Policy Q&A", primary: 1039, trend: 16 },
+      ] },
+    },
+    {
+      label: "Engagement Index", value: 78, suffix: "%", icon: TrendingUp, tone: "success", delta: "+6 pts",
+      drill: { title: "Workforce Engagement", description: "Logins, learning streaks, participation", metric: "78%", delta: "+6 pts vs last month", sparkline: [66, 68, 70, 73, 75, 78], rows: [
+        { label: "Daily login rate", primary: "84%", trend: 4 }, { label: "Learning streaks", primary: "61%", trend: 9 },
+      ] },
+    },
+    {
+      label: "Open Escalations", value: 11, icon: ShieldAlert, tone: "warning", delta: "Across departments",
+      drill: { title: "Open Escalations", description: "Awaiting leadership action", metric: "11", delta: "3 breaching SLA", rows: [
+        { label: "FHD", primary: 4, trend: 0 }, { label: "Inbound", primary: 3, trend: 0 }, { label: "Multimedia", primary: 2, trend: 0 }, { label: "Social Media", primary: 2, trend: 0 },
+      ] },
+    },
+  ];
+
   return (
     <>
       <div className="mb-6"><ProductsAndNews /></div>
-      <Greeting user={user} subtitle="Executive Operations Center — you oversee enterprise operational communications and executive intelligence across Customer Fulfilment." />
+      <Greeting user={user} subtitle="Executive Operations Command Center — real-time intelligence across Customer Fulfilment. Click any metric to drill down." />
 
       <ScenarioBanner />
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard label="Active Users" value="1,284" delta="+4.2% WoW" icon={Users} tone="primary" />
-        <StatCard label="LMS Adoption" value="92%" delta="Across 8 departments" icon={CheckCircle2} tone="success" />
-        <StatCard label="Avg QA (Group)" value="88.6%" delta="+1.4 vs last month" icon={Award} />
-        <StatCard label="Compliance Rate" value="96%" delta="Memo acknowledgements" icon={ShieldCheck} tone="success" />
+      <div className="grid lg:grid-cols-3 gap-4">
+        <ComplianceHealth scope="Enterprise" />
+        <div className="lg:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-3">
+          {tiles.map((t) => (
+            <button
+              key={t.label}
+              onClick={() => setDrill(t.drill)}
+              className="group relative text-left bg-card border rounded-xl p-4 shadow-sm hover:border-primary/50 hover:shadow-md transition-all overflow-hidden animate-fade-up"
+            >
+              <div className="absolute -right-5 -top-5 h-16 w-16 rounded-full bg-primary/5 group-hover:bg-primary/10 transition-colors" />
+              <t.icon className={`h-4 w-4 ${t.tone === "warning" ? "text-[color:var(--warning)]" : t.tone === "success" ? "text-[color:var(--success)]" : "text-primary"}`} />
+              <div className="mt-3 text-xl font-semibold tracking-tight tabular-nums">
+                <AnimatedCounter value={t.value} suffix={t.suffix} decimals={t.decimals ?? 0} />
+              </div>
+              <div className="text-[11px] text-muted-foreground mt-0.5 leading-tight">{t.label}</div>
+              <div className="text-[10px] text-muted-foreground/80 mt-1">{t.delta}</div>
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
         <div className="lg:col-span-2"><TodaysWorkflow role="group_head" /></div>
-        <ComplianceHealth scope="Enterprise" />
+        <AckTracker />
       </div>
 
       <div className="grid lg:grid-cols-2 gap-4 mt-4">
@@ -566,6 +652,18 @@ export function GroupHeadDashboard({ user }: { user: DirectoryEntry }) {
           ))}
         </div>
       </PanelCard>
+
+      <KpiDrillSheet
+        open={!!drill}
+        onOpenChange={(o) => !o && setDrill(null)}
+        title={drill?.title ?? ""}
+        description={drill?.description ?? ""}
+        metric={drill?.metric ?? ""}
+        delta={drill?.delta}
+        sparkline={drill?.sparkline}
+        rows={drill?.rows ?? []}
+        watchlist={drill?.watchlist}
+      />
     </>
   );
 }
