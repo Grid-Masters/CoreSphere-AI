@@ -92,7 +92,7 @@ export function ProductsAndNews() {
           className="group flex-1 min-w-0 text-left"
         >
           <div key={item.id} className="animate-fade-in flex items-center gap-2 sm:gap-3 min-w-0">
-            <span className={`hidden xs:inline-flex shrink-0 h-2 w-2 rounded-full ${priorityDot(item.priority)}`} aria-hidden />
+            <span className={`hidden sm:inline-flex shrink-0 h-2 w-2 rounded-full ${priorityDot(item.priority)}`} aria-hidden />
             <span className={`shrink-0 text-[9px] sm:text-[10px] uppercase tracking-wider font-semibold px-1.5 sm:px-2 py-0.5 rounded-full ${priorityChip(item.priority)}`}>
               <span className="hidden sm:inline">{item.category}</span>
               <span className="sm:hidden">{item.priority}</span>
