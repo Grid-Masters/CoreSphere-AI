@@ -9,26 +9,24 @@ import operationsCover from "@/assets/news/operations.jpg";
 
 export type NewsPriority = "Critical" | "Important" | "Info";
 
-/** Enterprise communications hub categories. */
+/** CoreSphere Pulse Feed intelligence categories. */
 export type NewsCategory =
-  | "Public News"
-  | "Management Updates"
-  | "Operations Updates"
-  | "Compliance & Risk"
-  | "Product Releases"
-  | "Learning & Development"
-  | "Employee Spotlight"
-  | "Corporate Announcements";
+  | "Product Updates"
+  | "Fraud Alerts"
+  | "Compliance Notices"
+  | "SOP Updates"
+  | "L&D Communications"
+  | "Group Head Announcements"
+  | "Townhall Broadcasts";
 
 export const newsCategories: NewsCategory[] = [
-  "Public News",
-  "Management Updates",
-  "Operations Updates",
-  "Compliance & Risk",
-  "Product Releases",
-  "Learning & Development",
-  "Employee Spotlight",
-  "Corporate Announcements",
+  "Product Updates",
+  "Fraud Alerts",
+  "Compliance Notices",
+  "SOP Updates",
+  "L&D Communications",
+  "Group Head Announcements",
+  "Townhall Broadcasts",
 ];
 
 export type NewsItem = {
@@ -50,18 +48,18 @@ export type NewsItem = {
 /** Default cover per category (used as a fallback). */
 export function coverFor(category: NewsCategory): string {
   switch (category) {
-    case "Management Updates":
-    case "Corporate Announcements":
+    case "Group Head Announcements":
+    case "Townhall Broadcasts":
       return managementCover;
-    case "Product Releases":
+    case "Product Updates":
       return productCover;
-    case "Compliance & Risk":
+    case "Fraud Alerts":
+      return fraudCover;
+    case "Compliance Notices":
       return complianceCover;
-    case "Learning & Development":
+    case "L&D Communications":
       return learningCover;
-    case "Employee Spotlight":
-      return spotlightCover;
-    case "Operations Updates":
+    case "SOP Updates":
       return operationsCover;
     default:
       return managementCover;
@@ -73,7 +71,7 @@ export const newsItems: NewsItem[] = [
     id: "n1",
     title: "Group MD addresses staff on FY2026 strategic priorities",
     body: "In a message to all employees, the Group Managing Director outlined the bank's FY2026 focus on customer-led digital transformation, operational excellence and a stronger compliance culture across all subsidiaries.",
-    category: "Management Updates",
+    category: "Group Head Announcements",
     priority: "Important",
     departmentTag: "Group-wide",
     timestamp: "1h ago",
@@ -87,7 +85,7 @@ export const newsItems: NewsItem[] = [
     id: "n2",
     title: "UBA LEO 4.0 goes live — conversational banking on Apple Business Chat",
     body: "Customers can now bank with LEO directly inside iMessage. CEEs should reference the LEO 4.0 SOP when handling related enquiries and highlight the new self-service journeys to customers.",
-    category: "Product Releases",
+    category: "Product Updates",
     priority: "Important",
     departmentTag: "FHD • Inbound • Multimedia",
     timestamp: "3h ago",
@@ -101,7 +99,7 @@ export const newsItems: NewsItem[] = [
     id: "n3",
     title: "Fraud Alert: New OTP-harvesting SIM swap pattern detected",
     body: "Customers calling about delayed OTPs must follow the updated SIM swap verification matrix. Escalate any pattern match to the Fraud Desk within 5 minutes.",
-    category: "Compliance & Risk",
+    category: "Fraud Alerts",
     priority: "Critical",
     departmentTag: "All Operations",
     timestamp: "5h ago",
@@ -115,7 +113,7 @@ export const newsItems: NewsItem[] = [
     id: "n4",
     title: "CBN circular on customer identification — effective Jun 1",
     body: "Updated KYC verification scripts have been published in the Knowledge Hub. All customer-facing staff must acknowledge the revised procedure before their next shift.",
-    category: "Compliance & Risk",
+    category: "Compliance Notices",
     priority: "Critical",
     departmentTag: "All Operations",
     timestamp: "6h ago",
@@ -129,7 +127,7 @@ export const newsItems: NewsItem[] = [
     id: "n5",
     title: "Card issuance batch delay (Lagos & Port Harcourt)",
     body: "Customers may experience a 24h delay on new card delivery. Use the approved holding script and log SLA breach reasons accurately in the CRM.",
-    category: "Operations Updates",
+    category: "SOP Updates",
     priority: "Important",
     departmentTag: "Inbound • FHD",
     timestamp: "Today",
@@ -142,7 +140,7 @@ export const newsItems: NewsItem[] = [
     id: "n6",
     title: "New training: Advanced Fraud Detection masterclass now live",
     body: "A four-module video series on emerging fraud typologies is now available in the Knowledge Hub. L&D recommends completion within two weeks for all customer-facing teams.",
-    category: "Learning & Development",
+    category: "L&D Communications",
     priority: "Info",
     departmentTag: "All Operations",
     timestamp: "Yesterday",
@@ -155,7 +153,7 @@ export const newsItems: NewsItem[] = [
     id: "n7",
     title: "Employee Spotlight: Inbound team hits record 91% FCR",
     body: "Congratulations to the Inbound Contact Centre team for achieving the highest first-call resolution rate in the bank's history this quarter. A model of operational excellence.",
-    category: "Employee Spotlight",
+    category: "Group Head Announcements",
     priority: "Info",
     departmentTag: "Inbound",
     timestamp: "Yesterday",
@@ -168,7 +166,7 @@ export const newsItems: NewsItem[] = [
     id: "n8",
     title: "FY2026 Operations Townhall — Thursday 10:00 WAT",
     body: "The Group Head, Customer Fulfilment will present the FY2026 operational priorities. Attendance is mandatory for all Customer Experience Executives.",
-    category: "Corporate Announcements",
+    category: "Townhall Broadcasts",
     priority: "Important",
     departmentTag: "Group-wide",
     timestamp: "2d ago",
@@ -181,7 +179,7 @@ export const newsItems: NewsItem[] = [
     id: "n9",
     title: "Wise Savers Promo — Phase 2 starts Monday",
     body: "Phase 2 unlocks ₦5M in additional prizes. Refer eligible customers to the campaign micro-site and log referrals in the CRM to support the bank's deposit mobilisation drive.",
-    category: "Public News",
+    category: "Product Updates",
     priority: "Info",
     departmentTag: "All Operations",
     timestamp: "2d ago",
@@ -194,7 +192,7 @@ export const newsItems: NewsItem[] = [
     id: "n10",
     title: "First-call resolution standard raised to 86%",
     body: "Effective this month, QA scorecards will weight FCR adherence at 20%. Review the updated QA rubric in Performance Intelligence and brief your teams accordingly.",
-    category: "Operations Updates",
+    category: "SOP Updates",
     priority: "Important",
     departmentTag: "All Operations",
     timestamp: "3d ago",
@@ -207,7 +205,7 @@ export const newsItems: NewsItem[] = [
     id: "n11",
     title: "NextGen Account onboarding journey simplified",
     body: "A streamlined three-screen onboarding is now live across all channels. Refresh your product knowledge in the Knowledge Hub to support customers through the new journey.",
-    category: "Product Releases",
+    category: "Product Updates",
     priority: "Info",
     departmentTag: "FHD • Social Media",
     timestamp: "3d ago",
@@ -220,7 +218,7 @@ export const newsItems: NewsItem[] = [
     id: "n12",
     title: "Innovation: AI co-pilot pilot launches for contact centre",
     body: "Selected agents will trial CoreSphere AI's real-time call assist during June. Feedback gathered will shape the enterprise-wide rollout in Q3.",
-    category: "Public News",
+    category: "Product Updates",
     priority: "Info",
     departmentTag: "Group-wide",
     timestamp: "4d ago",
