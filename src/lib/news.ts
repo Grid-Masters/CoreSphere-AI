@@ -9,26 +9,24 @@ import operationsCover from "@/assets/news/operations.jpg";
 
 export type NewsPriority = "Critical" | "Important" | "Info";
 
-/** Enterprise communications hub categories. */
+/** CoreSphere Pulse Feed intelligence categories. */
 export type NewsCategory =
-  | "Public News"
-  | "Management Updates"
-  | "Operations Updates"
-  | "Compliance & Risk"
-  | "Product Releases"
-  | "Learning & Development"
-  | "Employee Spotlight"
-  | "Corporate Announcements";
+  | "Product Updates"
+  | "Fraud Alerts"
+  | "Compliance Notices"
+  | "SOP Updates"
+  | "L&D Communications"
+  | "Group Head Announcements"
+  | "Townhall Broadcasts";
 
 export const newsCategories: NewsCategory[] = [
-  "Public News",
-  "Management Updates",
-  "Operations Updates",
-  "Compliance & Risk",
-  "Product Releases",
-  "Learning & Development",
-  "Employee Spotlight",
-  "Corporate Announcements",
+  "Product Updates",
+  "Fraud Alerts",
+  "Compliance Notices",
+  "SOP Updates",
+  "L&D Communications",
+  "Group Head Announcements",
+  "Townhall Broadcasts",
 ];
 
 export type NewsItem = {
@@ -50,18 +48,18 @@ export type NewsItem = {
 /** Default cover per category (used as a fallback). */
 export function coverFor(category: NewsCategory): string {
   switch (category) {
-    case "Management Updates":
-    case "Corporate Announcements":
+    case "Group Head Announcements":
+    case "Townhall Broadcasts":
       return managementCover;
-    case "Product Releases":
+    case "Product Updates":
       return productCover;
-    case "Compliance & Risk":
+    case "Fraud Alerts":
+      return fraudCover;
+    case "Compliance Notices":
       return complianceCover;
-    case "Learning & Development":
+    case "L&D Communications":
       return learningCover;
-    case "Employee Spotlight":
-      return spotlightCover;
-    case "Operations Updates":
+    case "SOP Updates":
       return operationsCover;
     default:
       return managementCover;
