@@ -140,7 +140,7 @@ export const newsItems: NewsItem[] = [
     id: "n6",
     title: "New training: Advanced Fraud Detection masterclass now live",
     body: "A four-module video series on emerging fraud typologies is now available in the Knowledge Hub. L&D recommends completion within two weeks for all customer-facing teams.",
-    category: "Lcategory: "Learning & Development"D Communications",
+    category: "L&D Communications",
     priority: "Info",
     departmentTag: "All Operations",
     timestamp: "Yesterday",
