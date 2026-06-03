@@ -190,6 +190,11 @@
 }
 .animate-pulse-soft { animation: pulse-soft 2s ease-in-out infinite; }
 
+@keyframes pulse-progress {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up, .animate-pulse-soft { animation: none; }
 }
