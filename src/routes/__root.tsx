@@ -83,8 +83,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:site", content: "@UBAGroup" },
       { name: "twitter:title", content: "CoreSphere AI — UBA Enterprise Operations Intelligence" },
       { name: "twitter:description", content: "CoreSphere AI — Enterprise Operations Intelligence & Knowledge Ecosystem for United Bank for Africa." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/be9c6ec6-e2d0-4e61-bd1e-7701c2fcdc90" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/be9c6ec6-e2d0-4e61-bd1e-7701c2fcdc90" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/650f870f-70ec-4566-bdd4-851e00967ad0" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/650f870f-70ec-4566-bdd4-851e00967ad0" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
