@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Sparkles, X, Send, AlertTriangle, ArrowRight, BookOpen, CheckSquare, Clock, ShieldCheck } from "lucide-react";
 import { askCoreSphereAI, type AiAnswer } from "@/lib/coresphere-ai.functions";
 import { useActiveUser } from "@/lib/active-user";
+
+export const OPEN_AI_EVENT = "coresphere:open-ai";
 
 const suggested = [
   "Summarize the Card Block SOP",
@@ -66,6 +68,12 @@ export function CoreSphereAI() {
   const user = useActiveUser();
   const ask = useServerFn(askCoreSphereAI);
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    const handler = () => setOpen(true);
+    window.addEventListener(OPEN_AI_EVENT, handler);
+    return () => window.removeEventListener(OPEN_AI_EVENT, handler);
+  }, []);
   const [messages, setMessages] = useState<Msg[]>([
     {
       role: "ai",
