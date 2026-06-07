@@ -156,7 +156,6 @@ export function AppSidebar({ collapsed, mobileOpen, onCloseMobile, onToggleColla
           collapsed ? "w-16" : "w-64"
         }`}
       >
-        <Brand compact={collapsed} />
         <NavBody compact={collapsed} />
         <div className={`p-3 border-t border-sidebar-border flex ${collapsed ? "justify-center" : "items-center justify-between"} gap-2`}>
           {!collapsed && (
