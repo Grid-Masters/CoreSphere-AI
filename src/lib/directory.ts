@@ -18,7 +18,7 @@ export const roleLabels: Record<Role, string> = {
   ld: "Learning & Development Officer",
   team_lead: "Team Lead",
   group_head: "Group Head",
-  sysadmin: "System Administrator",
+  sysadmin: "Platform Administrator",
 };
 
 // Simulated UBA enterprise directory. Role, department and reporting line are
@@ -119,12 +119,12 @@ export const directory: DirectoryEntry[] = [
   },
   {
     email: "admin@ubagroup.com",
-    name: "System Administrator",
-    initials: "SA",
+    name: "Ibrahim Sadiq",
+    initials: "IS",
     role: "sysadmin",
-    roleLabel: "System Administrator",
-    department: "IT Governance",
-    unit: "Platform Operations",
+    roleLabel: "Platform Administrator",
+    department: "Platform Governance",
+    unit: "Enterprise Controls",
   },
 ];
 

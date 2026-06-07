@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { useActiveUser } from "@/lib/active-user";
 import {
@@ -16,6 +18,10 @@ export const Route = createFileRoute("/")({
 
 function Dashboard() {
   const user = useActiveUser();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user.role === "sysadmin") navigate({ to: "/administration", replace: true });
+  }, [user.role, navigate]);
   return (
     <AppShell>
       {user.role === "staff" && <StaffDashboard user={user} />}
@@ -23,7 +29,6 @@ function Dashboard() {
       {user.role === "ld" && <LDDashboard user={user} />}
       {user.role === "team_lead" && <TeamLeadDashboard user={user} />}
       {user.role === "group_head" && <GroupHeadDashboard user={user} />}
-      {user.role === "sysadmin" && <GroupHeadDashboard user={user} />}
     </AppShell>
   );
 }

@@ -54,6 +54,7 @@ const groups: { label: string; items: NavItem[] }[] = [
   {
     label: "Administration",
     items: [
+      { to: "/administration", icon: ShieldCheck, label: "Administration Center", roles: ["sysadmin"] },
       { to: "/analytics", icon: BarChart3, label: "Analytics", roles: ["qa", "ld", "team_lead", "group_head"] },
       { to: "/admin", icon: ShieldCheck, label: "Admin Panel", roles: ["ld", "group_head"] },
       { to: "/settings", icon: Settings, label: "Settings", roles: ALL },
@@ -156,7 +157,6 @@ export function AppSidebar({ collapsed, mobileOpen, onCloseMobile, onToggleColla
           collapsed ? "w-16" : "w-64"
         }`}
       >
-        <Brand compact={collapsed} />
         <NavBody compact={collapsed} />
         <div className={`p-3 border-t border-sidebar-border flex ${collapsed ? "justify-center" : "items-center justify-between"} gap-2`}>
           {!collapsed && (

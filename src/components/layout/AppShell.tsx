@@ -32,23 +32,25 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }, [path]);
 
   return (
-    <div className="min-h-screen flex bg-background text-foreground">
-      <AppSidebar
-        collapsed={collapsed}
-        mobileOpen={mobileOpen}
-        onCloseMobile={() => setMobileOpen(false)}
+    <div className="min-h-screen flex flex-col bg-background text-foreground">
+      <TopBar
+        onOpenMobile={() => setMobileOpen(true)}
         onToggleCollapsed={() => setCollapsed((c) => !c)}
+        collapsed={collapsed}
       />
-      <div className="flex-1 flex flex-col min-w-0">
-        <TopBar
-          onOpenMobile={() => setMobileOpen(true)}
-          onToggleCollapsed={() => setCollapsed((c) => !c)}
+      <div className="flex flex-1 min-h-0">
+        <AppSidebar
           collapsed={collapsed}
+          mobileOpen={mobileOpen}
+          onCloseMobile={() => setMobileOpen(false)}
+          onToggleCollapsed={() => setCollapsed((c) => !c)}
         />
-        <ActivityTicker />
-        <main key={user.email} className="flex-1 overflow-y-auto">
-          <div className="p-4 lg:p-8 max-w-[1500px] mx-auto w-full">{children}</div>
-        </main>
+        <div className="flex-1 flex flex-col min-w-0">
+          <ActivityTicker />
+          <main key={user.email} className="flex-1 overflow-y-auto">
+            <div className="p-4 lg:p-8 max-w-[1500px] mx-auto w-full">{children}</div>
+          </main>
+        </div>
       </div>
       <CoreSphereAI />
       <EnterpriseSearch />
