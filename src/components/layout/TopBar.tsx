@@ -97,9 +97,13 @@ export function TopBar({ onOpenMobile, onToggleCollapsed, collapsed }: Props) {
             ⌘K
           </kbd>
         </button>
-        <IconButton label="Search" onClick={() => fire(OPEN_SEARCH_EVENT)}>
-          <span className="md:hidden"><Search className="h-4 w-4" /></span>
-        </IconButton>
+        <button
+          onClick={() => fire(OPEN_SEARCH_EVENT)}
+          aria-label="Search"
+          className="md:hidden h-10 w-10 rounded-md hover:bg-muted flex items-center justify-center text-muted-foreground transition-colors"
+        >
+          <Search className="h-4 w-4" />
+        </button>
 
         <IconButton label="CoreSphere AI" onClick={() => fire(OPEN_AI_EVENT)}>
           <Sparkles className="h-4 w-4 text-primary" />
