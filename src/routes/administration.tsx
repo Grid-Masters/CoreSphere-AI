@@ -154,7 +154,7 @@ function AdministrationCenter() {
                         {roleLabels[u.role]} • {u.department} • {u.email}
                       </div>
                     </div>
-                    <StatusBadge status="Active" />
+                    <StatusBadge status="On Duty" />
                   </div>
                 ))}
               </div>
@@ -283,7 +283,7 @@ function AdministrationCenter() {
                         {l.device} • {l.ip} • {l.at}
                       </div>
                     </div>
-                    <StatusBadge status={l.status === "Success" ? "Active" : "Blocked"} />
+                    <StatusBadge status={l.status === "Success" ? "On Duty" : "Failed"} />
                   </div>
                 ))}
               </div>
