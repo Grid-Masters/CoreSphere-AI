@@ -105,16 +105,22 @@ export function TopBar({ onOpenMobile, onToggleCollapsed, collapsed }: Props) {
           <Sparkles className="h-4 w-4 text-primary" />
         </IconButton>
 
-        <Link to="/">
-          <IconButton label="My tasks" badge>
-            <ListChecks className="h-4 w-4" />
-          </IconButton>
+        <Link
+          to="/"
+          aria-label="My tasks"
+          className="relative h-10 w-10 rounded-md hover:bg-muted flex items-center justify-center text-muted-foreground transition-colors"
+        >
+          <ListChecks className="h-4 w-4" />
+          <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary" />
         </Link>
 
-        <Link to="/notifications">
-          <IconButton label="Notifications" badge>
-            <Bell className="h-4 w-4" />
-          </IconButton>
+        <Link
+          to="/notifications"
+          aria-label="Notifications"
+          className="relative h-10 w-10 rounded-md hover:bg-muted flex items-center justify-center text-muted-foreground transition-colors"
+        >
+          <Bell className="h-4 w-4" />
+          <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary" />
         </Link>
 
         <div className="pl-2 ml-1 border-l">
