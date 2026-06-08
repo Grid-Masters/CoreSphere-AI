@@ -205,7 +205,7 @@ export function CoreSphereAI() {
         </button>
       )}
       {open && (
-        <div className="fixed bottom-6 right-6 z-50 w-[440px] max-w-[calc(100vw-2rem)] h-[660px] max-h-[calc(100vh-3rem)] bg-card border rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-scale-in">
+        <div className="fixed bottom-6 right-6 z-50 w-[440px] max-w-[calc(100vw-2rem)] h-[660px] max-h-[calc(100vh-3rem)] bg-card border rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-fade-up">
           {/* Header */}
           <div className="px-4 py-3 border-b bg-gradient-to-r from-primary/15 via-sidebar to-sidebar text-sidebar-foreground flex items-center gap-3">
             <Avatar size={36} />
@@ -254,7 +254,7 @@ export function CoreSphereAI() {
                   {hello}, {user.name.split(" ")[0]} — how can I support your operations today?
                 </div>
                 {messages.map((m, i) => (
-                  <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"} animate-fade-in`}>
+                  <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"} animate-fade-up`}>
                     {m.role === "user" ? (
                       <div className="max-w-[85%] text-sm rounded-lg px-3 py-2 bg-primary text-primary-foreground">{m.text}</div>
                     ) : (
