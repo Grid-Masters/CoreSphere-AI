@@ -33,6 +33,8 @@ import { ComplianceHealth } from "@/components/governance/ComplianceHealth";
 import { AtRiskStaff } from "@/components/governance/AtRiskStaff";
 import { AckTracker } from "@/components/governance/AckTracker";
 import { ScenarioBanner } from "@/components/ops/ScenarioBanner";
+import { MissionControl } from "@/components/mission/MissionControl";
+import { ReadinessScore } from "@/components/mission/ReadinessScore";
 import { EnterpriseActivityFeed } from "@/components/feed/EnterpriseActivityFeed";
 import { KpiDrillSheet, type KpiDrill } from "@/components/exec/KpiDrillSheet";
 import { AnimatedCounter } from "@/components/ui-bits/AnimatedCounter";
@@ -90,9 +92,14 @@ export function StaffDashboard({ user }: { user: DirectoryEntry }) {
       <div className="mb-6">
         <ProductsAndNews />
       </div>
-      <Greeting user={user} subtitle="Here's your operational snapshot for today's shift." />
+      <MissionControl user={user} />
 
       <ScenarioBanner />
+
+      <div className="grid lg:grid-cols-3 gap-4 mb-4">
+        <div className="lg:col-span-2"><ReadinessScore user={user} /></div>
+        <TodaysWorkflow role="staff" />
+      </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard label="Assigned SOPs" value={sops.length} delta="+2 this month" icon={BookOpen} tone="primary" />
@@ -102,8 +109,7 @@ export function StaffDashboard({ user }: { user: DirectoryEntry }) {
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
-        <div className="lg:col-span-2"><TodaysWorkflow role="staff" /></div>
-        <EnterpriseActivityFeed />
+        <div className="lg:col-span-3"><EnterpriseActivityFeed /></div>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4 mt-4">

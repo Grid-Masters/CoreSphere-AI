@@ -1,17 +1,37 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { Sparkles, X, Send, AlertTriangle, ArrowRight, BookOpen, CheckSquare, Clock, ShieldCheck } from "lucide-react";
+import {
+  X,
+  Send,
+  AlertTriangle,
+  ArrowRight,
+  BookOpen,
+  CheckSquare,
+  Clock,
+  ShieldCheck,
+  MessageSquare,
+  PenLine,
+  Info,
+  Copy,
+  Check,
+  Wand2,
+} from "lucide-react";
 import { askCoreSphereAI, type AiAnswer } from "@/lib/coresphere-ai.functions";
+import { runWritingAssistant, WRITER_TOOLS, type WriterTool } from "@/lib/coresphere-writer.functions";
 import { useActiveUser } from "@/lib/active-user";
+import { greetingForHour } from "@/lib/quotes";
+import {
+  AI_NAME,
+  AI_TAGLINE,
+  AI_MAY,
+  AI_MUST_NOT,
+  quickPromptsFor,
+} from "@/lib/ai-governance";
+import aiAvatar from "@/assets/ai/coresphere-ai-avatar.png";
 
 export const OPEN_AI_EVENT = "coresphere:open-ai";
 
-const suggested = [
-  "Summarize the Card Block SOP",
-  "What's the SLA for dispute resolution?",
-  "Quiz me on AML red flags",
-  "Draft a customer apology for delayed refund",
-];
+type Tab = "chat" | "write" | "about";
 
 type Msg = { role: "user"; text: string } | { role: "ai"; answer: AiAnswer; loading?: boolean };
 
@@ -62,23 +82,54 @@ function AiBubble({ a }: { a: AiAnswer }) {
   );
 }
 
+function Avatar({ size = 32 }: { size?: number }) {
+  return (
+    <img
+      src={aiAvatar}
+      alt="CoreSphere AI"
+      width={size}
+      height={size}
+      loading="lazy"
+      className="rounded-md object-contain"
+      style={{ width: size, height: size }}
+    />
+  );
+}
+
 export function CoreSphereAI() {
   const [open, setOpen] = useState(false);
+  const [tab, setTab] = useState<Tab>("chat");
   const [input, setInput] = useState("");
   const user = useActiveUser();
   const ask = useServerFn(askCoreSphereAI);
+  const write = useServerFn(runWritingAssistant);
   const [busy, setBusy] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [hello, setHello] = useState("Good morning");
+
+  // Writing assistant state
+  const [writerTool, setWriterTool] = useState<WriterTool>("Professional tone");
+  const [writerInput, setWriterInput] = useState("");
+  const [writerOutput, setWriterOutput] = useState("");
+  const [writerErr, setWriterErr] = useState("");
+  const [writerBusy, setWriterBusy] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const quickPrompts = quickPromptsFor(user.department);
 
   useEffect(() => {
     const handler = () => setOpen(true);
     window.addEventListener(OPEN_AI_EVENT, handler);
     return () => window.removeEventListener(OPEN_AI_EVENT, handler);
   }, []);
+  useEffect(() => {
+    setHello(greetingForHour(new Date().getHours()));
+  }, [open]);
   const [messages, setMessages] = useState<Msg[]>([
     {
       role: "ai",
       answer: {
-        summary: "I'm CoreSphere AI — your banking operations assistant. Ask about SOPs, compliance, or escalation paths and I'll respond in a structured operational format.",
+        summary: `I'm ${AI_NAME} — ${AI_TAGLINE}. Ask me about SOPs, compliance and escalation paths, or use the Writing Assistant to polish memos and customer responses.`,
         requiredActions: [],
         escalationPath: "",
         slaTimeline: "",
@@ -89,6 +140,10 @@ export function CoreSphereAI() {
       },
     },
   ]);
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages, busy]);
 
   const send = async () => {
     if (!input.trim() || busy) return;
@@ -110,88 +165,237 @@ export function CoreSphereAI() {
     }
   };
 
+  const runWriter = async () => {
+    if (!writerInput.trim() || writerBusy) return;
+    setWriterBusy(true);
+    setWriterErr("");
+    setWriterOutput("");
+    try {
+      const res = await write({ data: { tool: writerTool, text: writerInput.trim() } });
+      setWriterOutput(res.output);
+      if (res.error) setWriterErr(res.error);
+    } catch (err) {
+      console.error(err);
+      setWriterErr("Could not reach the AI service. Please try again.");
+    } finally {
+      setWriterBusy(false);
+    }
+  };
+
+  const copyOut = async () => {
+    try {
+      await navigator.clipboard.writeText(writerOutput);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      /* clipboard unavailable */
+    }
+  };
+
   return (
     <>
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 flex items-center justify-center hover:scale-105 transition-transform"
+          className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-card border shadow-lg shadow-primary/20 flex items-center justify-center hover:scale-105 transition-transform"
           aria-label="Open CoreSphere AI"
         >
-          <Sparkles className="h-6 w-6" />
+          <Avatar size={36} />
+          <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-[color:var(--success)] border-2 border-card" />
         </button>
       )}
       {open && (
-        <div className="fixed bottom-6 right-6 z-50 w-[420px] max-w-[calc(100vw-2rem)] h-[620px] max-h-[calc(100vh-3rem)] bg-card border rounded-xl shadow-2xl flex flex-col overflow-hidden">
-          <div className="px-4 py-3 border-b bg-sidebar text-sidebar-foreground flex items-center gap-3">
-            <div className="h-8 w-8 rounded-md bg-primary flex items-center justify-center">
-              <Sparkles className="h-4 w-4 text-primary-foreground" />
-            </div>
+        <div className="fixed bottom-6 right-6 z-50 w-[440px] max-w-[calc(100vw-2rem)] h-[660px] max-h-[calc(100vh-3rem)] bg-card border rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-fade-up">
+          {/* Header */}
+          <div className="px-4 py-3 border-b bg-gradient-to-r from-primary/15 via-sidebar to-sidebar text-sidebar-foreground flex items-center gap-3">
+            <Avatar size={36} />
             <div className="flex-1 leading-tight">
-              <div className="text-sm font-semibold">CoreSphere AI</div>
-              <div className="text-[10px] uppercase tracking-wider text-sidebar-foreground/60">
-                Banking Operations Intelligence
+              <div className="text-sm font-semibold">{AI_NAME}</div>
+              <div className="text-[10px] uppercase tracking-wider text-sidebar-foreground/70 flex items-center gap-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--success)] inline-block" />
+                {AI_TAGLINE}
               </div>
             </div>
             <button
               onClick={() => setOpen(false)}
               className="h-8 w-8 rounded-md hover:bg-sidebar-accent flex items-center justify-center"
+              aria-label="Close"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            {messages.map((m, i) => (
-              <div
-                key={i}
-                className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
+
+          {/* Tabs */}
+          <div className="flex border-b bg-muted/40 text-xs font-medium">
+            {([
+              { id: "chat" as Tab, label: "Coach", icon: MessageSquare },
+              { id: "write" as Tab, label: "Writing Assistant", icon: PenLine },
+              { id: "about" as Tab, label: "About", icon: Info },
+            ]).map((t) => (
+              <button
+                key={t.id}
+                onClick={() => setTab(t.id)}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 border-b-2 transition-colors ${
+                  tab === t.id
+                    ? "border-primary text-primary"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
+                }`}
               >
-                {m.role === "user" ? (
-                  <div className="max-w-[85%] text-sm rounded-lg px-3 py-2 bg-primary text-primary-foreground">{m.text}</div>
-                ) : (
-                  <AiBubble a={m.answer} />
+                <t.icon className="h-3.5 w-3.5" /> {t.label}
+              </button>
+            ))}
+          </div>
+
+          {/* CHAT TAB */}
+          {tab === "chat" && (
+            <>
+              <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
+                <div className="text-xs text-muted-foreground">
+                  {hello}, {user.name.split(" ")[0]} — how can I support your operations today?
+                </div>
+                {messages.map((m, i) => (
+                  <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"} animate-fade-up`}>
+                    {m.role === "user" ? (
+                      <div className="max-w-[85%] text-sm rounded-lg px-3 py-2 bg-primary text-primary-foreground">{m.text}</div>
+                    ) : (
+                      <div className="flex gap-2 max-w-[95%]">
+                        <Avatar size={24} />
+                        <AiBubble a={m.answer} />
+                      </div>
+                    )}
+                  </div>
+                ))}
+                {busy && (
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Avatar size={20} /> <span className="animate-pulse-soft">CoreSphere AI is analysing…</span>
+                  </div>
+                )}
+                {messages.length <= 1 && (
+                  <div className="pt-2 space-y-1.5">
+                    <div className="text-[11px] text-muted-foreground uppercase tracking-wider px-1">Quick prompts</div>
+                    {quickPrompts.map((s) => (
+                      <button
+                        key={s}
+                        onClick={() => setInput(s)}
+                        className="w-full text-left text-xs px-3 py-2 rounded-md border bg-background hover:bg-muted transition-colors flex items-center gap-2"
+                      >
+                        <ArrowRight className="h-3 w-3 text-primary shrink-0" /> {s}
+                      </button>
+                    ))}
+                  </div>
                 )}
               </div>
-            ))}
-            {busy && (
-              <div className="flex justify-start"><div className="text-xs text-muted-foreground animate-pulse-soft">CoreSphere AI is analysing…</div></div>
-            )}
-            {messages.length <= 1 && (
-              <div className="pt-2 space-y-1.5">
-                <div className="text-[11px] text-muted-foreground uppercase tracking-wider px-1">
-                  Suggested
-                </div>
-                {suggested.map((s) => (
+              <div className="border-t p-3">
+                <div className="flex items-center gap-2">
+                  <input
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && send()}
+                    placeholder="Ask about SOPs, compliance, escalation…"
+                    className="flex-1 h-10 px-3 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring/40"
+                    disabled={busy}
+                  />
                   <button
-                    key={s}
-                    onClick={() => setInput(s)}
-                    className="w-full text-left text-xs px-3 py-2 rounded-md border bg-background hover:bg-muted"
+                    onClick={send}
+                    disabled={busy}
+                    className="h-10 w-10 rounded-md bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-50"
                   >
-                    {s}
+                    <Send className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* WRITING ASSISTANT TAB */}
+          {tab === "write" && (
+            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+              <div className="text-[11px] text-muted-foreground uppercase tracking-wider">Choose a tool</div>
+              <div className="flex flex-wrap gap-1.5">
+                {WRITER_TOOLS.map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => setWriterTool(t)}
+                    className={`text-[11px] px-2 py-1 rounded-full border transition-colors ${
+                      writerTool === t ? "bg-primary text-primary-foreground border-primary" : "bg-background hover:bg-muted"
+                    }`}
+                  >
+                    {t}
                   </button>
                 ))}
               </div>
-            )}
-          </div>
-          <div className="border-t p-3">
-            <div className="flex items-center gap-2">
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && send()}
-                placeholder="Ask about SOPs, compliance, escalation…"
-                className="flex-1 h-10 px-3 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring/40"
-                disabled={busy}
+              <textarea
+                value={writerInput}
+                onChange={(e) => setWriterInput(e.target.value)}
+                placeholder="Paste a memo, customer reply, announcement or SOP text…"
+                className="w-full h-28 p-3 rounded-md border border-input bg-background text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring/40"
               />
               <button
-                onClick={send}
-                disabled={busy}
-                className="h-10 w-10 rounded-md bg-primary text-primary-foreground flex items-center justify-center"
+                onClick={runWriter}
+                disabled={writerBusy || !writerInput.trim()}
+                className="w-full h-10 rounded-md bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                <Send className="h-4 w-4" />
+                <Wand2 className="h-4 w-4" /> {writerBusy ? "Working…" : `Apply: ${writerTool}`}
               </button>
+              {writerErr && (
+                <div className="text-[11px] text-[color:var(--warning)] flex items-center gap-1">
+                  <AlertTriangle className="h-3 w-3" /> {writerErr}
+                </div>
+              )}
+              {writerOutput && (
+                <div className="rounded-md border bg-muted/50 p-3">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Result</span>
+                    <button onClick={copyOut} className="inline-flex items-center gap-1 text-[11px] text-primary hover:underline">
+                      {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />} {copied ? "Copied" : "Copy"}
+                    </button>
+                  </div>
+                  <div className="text-[13px] whitespace-pre-wrap leading-snug">{writerOutput}</div>
+                </div>
+              )}
             </div>
-          </div>
+          )}
+
+          {/* ABOUT TAB */}
+          {tab === "about" && (
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              <div className="flex items-center gap-3">
+                <Avatar size={44} />
+                <div>
+                  <div className="text-sm font-semibold">{AI_NAME}</div>
+                  <div className="text-[11px] text-muted-foreground">{AI_TAGLINE}</div>
+                </div>
+              </div>
+              <p className="text-[13px] text-muted-foreground">
+                CoreSphere AI is an Operations Development Assistant for the UBA Customer Fulfilment Group.
+                It supports learning, knowledge and operational excellence only.
+              </p>
+              <div>
+                <div className="text-[10px] uppercase tracking-wider font-semibold text-[color:var(--success)] flex items-center gap-1 mb-1.5">
+                  <ShieldCheck className="h-3 w-3" /> What it can do
+                </div>
+                <ul className="text-[12px] space-y-1">
+                  {AI_MAY.map((x) => (
+                    <li key={x} className="flex items-start gap-1.5">
+                      <Check className="h-3 w-3 text-[color:var(--success)] mt-0.5 shrink-0" /> {x}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <div className="text-[10px] uppercase tracking-wider font-semibold text-[color:var(--warning)] flex items-center gap-1 mb-1.5">
+                  <AlertTriangle className="h-3 w-3" /> What it will never do
+                </div>
+                <ul className="text-[12px] space-y-1">
+                  {AI_MUST_NOT.map((x) => (
+                    <li key={x} className="flex items-start gap-1.5">
+                      <X className="h-3 w-3 text-[color:var(--warning)] mt-0.5 shrink-0" /> {x}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </>
