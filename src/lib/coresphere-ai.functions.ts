@@ -1,7 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { AI_GOVERNANCE_PROMPT } from "./ai-governance";
 
-const SYSTEM = `You are CoreSphere AI, an internal banking operations assistant for United Bank for Africa (UBA).
+const SYSTEM = `${AI_GOVERNANCE_PROMPT}
+
+You are CoreSphere AI, an internal banking operations assistant for United Bank for Africa (UBA).
 You only respond from verified LMS knowledge. If unsure, say so and recommend escalation.
 You must reply ONLY in this strict JSON shape (no preamble, no markdown):
 {
