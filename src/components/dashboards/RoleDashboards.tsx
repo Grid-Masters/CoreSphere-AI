@@ -229,6 +229,11 @@ export function QADashboard({ user }: { user: DirectoryEntry }) {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-4 mt-4">
+        <KnowledgeGapInsights title="AI Knowledge Gap Engine" />
+        <Leaderboards title="Group Leaderboard" />
+      </div>
+
+      <div className="grid lg:grid-cols-2 gap-4 mt-4">
         <AtRiskStaff />
         <EnterpriseActivityFeed />
       </div>
