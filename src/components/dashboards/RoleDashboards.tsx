@@ -438,6 +438,11 @@ export function TeamLeadDashboard({ user }: { user: DirectoryEntry }) {
         <AckTracker department={user.department} />
       </div>
 
+      <div className="grid lg:grid-cols-2 gap-4 mt-4">
+        <KnowledgeGapInsights department={user.department} title={`${user.department} Knowledge Gaps`} />
+        <Leaderboards department={user.department} />
+      </div>
+
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
         <PanelCard className="lg:col-span-2" title="Team Roster" description="Completion + QA per direct report">
           <ul className="divide-y -my-2">
