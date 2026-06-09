@@ -5,7 +5,16 @@ import { Users, ShieldCheck, FileCheck2, Building2, CheckCircle2, XCircle } from
 import { departments } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/admin")({
-  head: () => ({ meta: [{ title: "Admin Panel — UBA CoreSphere" }] }),
+  head: () => ({
+    meta: [
+      { title: "Admin Panel — UBA CoreSphere" },
+      { name: "description", content: "CoreSphere admin panel for reviewing SOP updates, approvals and operational governance tasks." },
+      { property: "og:title", content: "Admin Panel — UBA CoreSphere" },
+      { property: "og:description", content: "CoreSphere admin panel for reviewing SOP updates, approvals and operational governance tasks." },
+      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/admin" },
+    ],
+    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/admin" }],
+  }),
   component: Admin,
 });
 

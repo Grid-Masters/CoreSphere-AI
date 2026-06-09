@@ -5,7 +5,16 @@ import { AppShell } from "@/components/layout/AppShell";
 import { coachingThreads } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/qa-coaching")({
-  head: () => ({ meta: [{ title: "QA Coaching Hub — UBA CoreSphere" }] }),
+  head: () => ({
+    meta: [
+      { title: "QA Coaching Hub — UBA CoreSphere" },
+      { name: "description", content: "Structured 1:1 QA coaching with your officer on CoreSphere — sessions logged for compliance." },
+      { property: "og:title", content: "QA Coaching Hub — UBA CoreSphere" },
+      { property: "og:description", content: "Structured 1:1 QA coaching with your officer on CoreSphere — sessions logged for compliance." },
+      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/qa-coaching" },
+    ],
+    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/qa-coaching" }],
+  }),
   component: CoachingHub,
 });
 
@@ -103,6 +112,7 @@ function CoachingHub() {
           <div className="border-t p-3 flex items-center gap-2">
             <MessageSquare className="h-4 w-4 text-muted-foreground" />
             <input
+              aria-label="Write a coaching note"
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="Write a coaching note…"

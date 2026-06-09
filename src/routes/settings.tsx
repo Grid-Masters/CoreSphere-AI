@@ -6,7 +6,16 @@ import { useTheme, type ThemeMode } from "@/lib/theme";
 import { useActiveUser } from "@/lib/active-user";
 
 export const Route = createFileRoute("/settings")({
-  head: () => ({ meta: [{ title: "Settings — UBA CoreSphere" }] }),
+  head: () => ({
+    meta: [
+      { title: "Settings — UBA CoreSphere" },
+      { name: "description", content: "Manage your CoreSphere profile, preferences and account settings." },
+      { property: "og:title", content: "Settings — UBA CoreSphere" },
+      { property: "og:description", content: "Manage your CoreSphere profile, preferences and account settings." },
+      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/settings" },
+    ],
+    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/settings" }],
+  }),
   component: Settings,
 });
 

@@ -12,7 +12,16 @@ import {
 } from "@/components/dashboards/RoleDashboards";
 
 export const Route = createFileRoute("/")({
-  head: () => ({ meta: [{ title: "Dashboard — UBA CoreSphere" }] }),
+  head: () => ({
+    meta: [
+      { title: "Dashboard — UBA CoreSphere" },
+      { name: "description", content: "Your CoreSphere operational dashboard — daily missions, readiness, SOP progress and performance intelligence for UBA." },
+      { property: "og:title", content: "Dashboard — UBA CoreSphere" },
+      { property: "og:description", content: "Your CoreSphere operational dashboard — daily missions, readiness, SOP progress and performance intelligence for UBA." },
+      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/" },
+    ],
+    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/" }],
+  }),
   component: Dashboard,
 });
 

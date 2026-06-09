@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ubacoresphere-pulse.lovable.app/sitemap.xml

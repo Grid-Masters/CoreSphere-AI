@@ -1,0 +1,13 @@
+# CoreSphere AI
+
+> Enterprise operations intelligence and knowledge ecosystem for United Bank for Africa (UBA) Customer Fulfillment Group — an AI-powered operations coach, knowledge governance, learning, and workforce intelligence platform.
+
+CoreSphere AI is a restricted internal banking operations platform. Most surfaces require authenticated UBA enterprise access.
+
+## Pages
+
+- [Sign in](/login): Sign in to CoreSphere AI with UBA enterprise credentials.
+
+## Optional
+
+- [Knowledge Hub](/knowledge-hub): Operational SOPs, procedures and training (authenticated).

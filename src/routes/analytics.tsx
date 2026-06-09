@@ -5,7 +5,16 @@ import { PanelCard, StatCard } from "@/components/ui-bits/Card";
 import { qaScores } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/analytics")({
-  head: () => ({ meta: [{ title: "Analytics — UBA CoreSphere" }] }),
+  head: () => ({
+    meta: [
+      { title: "Analytics — UBA CoreSphere" },
+      { name: "description", content: "Operational analytics and performance insights across UBA Customer Fulfillment on CoreSphere AI." },
+      { property: "og:title", content: "Analytics — UBA CoreSphere" },
+      { property: "og:description", content: "Operational analytics and performance insights across UBA Customer Fulfillment on CoreSphere AI." },
+      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/analytics" },
+    ],
+    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/analytics" }],
+  }),
   component: Analytics,
 });
 

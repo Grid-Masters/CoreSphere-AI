@@ -4,7 +4,16 @@ import { AppShell } from "@/components/layout/AppShell";
 import { townhallSessions } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/townhall")({
-  head: () => ({ meta: [{ title: "Townhall Hub — UBA CoreSphere" }] }),
+  head: () => ({
+    meta: [
+      { title: "Townhall Hub — UBA CoreSphere" },
+      { name: "description", content: "UBA townhall hub for leadership broadcasts and group-wide operational updates on CoreSphere." },
+      { property: "og:title", content: "Townhall Hub — UBA CoreSphere" },
+      { property: "og:description", content: "UBA townhall hub for leadership broadcasts and group-wide operational updates on CoreSphere." },
+      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/townhall" },
+    ],
+    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/townhall" }],
+  }),
   component: Townhall,
 });
 

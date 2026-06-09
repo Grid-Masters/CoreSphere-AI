@@ -4,7 +4,16 @@ import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard } from "@/components/ui-bits/Card";
 
 export const Route = createFileRoute("/notifications")({
-  head: () => ({ meta: [{ title: "Notifications — UBA CoreSphere" }] }),
+  head: () => ({
+    meta: [
+      { title: "Notifications — UBA CoreSphere" },
+      { name: "description", content: "Your CoreSphere notifications — scorecards, memos, missions and operational alerts." },
+      { property: "og:title", content: "Notifications — UBA CoreSphere" },
+      { property: "og:description", content: "Your CoreSphere notifications — scorecards, memos, missions and operational alerts." },
+      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/notifications" },
+    ],
+    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/notifications" }],
+  }),
   component: Notifications,
 });
 

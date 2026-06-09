@@ -8,7 +8,14 @@ import { memos } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/memos")({
   head: () => ({
-    meta: [{ title: "Operations Memos — UBA CoreSphere" }],
+    meta: [
+      { title: "Operations Memos — UBA CoreSphere" },
+      { name: "description", content: "Operational notices, compliance alerts and memos for the UBA Customer Fulfillment Group — acknowledge to confirm read." },
+      { property: "og:title", content: "Operations Memos — UBA CoreSphere" },
+      { property: "og:description", content: "Operational notices, compliance alerts and memos for the UBA Customer Fulfillment Group — acknowledge to confirm read." },
+      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/memos" },
+    ],
+    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/memos" }],
     scripts: [
       {
         type: "application/ld+json",

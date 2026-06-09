@@ -8,7 +8,16 @@ import { badgesForUser, badgeStats, type BadgeCategory } from "@/lib/badges";
 import { levelFor, pulsePoints, readinessScore, streakFor, LEVELS } from "@/lib/gamification";
 
 export const Route = createFileRoute("/achievements")({
-  head: () => ({ meta: [{ title: "Achievements — UBA CoreSphere" }] }),
+  head: () => ({
+    meta: [
+      { title: "Achievements — UBA CoreSphere" },
+      { name: "description", content: "Track your CoreSphere badges, milestones and recognition across UBA operations learning and performance." },
+      { property: "og:title", content: "Achievements — UBA CoreSphere" },
+      { property: "og:description", content: "Track your CoreSphere badges, milestones and recognition across UBA operations learning and performance." },
+      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/achievements" },
+    ],
+    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/achievements" }],
+  }),
   component: Achievements,
 });
 
