@@ -19,7 +19,16 @@ import ops2 from "@/assets/login/ops-2.jpg";
 import ops3 from "@/assets/login/ops-3.jpg";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Sign in — UBA CoreSphere" }] }),
+  head: () => ({
+    meta: [
+      { title: "Sign in — UBA CoreSphere" },
+      { name: "description", content: "Sign in to CoreSphere AI with your UBA enterprise credentials to access operations intelligence and knowledge tools." },
+      { property: "og:title", content: "Sign in — UBA CoreSphere" },
+      { property: "og:description", content: "Sign in to CoreSphere AI with your UBA enterprise credentials to access operations intelligence and knowledge tools." },
+      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/login" },
+    ],
+    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/login" }],
+  }),
   component: LoginPage,
 });
 

@@ -39,7 +39,16 @@ function thumbFor(cat: string) {
 }
 
 export const Route = createFileRoute("/knowledge-hub/")({
-  head: () => ({ meta: [{ title: "Knowledge Hub — UBA CoreSphere" }] }),
+  head: () => ({
+    meta: [
+      { title: "Knowledge Hub — UBA CoreSphere" },
+      { name: "description", content: "Search approved UBA SOPs, policies and operational playbooks with AI-powered guidance in the CoreSphere Knowledge Hub." },
+      { property: "og:title", content: "Knowledge Hub — UBA CoreSphere" },
+      { property: "og:description", content: "Search approved UBA SOPs, policies and operational playbooks with AI-powered guidance in the CoreSphere Knowledge Hub." },
+      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/knowledge-hub" },
+    ],
+    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/knowledge-hub" }],
+  }),
   component: KnowledgeHub,
 });
 
