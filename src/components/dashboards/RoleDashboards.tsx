@@ -331,6 +331,11 @@ export function LDDashboard({ user }: { user: DirectoryEntry }) {
         <ComplianceHealth scope="Enterprise Learning" />
       </div>
 
+      <div className="grid lg:grid-cols-2 gap-4 mt-4">
+        <KnowledgeGapInsights title="Enterprise Knowledge Gaps" />
+        <Leaderboards title="Group Leaderboard" />
+      </div>
+
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
         <PanelCard className="lg:col-span-2" title="Content Pipeline" description="Maker-checker: L&D uploads, Unit Head approves before publish">
           <ul className="divide-y -my-2">
