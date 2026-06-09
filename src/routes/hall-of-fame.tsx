@@ -5,7 +5,6 @@ import { PanelCard } from "@/components/ui-bits/Card";
 import { Leaderboards } from "@/components/mission/Leaderboards";
 import { ShiftScheduler } from "@/components/mission/ShiftScheduler";
 import { useActiveUser } from "@/lib/active-user";
-import { champions } from "@/lib/mock-data";
 import { DEPARTMENTS_WITH_STAFF } from "@/lib/leaderboards";
 
 export const Route = createFileRoute("/hall-of-fame")({
