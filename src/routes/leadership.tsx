@@ -6,7 +6,14 @@ import { announcements } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/leadership")({
   head: () => ({
-    meta: [{ title: "Leadership Board — UBA CoreSphere" }],
+    meta: [
+      { title: "Leadership Board — UBA CoreSphere" },
+      { name: "description", content: "Strategic announcements and operational updates from UBA Group Heads on the CoreSphere Leadership Board." },
+      { property: "og:title", content: "Leadership Board — UBA CoreSphere" },
+      { property: "og:description", content: "Strategic announcements and operational updates from UBA Group Heads on the CoreSphere Leadership Board." },
+      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/leadership" },
+    ],
+    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/leadership" }],
     scripts: [
       {
         type: "application/ld+json",
