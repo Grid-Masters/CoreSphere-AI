@@ -103,6 +103,7 @@ function CoachingHub() {
           <div className="border-t p-3 flex items-center gap-2">
             <MessageSquare className="h-4 w-4 text-muted-foreground" />
             <input
+              aria-label="Write a coaching note"
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="Write a coaching note…"
