@@ -76,6 +76,7 @@ function KnowledgeHub() {
         <div className="flex-1 relative">
           <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
           <input
+            aria-label="Search SOPs and policies"
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="AI-powered search across SOPs and policies…"
@@ -100,6 +101,7 @@ function KnowledgeHub() {
         </div>
       </div>
 
+      <h2 className="sr-only">Standard Operating Procedures</h2>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {filtered.map((s) => (
           <SopCard key={s.id} sop={s} />

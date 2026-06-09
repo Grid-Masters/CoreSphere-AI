@@ -23,7 +23,7 @@ export function PanelCard({
       {(title || action) && (
         <header className="px-5 py-4 border-b flex items-start justify-between gap-4">
           <div>
-            {title && <h3 className="text-sm font-semibold tracking-tight">{title}</h3>}
+            {title && <h2 className="text-sm font-semibold tracking-tight">{title}</h2>}
             {description && (
               <p className="text-xs text-muted-foreground mt-0.5">{description}</p>
             )}
