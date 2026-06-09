@@ -18,6 +18,7 @@ import { Route as MemosRouteImport } from './routes/memos'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LeadershipRouteImport } from './routes/leadership'
 import { Route as HallOfFameRouteImport } from './routes/hall-of-fame'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as AssessmentsRouteImport } from './routes/assessments'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AdministrationRouteImport } from './routes/administration'
@@ -72,6 +73,11 @@ const HallOfFameRoute = HallOfFameRouteImport.update({
   path: '/hall-of-fame',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AssessmentsRoute = AssessmentsRouteImport.update({
   id: '/assessments',
   path: '/assessments',
@@ -120,6 +126,7 @@ export interface FileRoutesByFullPath {
   '/administration': typeof AdministrationRoute
   '/analytics': typeof AnalyticsRoute
   '/assessments': typeof AssessmentsRoute
+  '/faq': typeof FaqRoute
   '/hall-of-fame': typeof HallOfFameRoute
   '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
@@ -139,6 +146,7 @@ export interface FileRoutesByTo {
   '/administration': typeof AdministrationRoute
   '/analytics': typeof AnalyticsRoute
   '/assessments': typeof AssessmentsRoute
+  '/faq': typeof FaqRoute
   '/hall-of-fame': typeof HallOfFameRoute
   '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
@@ -159,6 +167,7 @@ export interface FileRoutesById {
   '/administration': typeof AdministrationRoute
   '/analytics': typeof AnalyticsRoute
   '/assessments': typeof AssessmentsRoute
+  '/faq': typeof FaqRoute
   '/hall-of-fame': typeof HallOfFameRoute
   '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
@@ -180,6 +189,7 @@ export interface FileRouteTypes {
     | '/administration'
     | '/analytics'
     | '/assessments'
+    | '/faq'
     | '/hall-of-fame'
     | '/leadership'
     | '/login'
@@ -199,6 +209,7 @@ export interface FileRouteTypes {
     | '/administration'
     | '/analytics'
     | '/assessments'
+    | '/faq'
     | '/hall-of-fame'
     | '/leadership'
     | '/login'
@@ -218,6 +229,7 @@ export interface FileRouteTypes {
     | '/administration'
     | '/analytics'
     | '/assessments'
+    | '/faq'
     | '/hall-of-fame'
     | '/leadership'
     | '/login'
@@ -238,6 +250,7 @@ export interface RootRouteChildren {
   AdministrationRoute: typeof AdministrationRoute
   AnalyticsRoute: typeof AnalyticsRoute
   AssessmentsRoute: typeof AssessmentsRoute
+  FaqRoute: typeof FaqRoute
   HallOfFameRoute: typeof HallOfFameRoute
   LeadershipRoute: typeof LeadershipRoute
   LoginRoute: typeof LoginRoute
@@ -316,6 +329,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HallOfFameRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/assessments': {
       id: '/assessments'
       path: '/assessments'
@@ -382,6 +402,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdministrationRoute: AdministrationRoute,
   AnalyticsRoute: AnalyticsRoute,
   AssessmentsRoute: AssessmentsRoute,
+  FaqRoute: FaqRoute,
   HallOfFameRoute: HallOfFameRoute,
   LeadershipRoute: LeadershipRoute,
   LoginRoute: LoginRoute,
@@ -397,3 +418,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
