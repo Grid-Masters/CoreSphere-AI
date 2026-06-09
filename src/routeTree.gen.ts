@@ -17,6 +17,7 @@ import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MemosRouteImport } from './routes/memos'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LeadershipRouteImport } from './routes/leadership'
+import { Route as HallOfFameRouteImport } from './routes/hall-of-fame'
 import { Route as AssessmentsRouteImport } from './routes/assessments'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AdministrationRouteImport } from './routes/administration'
@@ -64,6 +65,11 @@ const LoginRoute = LoginRouteImport.update({
 const LeadershipRoute = LeadershipRouteImport.update({
   id: '/leadership',
   path: '/leadership',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HallOfFameRoute = HallOfFameRouteImport.update({
+  id: '/hall-of-fame',
+  path: '/hall-of-fame',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AssessmentsRoute = AssessmentsRouteImport.update({
@@ -114,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/administration': typeof AdministrationRoute
   '/analytics': typeof AnalyticsRoute
   '/assessments': typeof AssessmentsRoute
+  '/hall-of-fame': typeof HallOfFameRoute
   '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
   '/memos': typeof MemosRoute
@@ -132,6 +139,7 @@ export interface FileRoutesByTo {
   '/administration': typeof AdministrationRoute
   '/analytics': typeof AnalyticsRoute
   '/assessments': typeof AssessmentsRoute
+  '/hall-of-fame': typeof HallOfFameRoute
   '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
   '/memos': typeof MemosRoute
@@ -151,6 +159,7 @@ export interface FileRoutesById {
   '/administration': typeof AdministrationRoute
   '/analytics': typeof AnalyticsRoute
   '/assessments': typeof AssessmentsRoute
+  '/hall-of-fame': typeof HallOfFameRoute
   '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
   '/memos': typeof MemosRoute
@@ -171,6 +180,7 @@ export interface FileRouteTypes {
     | '/administration'
     | '/analytics'
     | '/assessments'
+    | '/hall-of-fame'
     | '/leadership'
     | '/login'
     | '/memos'
@@ -189,6 +199,7 @@ export interface FileRouteTypes {
     | '/administration'
     | '/analytics'
     | '/assessments'
+    | '/hall-of-fame'
     | '/leadership'
     | '/login'
     | '/memos'
@@ -207,6 +218,7 @@ export interface FileRouteTypes {
     | '/administration'
     | '/analytics'
     | '/assessments'
+    | '/hall-of-fame'
     | '/leadership'
     | '/login'
     | '/memos'
@@ -226,6 +238,7 @@ export interface RootRouteChildren {
   AdministrationRoute: typeof AdministrationRoute
   AnalyticsRoute: typeof AnalyticsRoute
   AssessmentsRoute: typeof AssessmentsRoute
+  HallOfFameRoute: typeof HallOfFameRoute
   LeadershipRoute: typeof LeadershipRoute
   LoginRoute: typeof LoginRoute
   MemosRoute: typeof MemosRoute
@@ -296,6 +309,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LeadershipRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hall-of-fame': {
+      id: '/hall-of-fame'
+      path: '/hall-of-fame'
+      fullPath: '/hall-of-fame'
+      preLoaderRoute: typeof HallOfFameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/assessments': {
       id: '/assessments'
       path: '/assessments'
@@ -362,6 +382,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdministrationRoute: AdministrationRoute,
   AnalyticsRoute: AnalyticsRoute,
   AssessmentsRoute: AssessmentsRoute,
+  HallOfFameRoute: HallOfFameRoute,
   LeadershipRoute: LeadershipRoute,
   LoginRoute: LoginRoute,
   MemosRoute: MemosRoute,
@@ -376,3 +397,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
