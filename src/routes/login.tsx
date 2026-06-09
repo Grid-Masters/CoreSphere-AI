@@ -147,16 +147,17 @@ function LoginPage() {
             <UbaLogo variant="mark" size={36} />
             <div className="text-base font-semibold">CoreSphere AI</div>
           </div>
-          <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Sign in to CoreSphere AI</h1>
           <p className="text-sm text-muted-foreground mt-1">
             Sign in with your UBA enterprise credentials to continue.
           </p>
           <div className="mt-8 space-y-4">
             <div>
-              <label className="text-xs font-medium text-muted-foreground">Corporate email</label>
+              <label htmlFor="login-email" className="text-xs font-medium text-muted-foreground">Corporate email</label>
               <div className="mt-1 relative">
                 <Mail className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                 <input
+                  id="login-email"
                   type="email"
                   required
                   value={email}
@@ -167,10 +168,11 @@ function LoginPage() {
               </div>
             </div>
             <div>
-              <label className="text-xs font-medium text-muted-foreground">Password</label>
+              <label htmlFor="login-password" className="text-xs font-medium text-muted-foreground">Password</label>
               <div className="mt-1 relative">
                 <Lock className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                 <input
+                  id="login-password"
                   type="password"
                   required
                   value={password}
