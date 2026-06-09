@@ -24,56 +24,62 @@ import { sops, currentUser, overallProgress } from "@/lib/mock-data";
 import { useTheoryProgress, useVideoProgress } from "@/lib/progress-store";
 
 export const Route = createFileRoute("/knowledge-hub/$sopId")({
-  head: ({ loaderData }) => ({
-    meta: [{ title: `${loaderData.title} — UBA CoreSphere` }],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "HowTo",
-          name: loaderData.title,
-          description: loaderData.summary,
-          category: loaderData.category,
-          audience: {
-            "@type": "BusinessAudience",
-            audienceType: loaderData.department,
-          },
-          publisher: {
-            "@type": "Organization",
-            name: "United Bank for Africa",
-          },
-          step: [
+  head: ({ params }) => {
+    const sop = sops.find((x) => x.id === params.sopId);
+    const title = sop?.title ?? params.sopId;
+    return {
+      meta: [{ title: `${title} — UBA CoreSphere` }],
+      scripts: sop
+        ? [
             {
-              "@type": "HowToStep",
-              name: "Authentication & Verification",
-              text: "Authenticate caller using 3-step verification before initiating any account-impacting action.",
+              type: "application/ld+json",
+              children: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "HowTo",
+                name: sop.title,
+                description: sop.summary,
+                category: sop.category,
+                audience: {
+                  "@type": "BusinessAudience",
+                  audienceType: sop.department,
+                },
+                publisher: {
+                  "@type": "Organization",
+                  name: "United Bank for Africa",
+                },
+                step: [
+                  {
+                    "@type": "HowToStep",
+                    name: "Authentication & Verification",
+                    text: "Authenticate caller using 3-step verification before initiating any account-impacting action.",
+                  },
+                  {
+                    "@type": "HowToStep",
+                    name: "Intent Classification",
+                    text: "Capture intent and classify into approved category based on the request type.",
+                  },
+                  {
+                    "@type": "HowToStep",
+                    name: "Action Request",
+                    text: "Action request within authorised limits and approved procedures.",
+                  },
+                  {
+                    "@type": "HowToStep",
+                    name: "Documentation & Audit",
+                    text: "Document outcome in core system and audit log for compliance and traceability.",
+                  },
+                  {
+                    "@type": "HowToStep",
+                    name: "Customer Acknowledgement",
+                    text: "Acknowledge customer with reference number and confirm resolution.",
+                  },
+                ],
+              }),
             },
-            {
-              "@type": "HowToStep",
-              name: "Intent Classification",
-              text: "Capture intent and classify into approved category based on the request type.",
-            },
-            {
-              "@type": "HowToStep",
-              name: "Action Request",
-              text: "Action request within authorised limits and approved procedures.",
-            },
-            {
-              "@type": "HowToStep",
-              name: "Documentation & Audit",
-              text: "Document outcome in core system and audit log for compliance and traceability.",
-            },
-            {
-              "@type": "HowToStep",
-              name: "Customer Acknowledgement",
-              text: "Acknowledge customer with reference number and confirm resolution.",
-            },
-          ],
-        }),
-      },
-    ],
-  }),
+          ]
+        : [],
+    };
+  },
   component: SopDetail,
   notFoundComponent: () => (
     <AppShell>
