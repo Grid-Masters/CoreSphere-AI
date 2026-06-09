@@ -7,7 +7,34 @@ import { useAcknowledged } from "@/lib/ack-store";
 import { memos } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/memos")({
-  head: () => ({ meta: [{ title: "Operations Memos — UBA CoreSphere" }] }),
+  head: () => ({
+    meta: [{ title: "Operations Memos — UBA CoreSphere" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "Operations Memos",
+          description: "Notices, compliance alerts, and operational memos for UBA Customer Fulfillment.",
+          mainEntity: {
+            "@type": "ItemList",
+            itemListElement: memos.map((m, i) => ({
+              "@type": "ListItem",
+              position: i + 1,
+              item: {
+                "@type": "Article",
+                headline: m.title,
+                articleSection: m.category,
+                dateModified: m.expires,
+                publisher: { "@type": "Organization", name: "United Bank for Africa" },
+              },
+            })),
+          },
+        }),
+      },
+    ],
+  }),
   component: Memos,
 });
 
