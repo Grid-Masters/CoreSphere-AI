@@ -5,7 +5,16 @@ import { PanelCard, StatCard, StatusBadge } from "@/components/ui-bits/Card";
 import { assessments } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/assessments")({
-  head: () => ({ meta: [{ title: "Assessments — UBA CoreSphere" }] }),
+  head: () => ({
+    meta: [
+      { title: "Assessments — UBA CoreSphere" },
+      { name: "description", content: "Complete role-based assessments and quizzes to validate SOP knowledge on CoreSphere AI." },
+      { property: "og:title", content: "Assessments — UBA CoreSphere" },
+      { property: "og:description", content: "Complete role-based assessments and quizzes to validate SOP knowledge on CoreSphere AI." },
+      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/assessments" },
+    ],
+    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/assessments" }],
+  }),
   component: Assessments,
 });
 

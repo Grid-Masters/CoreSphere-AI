@@ -20,7 +20,16 @@ import { directory, roleLabels, type Role } from "@/lib/directory";
 import { departments } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/administration")({
-  head: () => ({ meta: [{ title: "Administration Center — UBA CoreSphere" }] }),
+  head: () => ({
+    meta: [
+      { title: "Administration Center — UBA CoreSphere" },
+      { name: "description", content: "CoreSphere Administration Center for user, role, department, security and AI governance management." },
+      { property: "og:title", content: "Administration Center — UBA CoreSphere" },
+      { property: "og:description", content: "CoreSphere Administration Center for user, role, department, security and AI governance management." },
+      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/administration" },
+    ],
+    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/administration" }],
+  }),
   component: AdministrationCenter,
 });
 

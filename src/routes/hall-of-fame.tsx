@@ -8,7 +8,16 @@ import { useActiveUser } from "@/lib/active-user";
 import { DEPARTMENTS_WITH_STAFF } from "@/lib/leaderboards";
 
 export const Route = createFileRoute("/hall-of-fame")({
-  head: () => ({ meta: [{ title: "Hall of Fame — UBA CoreSphere" }] }),
+  head: () => ({
+    meta: [
+      { title: "Hall of Fame — UBA CoreSphere" },
+      { name: "description", content: "Celebrate top performers and recognition leaders across UBA Customer Fulfillment on CoreSphere." },
+      { property: "og:title", content: "Hall of Fame — UBA CoreSphere" },
+      { property: "og:description", content: "Celebrate top performers and recognition leaders across UBA Customer Fulfillment on CoreSphere." },
+      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/hall-of-fame" },
+    ],
+    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/hall-of-fame" }],
+  }),
   component: HallOfFame,
 });
 
