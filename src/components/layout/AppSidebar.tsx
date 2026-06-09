@@ -18,6 +18,12 @@ import {
   PanelLeftOpen,
   X,
 } from "lucide-react";
+import {
+  Bot,
+  HelpCircle,
+  Trophy,
+  Medal,
+} from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useActiveUser } from "@/lib/active-user";
 import type { Role } from "@/lib/directory";
@@ -33,6 +39,8 @@ const groups: { label: string; items: NavItem[] }[] = [
       { to: "/", icon: LayoutDashboard, label: "Dashboard", roles: ALL },
       { to: "/knowledge-hub", icon: BookOpen, label: "Knowledge Hub", roles: ALL },
       { to: "/assessments", icon: GraduationCap, label: "Assessments", roles: ALL },
+      { to: "/scenarios", icon: Bot, label: "Scenario Simulator", roles: ALL },
+      { to: "/faq", icon: HelpCircle, label: "FAQ Center", roles: ALL },
     ],
   },
   {
@@ -40,6 +48,13 @@ const groups: { label: string; items: NavItem[] }[] = [
     items: [
       { to: "/performance-intelligence", icon: Award, label: "Performance Intelligence", roles: ALL },
       { to: "/qa-coaching", icon: MessagesSquare, label: "QA Coaching Hub", roles: ALL },
+    ],
+  },
+  {
+    label: "Recognition",
+    items: [
+      { to: "/achievements", icon: Trophy, label: "Achievements", roles: ALL },
+      { to: "/hall-of-fame", icon: Medal, label: "Hall of Fame", roles: ALL },
     ],
   },
   {

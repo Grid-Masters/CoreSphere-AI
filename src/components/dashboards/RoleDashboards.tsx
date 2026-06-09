@@ -35,6 +35,9 @@ import { AckTracker } from "@/components/governance/AckTracker";
 import { ScenarioBanner } from "@/components/ops/ScenarioBanner";
 import { MissionControl } from "@/components/mission/MissionControl";
 import { ReadinessScore } from "@/components/mission/ReadinessScore";
+import { Leaderboards } from "@/components/mission/Leaderboards";
+import { KnowledgeGapInsights } from "@/components/exec/KnowledgeGapInsights";
+import { ExecutiveIntelligence } from "@/components/exec/ExecutiveIntelligence";
 import { EnterpriseActivityFeed } from "@/components/feed/EnterpriseActivityFeed";
 import { KpiDrillSheet, type KpiDrill } from "@/components/exec/KpiDrillSheet";
 import { AnimatedCounter } from "@/components/ui-bits/AnimatedCounter";
@@ -226,6 +229,11 @@ export function QADashboard({ user }: { user: DirectoryEntry }) {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-4 mt-4">
+        <KnowledgeGapInsights title="AI Knowledge Gap Engine" />
+        <Leaderboards title="Group Leaderboard" />
+      </div>
+
+      <div className="grid lg:grid-cols-2 gap-4 mt-4">
         <AtRiskStaff />
         <EnterpriseActivityFeed />
       </div>
@@ -321,6 +329,11 @@ export function LDDashboard({ user }: { user: DirectoryEntry }) {
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
         <div className="lg:col-span-2"><TodaysWorkflow role="ld" /></div>
         <ComplianceHealth scope="Enterprise Learning" />
+      </div>
+
+      <div className="grid lg:grid-cols-2 gap-4 mt-4">
+        <KnowledgeGapInsights title="Enterprise Knowledge Gaps" />
+        <Leaderboards title="Group Leaderboard" />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
@@ -423,6 +436,11 @@ export function TeamLeadDashboard({ user }: { user: DirectoryEntry }) {
 
       <div className="mt-4">
         <AckTracker department={user.department} />
+      </div>
+
+      <div className="grid lg:grid-cols-2 gap-4 mt-4">
+        <KnowledgeGapInsights department={user.department} title={`${user.department} Knowledge Gaps`} />
+        <Leaderboards department={user.department} />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
@@ -589,6 +607,10 @@ export function GroupHeadDashboard({ user }: { user: DirectoryEntry }) {
         <AtRiskStaff />
         <EnterpriseActivityFeed />
       </div>
+
+      <div className="mt-4"><ExecutiveIntelligence /></div>
+
+      <div className="mt-4"><KnowledgeGapInsights title="Enterprise Knowledge Gap Engine" /></div>
 
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
         <PanelCard className="lg:col-span-2" title="Departmental KPIs" description="QA + SOP completion by department">
