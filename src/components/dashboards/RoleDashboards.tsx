@@ -65,14 +65,15 @@ function Greeting({ user, subtitle }: { user: DirectoryEntry; subtitle: string }
   }, []);
   return (
     <div className="mb-6">
+      <h1 className="sr-only">Operational Dashboard</h1>
       <div className="flex items-end justify-between flex-wrap gap-3">
       <div>
         <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
           {user.department} • {user.unit}
         </div>
-        <h1 className="text-2xl font-semibold tracking-tight mt-1">
+        <p className="text-2xl font-semibold tracking-tight mt-1">
           {hello}, {user.name.split(" ")[0]} <span aria-hidden>👋</span>
-        </h1>
+        </p>
         <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>
       </div>
       </div>

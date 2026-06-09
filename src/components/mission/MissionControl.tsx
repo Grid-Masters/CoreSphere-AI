@@ -66,14 +66,15 @@ export function MissionControl({ user }: { user: DirectoryEntry }) {
     <section className="relative overflow-hidden rounded-xl border bg-gradient-to-br from-primary/10 via-card to-card shadow-sm mb-6">
       <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/10 blur-2xl" aria-hidden />
       <div className="relative p-5 sm:p-6">
+        <h1 className="sr-only">Operational Dashboard</h1>
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
             <div className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] text-primary font-semibold">
               <Sparkles className="h-3 w-3" /> Mission Control
             </div>
-            <h1 className="text-2xl font-semibold tracking-tight mt-1.5">
+            <p className="text-2xl font-semibold tracking-tight mt-1.5">
               {hello}, {user.name.split(" ")[0]} <span aria-hidden>👋</span>
-            </h1>
+            </p>
             <blockquote className="mt-1.5 text-sm italic text-muted-foreground border-l-2 border-primary/40 pl-3">
               “{quote}”
             </blockquote>
