@@ -5,7 +5,35 @@ import { PanelCard } from "@/components/ui-bits/Card";
 import { announcements } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/leadership")({
-  head: () => ({ meta: [{ title: "Leadership Board — UBA CoreSphere" }] }),
+  head: () => ({
+    meta: [{ title: "Leadership Board — UBA CoreSphere" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "Leadership Board",
+          description: "Strategic announcements and operational updates from UBA Group Heads.",
+          mainEntity: {
+            "@type": "ItemList",
+            itemListElement: announcements.map((a, i) => ({
+              "@type": "ListItem",
+              position: i + 1,
+              item: {
+                "@type": "Article",
+                headline: a.title,
+                author: { "@type": "Person", name: a.author },
+                datePublished: a.time,
+                articleBody: a.body,
+                publisher: { "@type": "Organization", name: "United Bank for Africa" },
+              },
+            })),
+          },
+        }),
+      },
+    ],
+  }),
   component: Leadership,
 });
 
