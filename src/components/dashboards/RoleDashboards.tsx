@@ -608,6 +608,10 @@ export function GroupHeadDashboard({ user }: { user: DirectoryEntry }) {
         <EnterpriseActivityFeed />
       </div>
 
+      <div className="mt-4"><ExecutiveIntelligence /></div>
+
+      <div className="mt-4"><KnowledgeGapInsights title="Enterprise Knowledge Gap Engine" /></div>
+
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
         <PanelCard className="lg:col-span-2" title="Departmental KPIs" description="QA + SOP completion by department">
           <ul className="divide-y -my-2">
