@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TownhallRouteImport } from './routes/townhall'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ScenariosRouteImport } from './routes/scenarios'
 import { Route as QaCoachingRouteImport } from './routes/qa-coaching'
 import { Route as PerformanceIntelligenceRouteImport } from './routes/performance-intelligence'
 import { Route as NotificationsRouteImport } from './routes/notifications'
@@ -36,6 +37,11 @@ const TownhallRoute = TownhallRouteImport.update({
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScenariosRoute = ScenariosRouteImport.update({
+  id: '/scenarios',
+  path: '/scenarios',
   getParentRoute: () => rootRouteImport,
 } as any)
 const QaCoachingRoute = QaCoachingRouteImport.update({
@@ -134,6 +140,7 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof NotificationsRoute
   '/performance-intelligence': typeof PerformanceIntelligenceRoute
   '/qa-coaching': typeof QaCoachingRoute
+  '/scenarios': typeof ScenariosRoute
   '/settings': typeof SettingsRoute
   '/townhall': typeof TownhallRoute
   '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
@@ -154,6 +161,7 @@ export interface FileRoutesByTo {
   '/notifications': typeof NotificationsRoute
   '/performance-intelligence': typeof PerformanceIntelligenceRoute
   '/qa-coaching': typeof QaCoachingRoute
+  '/scenarios': typeof ScenariosRoute
   '/settings': typeof SettingsRoute
   '/townhall': typeof TownhallRoute
   '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
@@ -175,6 +183,7 @@ export interface FileRoutesById {
   '/notifications': typeof NotificationsRoute
   '/performance-intelligence': typeof PerformanceIntelligenceRoute
   '/qa-coaching': typeof QaCoachingRoute
+  '/scenarios': typeof ScenariosRoute
   '/settings': typeof SettingsRoute
   '/townhall': typeof TownhallRoute
   '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
@@ -197,6 +206,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/performance-intelligence'
     | '/qa-coaching'
+    | '/scenarios'
     | '/settings'
     | '/townhall'
     | '/knowledge-hub/$sopId'
@@ -217,6 +227,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/performance-intelligence'
     | '/qa-coaching'
+    | '/scenarios'
     | '/settings'
     | '/townhall'
     | '/knowledge-hub/$sopId'
@@ -237,6 +248,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/performance-intelligence'
     | '/qa-coaching'
+    | '/scenarios'
     | '/settings'
     | '/townhall'
     | '/knowledge-hub/$sopId'
@@ -258,6 +270,7 @@ export interface RootRouteChildren {
   NotificationsRoute: typeof NotificationsRoute
   PerformanceIntelligenceRoute: typeof PerformanceIntelligenceRoute
   QaCoachingRoute: typeof QaCoachingRoute
+  ScenariosRoute: typeof ScenariosRoute
   SettingsRoute: typeof SettingsRoute
   TownhallRoute: typeof TownhallRoute
   KnowledgeHubSopIdRoute: typeof KnowledgeHubSopIdRoute
@@ -278,6 +291,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/scenarios': {
+      id: '/scenarios'
+      path: '/scenarios'
+      fullPath: '/scenarios'
+      preLoaderRoute: typeof ScenariosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/qa-coaching': {
@@ -410,6 +430,7 @@ const rootRouteChildren: RootRouteChildren = {
   NotificationsRoute: NotificationsRoute,
   PerformanceIntelligenceRoute: PerformanceIntelligenceRoute,
   QaCoachingRoute: QaCoachingRoute,
+  ScenariosRoute: ScenariosRoute,
   SettingsRoute: SettingsRoute,
   TownhallRoute: TownhallRoute,
   KnowledgeHubSopIdRoute: KnowledgeHubSopIdRoute,
