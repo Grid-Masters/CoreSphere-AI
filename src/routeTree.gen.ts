@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TownhallRouteImport } from './routes/townhall'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ScenariosRouteImport } from './routes/scenarios'
 import { Route as QaCoachingRouteImport } from './routes/qa-coaching'
@@ -32,6 +33,11 @@ import { Route as KnowledgeHubSopIdRouteImport } from './routes/knowledge-hub.$s
 const TownhallRoute = TownhallRouteImport.update({
   id: '/townhall',
   path: '/townhall',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -142,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/qa-coaching': typeof QaCoachingRoute
   '/scenarios': typeof ScenariosRoute
   '/settings': typeof SettingsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/townhall': typeof TownhallRoute
   '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
   '/knowledge-hub/': typeof KnowledgeHubIndexRoute
@@ -163,6 +170,7 @@ export interface FileRoutesByTo {
   '/qa-coaching': typeof QaCoachingRoute
   '/scenarios': typeof ScenariosRoute
   '/settings': typeof SettingsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/townhall': typeof TownhallRoute
   '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
   '/knowledge-hub': typeof KnowledgeHubIndexRoute
@@ -185,6 +193,7 @@ export interface FileRoutesById {
   '/qa-coaching': typeof QaCoachingRoute
   '/scenarios': typeof ScenariosRoute
   '/settings': typeof SettingsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/townhall': typeof TownhallRoute
   '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
   '/knowledge-hub/': typeof KnowledgeHubIndexRoute
@@ -208,6 +217,7 @@ export interface FileRouteTypes {
     | '/qa-coaching'
     | '/scenarios'
     | '/settings'
+    | '/sitemap.xml'
     | '/townhall'
     | '/knowledge-hub/$sopId'
     | '/knowledge-hub/'
@@ -229,6 +239,7 @@ export interface FileRouteTypes {
     | '/qa-coaching'
     | '/scenarios'
     | '/settings'
+    | '/sitemap.xml'
     | '/townhall'
     | '/knowledge-hub/$sopId'
     | '/knowledge-hub'
@@ -250,6 +261,7 @@ export interface FileRouteTypes {
     | '/qa-coaching'
     | '/scenarios'
     | '/settings'
+    | '/sitemap.xml'
     | '/townhall'
     | '/knowledge-hub/$sopId'
     | '/knowledge-hub/'
@@ -272,6 +284,7 @@ export interface RootRouteChildren {
   QaCoachingRoute: typeof QaCoachingRoute
   ScenariosRoute: typeof ScenariosRoute
   SettingsRoute: typeof SettingsRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TownhallRoute: typeof TownhallRoute
   KnowledgeHubSopIdRoute: typeof KnowledgeHubSopIdRoute
   KnowledgeHubIndexRoute: typeof KnowledgeHubIndexRoute
@@ -284,6 +297,13 @@ declare module '@tanstack/react-router' {
       path: '/townhall'
       fullPath: '/townhall'
       preLoaderRoute: typeof TownhallRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -432,6 +452,7 @@ const rootRouteChildren: RootRouteChildren = {
   QaCoachingRoute: QaCoachingRoute,
   ScenariosRoute: ScenariosRoute,
   SettingsRoute: SettingsRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TownhallRoute: TownhallRoute,
   KnowledgeHubSopIdRoute: KnowledgeHubSopIdRoute,
   KnowledgeHubIndexRoute: KnowledgeHubIndexRoute,
@@ -439,3 +460,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
