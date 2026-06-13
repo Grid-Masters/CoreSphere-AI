@@ -1,3 +1,5 @@
+import { DEFAULT_COUNTRY, type CountryCode } from "./org-structure";
+
 export type Role = "staff" | "qa" | "ld" | "team_lead" | "group_head" | "sysadmin";
 
 export type DirectoryEntry = {
@@ -10,6 +12,7 @@ export type DirectoryEntry = {
   unit: string;
   reportsTo?: string;
   assignedQAOfficer?: string;
+  country?: CountryCode;
 };
 
 export const roleLabels: Record<Role, string> = {
