@@ -524,7 +524,7 @@ export function GroupHeadDashboard({ user }: { user: DirectoryEntry }) {
     {
       label: "Active Workforce", value: 1284, icon: Users, tone: "primary", delta: "+4.2% WoW",
       drill: { title: "Active Workforce", description: "Daily active staff across Customer Fulfilment", metric: "1,284", delta: "+4.2% week-on-week", sparkline: [1180, 1205, 1222, 1240, 1260, 1284], rows: [
-        { label: "FHD", primary: 412, trend: 5 }, { label: "Inbound", primary: 386, trend: 3 }, { label: "Multimedia", primary: 268, trend: 6 }, { label: "Social Media", primary: 218, trend: 2 },
+        { label: "FHD", primary: 412, trend: 5 }, { label: "Inbound", primary: 386, trend: 3 }, { label: "Multimedia", primary: 268, trend: 6 }, { label: "Social Media", primary: 218, trend: 2 }, { label: "Video Validation", primary: 174, trend: 7 },
       ] },
     },
     {
@@ -566,7 +566,7 @@ export function GroupHeadDashboard({ user }: { user: DirectoryEntry }) {
     {
       label: "Open Escalations", value: 11, icon: ShieldAlert, tone: "warning", delta: "Across departments",
       drill: { title: "Open Escalations", description: "Awaiting leadership action", metric: "11", delta: "3 breaching SLA", rows: [
-        { label: "FHD", primary: 4, trend: 0 }, { label: "Inbound", primary: 3, trend: 0 }, { label: "Multimedia", primary: 2, trend: 0 }, { label: "Social Media", primary: 2, trend: 0 },
+        { label: "FHD", primary: 4, trend: 0 }, { label: "Inbound", primary: 3, trend: 0 }, { label: "Multimedia", primary: 2, trend: 0 }, { label: "Social Media", primary: 2, trend: 0 }, { label: "Video Validation", primary: 1, trend: 0 },
       ] },
     },
   ];
