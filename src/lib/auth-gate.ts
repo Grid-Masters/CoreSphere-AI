@@ -1,33 +1,27 @@
 import { useEffect } from "react";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
-
-const KEY = "coresphere.authed";
-
-export function isAuthed(): boolean {
-  if (typeof window === "undefined") return true; // SSR pass-through
-  return window.localStorage.getItem(KEY) === "1";
-}
-
-export function markAuthed() {
-  if (typeof window !== "undefined") window.localStorage.setItem(KEY, "1");
-}
-
-export function clearAuth() {
-  if (typeof window !== "undefined") window.localStorage.removeItem(KEY);
-}
+import { supabase } from "@/integrations/supabase/client";
 
 /**
- * Client-only auth gate. Redirects to /login when no auth flag is present.
- * Intentionally runs in `useEffect` so SSR markup is unaffected.
+ * Client-only auth gate backed by a real Supabase session. Redirects to
+ * /login when no authenticated session exists. Runs in `useEffect` so SSR
+ * markup is unaffected, and also reacts to sign-out events.
  */
 export function useAuthGate() {
   const navigate = useNavigate();
   const path = useRouterState({ select: (s) => s.location.pathname });
   useEffect(() => {
     if (path === "/login") return;
-    if (typeof window === "undefined") return;
-    if (window.localStorage.getItem(KEY) !== "1") {
-      navigate({ to: "/login", replace: true });
-    }
+    let active = true;
+    supabase.auth.getSession().then(({ data }) => {
+      if (active && !data.session) navigate({ to: "/login", replace: true });
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) navigate({ to: "/login", replace: true });
+    });
+    return () => {
+      active = false;
+      sub.subscription.unsubscribe();
+    };
   }, [navigate, path]);
 }
