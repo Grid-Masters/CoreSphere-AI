@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { AI_GOVERNANCE_PROMPT } from "./ai-governance";
 
 const SYSTEM = `${AI_GOVERNANCE_PROMPT}
@@ -51,6 +52,7 @@ function fallback(prompt: string): AiAnswer {
 }
 
 export const askCoreSphereAI = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator(z.object({ prompt: z.string().min(1).max(2000), department: z.string().optional() }))
   .handler(async ({ data }): Promise<AiAnswer> => {
     const key = process.env.LOVABLE_API_KEY;
