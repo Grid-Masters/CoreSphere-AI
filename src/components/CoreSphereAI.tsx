@@ -15,11 +15,17 @@ import {
   Copy,
   Check,
   Wand2,
+  Sun,
+  PanelRightClose,
+  Minus,
+  Maximize2,
 } from "lucide-react";
 import { askCoreSphereAI, type AiAnswer } from "@/lib/coresphere-ai.functions";
 import { runWritingAssistant, WRITER_TOOLS, type WriterTool } from "@/lib/coresphere-writer.functions";
 import { useActiveUser } from "@/lib/active-user";
 import { greetingForHour } from "@/lib/quotes";
+import { buildBriefing, type DailyBriefing } from "@/lib/briefing";
+import { IntelligenceOrb } from "@/components/IntelligenceOrb";
 import {
   AI_NAME,
   AI_TAGLINE,
@@ -31,7 +37,9 @@ import aiAvatar from "@/assets/ai/coresphere-ai-avatar.png";
 
 export const OPEN_AI_EVENT = "coresphere:open-ai";
 
-type Tab = "chat" | "write" | "about";
+type Tab = "briefing" | "chat" | "write" | "about";
+type DisplayMode = "floating" | "docked" | "minimized";
+const MODE_KEY = "coresphere.ai.mode";
 
 type Msg = { role: "user"; text: string } | { role: "ai"; answer: AiAnswer; loading?: boolean };
 
