@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { AI_GOVERNANCE_PROMPT } from "./ai-governance";
 
 const SYSTEM = `${AI_GOVERNANCE_PROMPT}
@@ -57,6 +58,7 @@ function fallback(): ScenarioAssessment {
 }
 
 export const assessScenario = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator(
     z.object({
       situation: z.string().min(1).max(2000),
