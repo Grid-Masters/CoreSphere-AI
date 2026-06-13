@@ -34,7 +34,7 @@ export const directory: DirectoryEntry[] = [
     role: "staff",
     roleLabel: "Customer Experience Executive • FHD Service Officer",
     department: "FHD",
-    unit: "FHD Core",
+    unit: "FHD Operations",
     reportsTo: "s.eze@ubagroup.com",
     assignedQAOfficer: "d.obi@ubagroup.com",
   },
@@ -108,7 +108,7 @@ export const directory: DirectoryEntry[] = [
     role: "team_lead",
     roleLabel: "Customer Experience Executive • Team Lead, FHD",
     department: "FHD",
-    unit: "FHD Core",
+    unit: "FHD Operations",
     reportsTo: "a.yusuf@ubagroup.com",
   },
   {
@@ -129,8 +129,55 @@ export const directory: DirectoryEntry[] = [
     department: "Platform Governance",
     unit: "Enterprise Controls",
   },
+  {
+    email: "f.danjuma@ubagroup.com",
+    name: "Fatima Danjuma",
+    initials: "FD",
+    role: "staff",
+    roleLabel: "Customer Experience Executive • Containment Officer",
+    department: "FHD",
+    unit: "Containment",
+    reportsTo: "s.eze@ubagroup.com",
+    assignedQAOfficer: "d.obi@ubagroup.com",
+  },
+  {
+    email: "k.mensah@ubagroup.com",
+    name: "Kelechi Mensah",
+    initials: "KM",
+    role: "staff",
+    roleLabel: "Customer Experience Executive • Block Card Officer",
+    department: "FHD",
+    unit: "Block Card",
+    reportsTo: "s.eze@ubagroup.com",
+    assignedQAOfficer: "d.obi@ubagroup.com",
+  },
+  {
+    email: "n.ibe@ubagroup.com",
+    name: "Ngozi Ibe",
+    initials: "NI",
+    role: "staff",
+    roleLabel: "Customer Experience Executive • Email Officer",
+    department: "Multimedia",
+    unit: "Email",
+    reportsTo: "s.eze@ubagroup.com",
+    assignedQAOfficer: "d.obi@ubagroup.com",
+  },
+  {
+    email: "b.achi@ubagroup.com",
+    name: "Blessing Achi",
+    initials: "BA",
+    role: "staff",
+    roleLabel: "Customer Experience Executive • Video Validation / KYC Officer",
+    department: "Video Validation",
+    unit: "KYC",
+    reportsTo: "s.eze@ubagroup.com",
+    assignedQAOfficer: "r.adeyemi@ubagroup.com",
+  },
 ];
 
 export function findByEmail(email: string): DirectoryEntry | undefined {
   return directory.find((d) => d.email.toLowerCase() === email.toLowerCase());
 }
+
+// Re-export the canonical org structure so consumers resolve from one place.
+export { DEPARTMENTS, OPERATIONAL_DEPARTMENTS, COUNTRIES, DEFAULT_COUNTRY } from "./org-structure";
