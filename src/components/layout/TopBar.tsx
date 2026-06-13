@@ -12,7 +12,7 @@ import { UbaLogo } from "@/components/brand/UbaLogo";
 import { OPEN_SEARCH_EVENT } from "@/components/search/EnterpriseSearch";
 import { OPEN_AI_EVENT } from "@/components/CoreSphereAI";
 import { useActiveUser } from "@/lib/active-user";
-import { clearAuth } from "@/lib/auth-gate";
+import { supabase } from "@/integrations/supabase/client";
 
 function fire(name: string) {
   if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(name));
@@ -51,8 +51,8 @@ export function TopBar({ onOpenMobile, onToggleCollapsed, collapsed }: Props) {
   const user = useActiveUser();
   const navigate = useNavigate();
 
-  const signOut = () => {
-    clearAuth();
+  const signOut = async () => {
+    await supabase.auth.signOut();
     navigate({ to: "/login", replace: true });
   };
 
