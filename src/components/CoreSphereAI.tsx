@@ -481,6 +481,16 @@ export function CoreSphereAI() {
               </div>
             </div>
           )}
+          </>
+          )}
+          {mode === "minimized" && (
+            <button
+              onClick={() => changeMode("floating")}
+              className="p-4 text-left text-xs text-muted-foreground hover:bg-muted transition-colors"
+            >
+              {hello}, {user.name.split(" ")[0]} — tap to open your briefing &amp; coach.
+            </button>
+          )}
         </div>
       )}
     </>
