@@ -37,3 +37,28 @@ export function greetingForHour(hour: number): string {
   if (hour < 17) return "Good afternoon";
   return "Good evening";
 }
+
+/**
+ * Return a fresh motivational quote on each new login/day. We rotate the quote
+ * once per calendar day per browser session and persist the chosen index so it
+ * stays stable across renders within the day but feels new each login.
+ */
+const QUOTE_KEY = "coresphere.dailyquote";
+export function freshQuote(now: Date = new Date()): string {
+  const today = now.toISOString().slice(0, 10);
+  if (typeof window === "undefined") {
+    return quotes[Math.floor(now.getTime() / 86400000) % quotes.length];
+  }
+  try {
+    const raw = window.localStorage.getItem(QUOTE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw) as { day: string; index: number };
+      if (parsed.day === today) return quotes[parsed.index % quotes.length];
+    }
+    const index = Math.floor(Math.random() * quotes.length);
+    window.localStorage.setItem(QUOTE_KEY, JSON.stringify({ day: today, index }));
+    return quotes[index];
+  } catch {
+    return quotes[Math.floor(now.getTime() / 86400000) % quotes.length];
+  }
+}

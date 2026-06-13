@@ -198,3 +198,40 @@
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up, .animate-pulse-soft { animation: none; }
 }
+
+/* ── CoreSphere Intelligence Orb ─────────────────────────────────────────── */
+@keyframes orb-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes orb-glow {
+  0%, 100% { box-shadow: 0 0 0 0 var(--orb-ring), 0 8px 24px -6px rgba(0,0,0,0.45); }
+  50% { box-shadow: 0 0 0 10px transparent, 0 8px 28px -4px rgba(0,0,0,0.5); }
+}
+@keyframes orb-spin {
+  to { transform: rotate(360deg); }
+}
+.orb {
+  --orb-ring: color-mix(in oklab, var(--orb-accent) 45%, transparent);
+  position: relative;
+  border-radius: 9999px;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255,255,255,0.85), rgba(255,255,255,0.05) 38%),
+    radial-gradient(circle at 70% 75%, color-mix(in oklab, var(--orb-accent) 70%, transparent), transparent 60%),
+    linear-gradient(145deg, color-mix(in oklab, var(--orb-accent) 85%, black 5%), color-mix(in oklab, var(--orb-accent) 40%, black 30%));
+  animation: orb-float 4.5s ease-in-out infinite, orb-glow 3s ease-in-out infinite;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+.orb::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 9999px;
+  border: 1.5px solid var(--orb-ring);
+  animation: orb-spin 6s linear infinite;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .orb, .orb::after { animation: none; }
+}
