@@ -3,9 +3,8 @@ import { useEffect, useState } from "react";
 import { ShieldCheck, Lock, Mail, ArrowRight, Sparkles } from "lucide-react";
 import { UbaLogo } from "@/components/brand/UbaLogo";
 import { findByEmail } from "@/lib/directory";
-import { setActiveUser } from "@/lib/active-user";
-import { markAuthed } from "@/lib/auth-gate";
 import { demoProfiles } from "@/lib/demo-profiles";
+import { supabase } from "@/integrations/supabase/client";
 import { quotes } from "@/lib/quotes";
 import {
   Dialog,
@@ -32,6 +31,9 @@ export const Route = createFileRoute("/login")({
   component: LoginPage,
 });
 
+// Shared password for the internally provisioned UBA directory accounts.
+const DEMO_PASSWORD = "CoreSphere#2026";
+
 const slides = [
   {
     img: ops1,
@@ -55,6 +57,7 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
   const [demoOpen, setDemoOpen] = useState(false);
   const [slide, setSlide] = useState(0);
   const [quote, setQuote] = useState(0);
@@ -68,15 +71,23 @@ function LoginPage() {
     return () => clearInterval(t);
   }, []);
 
-  function signIn(targetEmail: string) {
-    const found = findByEmail(targetEmail.trim());
-    if (!found) {
-      setError("Unknown enterprise email. Use one of the seeded UBA accounts.");
+  async function signIn(targetEmail: string, targetPassword: string) {
+    setError("");
+    setBusy(true);
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: targetEmail.trim(),
+      password: targetPassword,
+    });
+    setBusy(false);
+    if (signInError) {
+      setError("Invalid credentials. Check your enterprise email and password.");
       return;
     }
-    setActiveUser(found.email);
-    markAuthed();
     navigate({ to: "/" });
+  }
+
+  function signInDemo(targetEmail: string) {
+    void signIn(targetEmail, DEMO_PASSWORD);
   }
 
   return (
