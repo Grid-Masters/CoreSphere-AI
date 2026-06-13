@@ -106,7 +106,8 @@ function Avatar({ size = 32 }: { size?: number }) {
 
 export function CoreSphereAI() {
   const [open, setOpen] = useState(false);
-  const [tab, setTab] = useState<Tab>("chat");
+  const [tab, setTab] = useState<Tab>("briefing");
+  const [mode, setMode] = useState<DisplayMode>("floating");
   const [input, setInput] = useState("");
   const user = useActiveUser();
   const ask = useServerFn(askCoreSphereAI);
@@ -114,6 +115,7 @@ export function CoreSphereAI() {
   const [busy, setBusy] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [hello, setHello] = useState("Good morning");
+  const [briefing, setBriefing] = useState<DailyBriefing | null>(null);
 
   // Writing assistant state
   const [writerTool, setWriterTool] = useState<WriterTool>("Professional tone");
@@ -133,6 +135,19 @@ export function CoreSphereAI() {
   useEffect(() => {
     setHello(greetingForHour(new Date().getHours()));
   }, [open]);
+  // Persisted display mode
+  useEffect(() => {
+    const saved = window.localStorage.getItem(MODE_KEY) as DisplayMode | null;
+    if (saved === "floating" || saved === "docked" || saved === "minimized") setMode(saved);
+  }, []);
+  const changeMode = (m: DisplayMode) => {
+    setMode(m);
+    window.localStorage.setItem(MODE_KEY, m);
+  };
+  // Rebuild the briefing whenever the panel opens or the user changes
+  useEffect(() => {
+    if (open) setBriefing(buildBriefing(user));
+  }, [open, user]);
   const [messages, setMessages] = useState<Msg[]>([
     {
       role: "ai",
