@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { AI_GOVERNANCE_PROMPT } from "./ai-governance";
 
 export const WRITER_TOOLS = [
@@ -35,6 +36,7 @@ const instructions: Record<WriterTool, string> = {
 };
 
 export const runWritingAssistant = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator(
     z.object({
       tool: z.enum(WRITER_TOOLS),
