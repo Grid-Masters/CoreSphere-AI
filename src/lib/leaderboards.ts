@@ -4,6 +4,7 @@
 import { directory, type DirectoryEntry } from "./directory";
 import { pulsePoints, readinessScore, levelFor } from "./gamification";
 import { badgeStats } from "./badges";
+import { OPERATIONAL_DEPARTMENTS } from "./org-structure";
 
 export type LeaderRow = {
   user: DirectoryEntry;
@@ -47,4 +48,4 @@ export function leaderboard(
   return rows.map((r, i) => ({ ...r, rank: i + 1 }));
 }
 
-export const DEPARTMENTS_WITH_STAFF = ["FHD", "Inbound", "Multimedia", "Social Media"];
+export const DEPARTMENTS_WITH_STAFF: string[] = [...OPERATIONAL_DEPARTMENTS];
