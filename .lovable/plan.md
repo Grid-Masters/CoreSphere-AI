@@ -1,41 +1,47 @@
-# CoreSphere Pulse AI — Phase 2 Enhancement Plan
+# CoreSphere Pulse AI — Phase 2.5 Enhancement Plan
 
-This extends the existing platform. No existing modules are rebuilt — they are enhanced and joined by new ones. Everything runs on the current mock-data + directory architecture (no schema changes unless you later want real persistence), keeping work in frontend/presentation + light client "intelligence" libraries. The existing structured AI server function (`coresphere-ai.functions.ts`) stays and is extended.
+This applies enhancements **on top of** the existing app. Nothing is rebuilt or removed. The work is grouped into 6 buildable phases. Each phase is self-contained and verifiable. I recommend building in this order because later phases depend on the org-structure and data foundations laid early.
 
-## Guardrails baked into every AI feature
-A shared governance constant defines what CoreSphere AI MAY and MUST NOT do (no promotions, salary, discipline, transfers, succession, or ranking for management decisions). This is injected into the AI system prompt and shown in the AI "About" panel, so the assistant is positioned strictly as an Operations Development Assistant / Personal Operations Coach.
+## Phase A — Official Customer Fulfilment Structure (FOUNDATION)
+Single source of truth that every other phase reads from.
+- Rework `src/lib/directory.ts` into a formal department hierarchy:
+  - Departments: Inbound, Fraud Help Desk (FHD), Multimedia, Social Media, Video Validation, Quality Assurance (QA), Learning & Development (L&D)
+  - Sub-units: FHD → {FHD Operations, Containment, Block Card}; Multimedia → {Email, Live Chat}
+- Add a new `src/lib/org-structure.ts` exporting the canonical department + sub-unit tree, plus a `countries` list (Nigeria default; Ghana, Kenya, Uganda, Cameroon, Tanzania, Zambia) for the country-aware framework.
+- Update all consumers (dashboards, analytics, leaderboards, readiness, recognition) to use the hierarchy. Containment/Block Card and Email/Live Chat render as sub-units, never standalone departments.
+- Add Video Validation as a first-class department everywhere.
 
-## Build order (each phase is shippable on its own)
+## Phase B — CoreSphere AI Evolution + Intelligence Orb + Daily Briefing
+- Redesign `CoreSphereAI.tsx` into a premium "Personal Operations Coach" panel: dynamic conversation cards, mission alerts, SOP recommendations, assessment coaching.
+- Replace floating button with **CoreSphere Intelligence Orb**: CSS/SVG glass orb, UBA accents, soft glow, floating motion, state-driven pulses (Normal/New Mission=blue, QA Feedback=amber, Assessment=glow, Critical=red). Modes: Floating / Docked / Minimized (persisted).
+- **AI Daily Briefing**: "Good morning [Name]" + fresh motivational quote each login, plus Today's Briefing (SOP updates, learning mission, product updates, fraud alerts, compliance notices, available Pulse Points).
 
-### Phase A — CoreSphere AI redesign (Personal Operations Coach)
-- Rewrite `CoreSphereAI.tsx` into a premium conversational panel: AI avatar (generated brand mark, not a generic sparkle), dynamic time-based greeting using the user's name, animated response cards, quick prompts, suggested/context-aware actions by department, and an "About / Governance" disclosure.
-- Keep the floating button on every page (already mounted in AppShell). Extend the system prompt with the governance guardrails and coaching tone.
-- Add an **AI Writing Assistant** mode inside the panel: tone rewrite (Professional / Executive / Empathetic / Concise), grammar/spell fix, Memo Generator, Customer Response Generator, SOP/Policy Summarizer, EN↔FR translation. Backed by one new server function.
+## Phase C — Knowledge & Product Intelligence
+- **Product Intelligence Hub** (`/products`): Accounts, Cards, Loans, Leo, Mobile Banking, Internet Banking, SME, Corporate — each with Overview, Features, Benefits, FAQs, Escalation Paths, Talking Points. Country-aware (Nigeria default).
+- **Operational Alert Center** (`/alerts`): NIBSS, card delays, fraud trends, app incidents, downtime — role-visible.
+- **FAQ Governance + Gap Detector**: AI suggests/drafts only; Team Leads publish for their dept; L&D governs enterprise. Gap detector reads failed searches and recommends FAQs to Team Lead + L&D.
+- **Knowledge Decay Detection** + **Incident Learning Center**.
 
-### Phase B — Mission Control + Readiness + Levels (staff dashboard)
-- `src/lib/gamification.ts`: deterministic per-user engine computing Readiness Score (weighted: 20% SOP, 15% video, 20% assessment, 25% QA, 10% compliance, 10% consistency), Knowledge Level (1 Explorer → 7 Legend), streak, Pulse Points, daily mission selection (rule-based on department/SOP history/QA/compliance/recent SOPs — not random).
-- `MissionControl.tsx`: greeting + rotating quote, daily mission card (type, assigned SOP/video/quiz, est. time 3–10 min, earnable badge), streak, level, pulse points.
-- `ReadinessScore.tsx`: dial/score with "Operationally Ready / Needs Improvement" label and a "development only" disclaimer. Add both to the staff dashboard.
+## Phase D — Recognition: Hall of Excellence
+- Rename/upgrade Hall of Fame into **CoreSphere Hall of Excellence**.
+- **3D Recognition Wall** (3 champions: Learning Excellence, Operational Readiness, Continuous Improvement) with portrait frame, 3D-bust styling, dept, title, Pulse Points, Readiness. Admin photo upload (Lovable Cloud storage).
+- **Monthly Recognition Ceremony** archives, **Departmental Recognition** (incl. sub-unit champions: Containment, Block Card, Email, Live Chat, Video Validation/KYC), **CoreSphere Spotlight** AI stories.
+- **CoreSphere Reputation System** (Pulse Points, recognition-only).
 
-### Phase C — Badge ecosystem + Hall of Fame + Leaderboards
-- `src/lib/badges.ts`: full badge catalog (Attendance, Knowledge, AI, Assessments, QA, Learning, Compliance, Department, Recognition incl. CoreSphere Legend) with earned/locked state per user.
-- `/achievements` route: badge wall + level progress + Pulse Points.
-- `/hall-of-fame` route: monthly recognition categories.
-- Department leaderboards component (monthly rankings by learning completion, readiness, assessment, engagement) visible to Team Lead / L&D / Group Head.
-- Shift-based badges: Team Lead can "upload" weekly/monthly shifts (Morning/Afternoon/Night) via a simple form; badges awarded only to scheduled users (mock store).
+## Phase E — Executive Intelligence
+- **Executive Command Center** (Group Head): Operational Health, Readiness Trends, Department Rankings, Voice of Customer, Compliance, Knowledge Risks, AI Insights. Strategic only — no promotion/salary/succession.
+- **Voice of Customer Dashboard** (complaint categories, escalations, pain points, trends).
+- **Operational Wins Board** + **Pulse Health Index** executive KPI.
 
-### Phase D — Knowledge governance + AI intelligence engines
-- **Banking Scenario Simulator** (`/scenarios` or in Learning Center): AI generates a scenario (Failed Transfer, Fraud Complaint, Card Blocking, etc.), staff answers, AI returns correct response + SOP ref + escalation + SLA (reuses structured AI fn).
-- **FAQ governance**: `/faq` center with role-based permissions — AI suggests/drafts/detects gaps but cannot publish; Team Leads manage dept FAQs; L&D manages enterprise FAQs; Group Head views/requests. Uses existing `failed_searches` data for the **FAQ Gap Detector** ("137 searches detected for…→ recommend FAQ").
-- **AI Knowledge Gap Engine**: `src/lib/knowledge-gaps.ts` surfaces weak SOP adoption, low assessment scores, missing content → insight cards for Team Lead / L&D / Group Head.
-- **Executive Intelligence**: extend Group Head dashboard with Learning Health Index, Department Readiness, SOP Adoption, Assessment Performance, Compliance Status, Knowledge Risk Areas, Engagement, AI Insights — trends only, no HR/promotion output.
+## Phase F — Engagement & Scalability
+- **Digital Suggestion Box** (staff submit; AI auto-categorizes; management trend reports) — backed by a Lovable Cloud table.
+- **Country Expansion Framework** wired through products/policies/SOPs (Nigeria active, others scaffolded).
+- **Login Experience** polish tying into the Daily Briefing.
 
 ## Technical notes
-- New libs are pure, deterministic (seeded by user email) so values are stable across renders/SSR.
-- New routes follow flat file-based routing under `src/routes/`; nav entries added to `AppSidebar`.
-- Two new server functions via `createServerFn` (writing assistant, scenario generator) reusing the Lovable AI gateway pattern already in `coresphere-ai.functions.ts`, with graceful fallbacks.
-- Reuse existing UI primitives (`PanelCard`, `StatCard`, `ProgressBar`, badges, sheets) and design tokens — no raw color classes.
-- One generated AI avatar asset for the assistant identity.
+- New persisted data (suggestion box, recognition photos, monthly archives) uses Lovable Cloud tables + storage with RLS.
+- AI features use existing authenticated server functions (`requireSupabaseAuth`) via the AI gateway — no mock AI.
+- Governance guardrails (no promotion/pay/discipline/succession) already enforced in `ai-governance.ts`; extend to FAQ publishing rules.
 
-## Suggested delivery
-I recommend shipping Phase A + B first (the most visible "operations coach" transformation), then C, then D in follow-up turns to keep each change reviewable. I can start on Phase A + B immediately on approval.
+## Suggested starting point
+I recommend starting with **Phase A** since it is the structural foundation everything else reads from, then **Phase B** (the headline AI/Orb/Briefing experience).
