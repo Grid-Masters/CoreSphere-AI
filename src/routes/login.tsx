@@ -263,7 +263,7 @@ function LoginPage() {
               return (
                 <button
                   key={p.email}
-                  onClick={() => signIn(p.email)}
+                  onClick={() => signInDemo(p.email)}
                   className="flex items-center gap-3 rounded-md border bg-card hover:bg-muted transition-colors px-3 py-2.5 text-left"
                 >
                   <div className="h-9 w-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-semibold shrink-0">
