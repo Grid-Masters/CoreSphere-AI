@@ -159,7 +159,7 @@ function LoginPage() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            signIn(email);
+            void signIn(email, password);
           }}
           className="w-full max-w-sm"
         >
