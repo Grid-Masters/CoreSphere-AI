@@ -213,9 +213,10 @@ function LoginPage() {
             </div>
             <button
               type="submit"
-              className="w-full h-11 rounded-md bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 inline-flex items-center justify-center gap-2"
+              disabled={busy}
+              className="w-full h-11 rounded-md bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 inline-flex items-center justify-center gap-2 disabled:opacity-60"
             >
-              Continue <ArrowRight className="h-4 w-4" />
+              {busy ? "Signing in…" : "Continue"} <ArrowRight className="h-4 w-4" />
             </button>
 
             {/* Rotating professional motivational quote */}
