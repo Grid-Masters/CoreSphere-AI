@@ -217,18 +217,17 @@ export function CoreSphereAI() {
 
   return (
     <>
-      {!open && (
-        <button
-          onClick={() => setOpen(true)}
-          className="fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-card border shadow-lg shadow-primary/20 flex items-center justify-center hover:scale-105 transition-transform"
-          aria-label="Open CoreSphere AI"
-        >
-          <Avatar size={36} />
-          <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-[color:var(--success)] border-2 border-card" />
-        </button>
-      )}
+      {!open && <IntelligenceOrb onClick={() => setOpen(true)} />}
       {open && (
-        <div className="fixed bottom-6 right-6 z-50 w-[440px] max-w-[calc(100vw-2rem)] h-[660px] max-h-[calc(100vh-3rem)] bg-card border rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-fade-up">
+        <div
+          className={
+            mode === "docked"
+              ? "fixed top-0 right-0 bottom-0 z-50 w-[440px] max-w-[100vw] bg-card border-l shadow-2xl flex flex-col overflow-hidden animate-slide-in-right"
+              : mode === "minimized"
+                ? "fixed bottom-6 right-6 z-50 w-[300px] bg-card border rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-fade-up"
+                : "fixed bottom-6 right-6 z-50 w-[440px] max-w-[calc(100vw-2rem)] h-[660px] max-h-[calc(100vh-3rem)] bg-card border rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-fade-up"
+          }
+        >
           {/* Header */}
           <div className="px-4 py-3 border-b bg-gradient-to-r from-primary/15 via-sidebar to-sidebar text-sidebar-foreground flex items-center gap-3">
             <Avatar size={36} />
@@ -239,20 +238,39 @@ export function CoreSphereAI() {
                 {AI_TAGLINE}
               </div>
             </div>
-            <button
-              onClick={() => setOpen(false)}
-              className="h-8 w-8 rounded-md hover:bg-sidebar-accent flex items-center justify-center"
-              aria-label="Close"
-            >
-              <X className="h-4 w-4" />
-            </button>
+            <div className="flex items-center gap-0.5">
+              <button
+                onClick={() => changeMode(mode === "minimized" ? "floating" : "minimized")}
+                className="h-8 w-8 rounded-md hover:bg-sidebar-accent flex items-center justify-center"
+                aria-label={mode === "minimized" ? "Restore" : "Minimize"}
+              >
+                {mode === "minimized" ? <Maximize2 className="h-4 w-4" /> : <Minus className="h-4 w-4" />}
+              </button>
+              <button
+                onClick={() => changeMode(mode === "docked" ? "floating" : "docked")}
+                className={`h-8 w-8 rounded-md hover:bg-sidebar-accent flex items-center justify-center ${mode === "docked" ? "text-primary" : ""}`}
+                aria-label={mode === "docked" ? "Float" : "Dock to side"}
+              >
+                <PanelRightClose className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setOpen(false)}
+                className="h-8 w-8 rounded-md hover:bg-sidebar-accent flex items-center justify-center"
+                aria-label="Close"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
           </div>
 
+          {mode !== "minimized" && (
+          <>
           {/* Tabs */}
           <div className="flex border-b bg-muted/40 text-xs font-medium">
             {([
+              { id: "briefing" as Tab, label: "Briefing", icon: Sun },
               { id: "chat" as Tab, label: "Coach", icon: MessageSquare },
-              { id: "write" as Tab, label: "Writing Assistant", icon: PenLine },
+              { id: "write" as Tab, label: "Write", icon: PenLine },
               { id: "about" as Tab, label: "About", icon: Info },
             ]).map((t) => (
               <button
@@ -268,6 +286,50 @@ export function CoreSphereAI() {
               </button>
             ))}
           </div>
+
+          {/* BRIEFING TAB */}
+          {tab === "briefing" && briefing && (
+            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+              <div className="rounded-xl border bg-gradient-to-br from-primary/10 via-card to-card p-4">
+                <div className="text-sm font-semibold">
+                  {briefing.greeting}, {briefing.name} 👋
+                </div>
+                <div className="mt-1.5 text-[12px] italic text-muted-foreground leading-snug">
+                  “{briefing.quote}”
+                </div>
+              </div>
+              <div className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold px-1">
+                Today's Briefing
+              </div>
+              <div className="space-y-2">
+                {briefing.items.map((it, i) => {
+                  const toneCls =
+                    it.tone === "warning"
+                      ? "text-[color:var(--warning)]"
+                      : it.tone === "success"
+                        ? "text-[color:var(--success)]"
+                        : it.tone === "info"
+                          ? "text-[color:var(--info)]"
+                          : "text-primary";
+                  return (
+                    <a
+                      key={i}
+                      href={it.href ?? "#"}
+                      className="flex gap-2.5 rounded-lg border bg-background p-2.5 hover:bg-muted transition-colors"
+                    >
+                      <it.icon className={`h-4 w-4 mt-0.5 shrink-0 ${toneCls}`} />
+                      <div className="min-w-0">
+                        <div className={`text-[10px] uppercase tracking-wider font-semibold ${toneCls}`}>
+                          {it.label}
+                        </div>
+                        <div className="text-[12px] leading-snug">{it.text}</div>
+                      </div>
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* CHAT TAB */}
           {tab === "chat" && (
