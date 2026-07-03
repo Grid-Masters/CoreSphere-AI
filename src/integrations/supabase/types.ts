@@ -224,6 +224,78 @@ export type Database = {
         }
         Relationships: []
       }
+      recognition_archives: {
+        Row: {
+          category: string
+          citation: string | null
+          created_at: string
+          created_by: string | null
+          department: string | null
+          id: string
+          month: string
+          points: number
+          winner_email: string
+          winner_name: string
+        }
+        Insert: {
+          category: string
+          citation?: string | null
+          created_at?: string
+          created_by?: string | null
+          department?: string | null
+          id?: string
+          month: string
+          points?: number
+          winner_email: string
+          winner_name: string
+        }
+        Update: {
+          category?: string
+          citation?: string | null
+          created_at?: string
+          created_by?: string | null
+          department?: string | null
+          id?: string
+          month?: string
+          points?: number
+          winner_email?: string
+          winner_name?: string
+        }
+        Relationships: []
+      }
+      recognition_photos: {
+        Row: {
+          caption: string | null
+          category: string
+          created_at: string
+          id: string
+          photo_path: string
+          subject_email: string
+          updated_at: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          caption?: string | null
+          category: string
+          created_at?: string
+          id?: string
+          photo_path: string
+          subject_email: string
+          updated_at?: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          caption?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          photo_path?: string
+          subject_email?: string
+          updated_at?: string
+          uploaded_by?: string | null
+        }
+        Relationships: []
+      }
       risk_snapshots: {
         Row: {
           computed_at: string
