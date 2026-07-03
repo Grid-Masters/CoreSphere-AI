@@ -57,7 +57,6 @@ const groups: { label: string; items: NavItem[] }[] = [
     label: "Recognition",
     items: [
       { to: "/achievements", icon: Trophy, label: "Achievements", roles: ALL },
-      { to: "/hall-of-fame", icon: Medal, label: "Hall of Fame", roles: ALL },
       { to: "/hall-of-fame", icon: Medal, label: "Hall of Excellence", roles: ALL },
     ],
   },
