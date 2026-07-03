@@ -5,6 +5,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, StatCard } from "@/components/ui-bits/Card";
 import { useActiveUser } from "@/lib/active-user";
 import { faqs, failedSearches, faqPermissions, type FaqStatus } from "@/lib/faq";
+import { knowledgeDecay } from "@/lib/alerts";
 
 export const Route = createFileRoute("/faq")({
   head: () => ({
@@ -30,6 +31,10 @@ function FaqCenter() {
   const user = useActiveUser();
   const perms = faqPermissions(user.role, user.department);
   const [q, setQ] = useState("");
+  const decay = useMemo(
+    () => knowledgeDecay(user.role === "team_lead" ? user.department : undefined).filter((d) => d.severity !== "Fresh"),
+    [user.role, user.department],
+  );
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -134,6 +139,25 @@ function FaqCenter() {
               <li className="flex items-start gap-2"><CheckCircle2 className="h-3.5 w-3.5 text-[color:var(--success)] mt-0.5 shrink-0" /> L&D manages enterprise FAQs.</li>
               <li className="flex items-start gap-2"><CheckCircle2 className="h-3.5 w-3.5 text-[color:var(--success)] mt-0.5 shrink-0" /> Group Head views all and requests new FAQs.</li>
             </ul>
+          </PanelCard>
+
+          <PanelCard title="Knowledge Decay Detection" description="Ageing or under-adopted SOPs to refresh">
+            {decay.length === 0 ? (
+              <p className="text-xs text-muted-foreground">All knowledge is fresh — nothing to refresh right now.</p>
+            ) : (
+              <ul className="space-y-3">
+                {decay.slice(0, 5).map((d) => (
+                  <li key={d.sop.id} className="rounded-lg border bg-background p-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-sm font-medium truncate">{d.sop.title}</span>
+                      <span className={`shrink-0 text-[10px] font-semibold ${d.severity === "Stale" ? "text-destructive" : "text-[color:var(--warning)]"}`}>{d.severity}</span>
+                    </div>
+                    <div className="text-[11px] text-muted-foreground mt-1">{d.sop.department} • {d.ageDays}d since update • {d.adoption}% adoption</div>
+                    <p className="text-[11px] text-muted-foreground mt-1">{d.recommendation}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
           </PanelCard>
         </div>
       </div>

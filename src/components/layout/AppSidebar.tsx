@@ -24,6 +24,7 @@ import {
   Trophy,
   Medal,
 } from "lucide-react";
+import { Package, Siren } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useActiveUser } from "@/lib/active-user";
 import type { Role } from "@/lib/directory";
@@ -41,6 +42,8 @@ const groups: { label: string; items: NavItem[] }[] = [
       { to: "/assessments", icon: GraduationCap, label: "Assessments", roles: ALL },
       { to: "/scenarios", icon: Bot, label: "Scenario Simulator", roles: ALL },
       { to: "/faq", icon: HelpCircle, label: "FAQ Center", roles: ALL },
+      { to: "/products", icon: Package, label: "Product Intelligence", roles: ALL },
+      { to: "/alerts", icon: Siren, label: "Alert Center", roles: ALL },
     ],
   },
   {
@@ -54,7 +57,7 @@ const groups: { label: string; items: NavItem[] }[] = [
     label: "Recognition",
     items: [
       { to: "/achievements", icon: Trophy, label: "Achievements", roles: ALL },
-      { to: "/hall-of-fame", icon: Medal, label: "Hall of Fame", roles: ALL },
+      { to: "/hall-of-fame", icon: Medal, label: "Hall of Excellence", roles: ALL },
     ],
   },
   {
