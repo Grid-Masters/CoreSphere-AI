@@ -24,6 +24,7 @@ import { Route as HallOfFameRouteImport } from './routes/hall-of-fame'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as AssessmentsRouteImport } from './routes/assessments'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
+import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as AdministrationRouteImport } from './routes/administration'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AchievementsRouteImport } from './routes/achievements'
@@ -106,6 +107,11 @@ const AnalyticsRoute = AnalyticsRouteImport.update({
   path: '/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AlertsRoute = AlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdministrationRoute = AdministrationRouteImport.update({
   id: '/administration',
   path: '/administration',
@@ -142,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/achievements': typeof AchievementsRoute
   '/admin': typeof AdminRoute
   '/administration': typeof AdministrationRoute
+  '/alerts': typeof AlertsRoute
   '/analytics': typeof AnalyticsRoute
   '/assessments': typeof AssessmentsRoute
   '/faq': typeof FaqRoute
@@ -165,6 +172,7 @@ export interface FileRoutesByTo {
   '/achievements': typeof AchievementsRoute
   '/admin': typeof AdminRoute
   '/administration': typeof AdministrationRoute
+  '/alerts': typeof AlertsRoute
   '/analytics': typeof AnalyticsRoute
   '/assessments': typeof AssessmentsRoute
   '/faq': typeof FaqRoute
@@ -189,6 +197,7 @@ export interface FileRoutesById {
   '/achievements': typeof AchievementsRoute
   '/admin': typeof AdminRoute
   '/administration': typeof AdministrationRoute
+  '/alerts': typeof AlertsRoute
   '/analytics': typeof AnalyticsRoute
   '/assessments': typeof AssessmentsRoute
   '/faq': typeof FaqRoute
@@ -214,6 +223,7 @@ export interface FileRouteTypes {
     | '/achievements'
     | '/admin'
     | '/administration'
+    | '/alerts'
     | '/analytics'
     | '/assessments'
     | '/faq'
@@ -237,6 +247,7 @@ export interface FileRouteTypes {
     | '/achievements'
     | '/admin'
     | '/administration'
+    | '/alerts'
     | '/analytics'
     | '/assessments'
     | '/faq'
@@ -260,6 +271,7 @@ export interface FileRouteTypes {
     | '/achievements'
     | '/admin'
     | '/administration'
+    | '/alerts'
     | '/analytics'
     | '/assessments'
     | '/faq'
@@ -284,6 +296,7 @@ export interface RootRouteChildren {
   AchievementsRoute: typeof AchievementsRoute
   AdminRoute: typeof AdminRoute
   AdministrationRoute: typeof AdministrationRoute
+  AlertsRoute: typeof AlertsRoute
   AnalyticsRoute: typeof AnalyticsRoute
   AssessmentsRoute: typeof AssessmentsRoute
   FaqRoute: typeof FaqRoute
@@ -410,6 +423,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/alerts': {
+      id: '/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/administration': {
       id: '/administration'
       path: '/administration'
@@ -460,6 +480,7 @@ const rootRouteChildren: RootRouteChildren = {
   AchievementsRoute: AchievementsRoute,
   AdminRoute: AdminRoute,
   AdministrationRoute: AdministrationRoute,
+  AlertsRoute: AlertsRoute,
   AnalyticsRoute: AnalyticsRoute,
   AssessmentsRoute: AssessmentsRoute,
   FaqRoute: FaqRoute,
