@@ -38,6 +38,7 @@ import { ReadinessScore } from "@/components/mission/ReadinessScore";
 import { Leaderboards } from "@/components/mission/Leaderboards";
 import { KnowledgeGapInsights } from "@/components/exec/KnowledgeGapInsights";
 import { ExecutiveIntelligence } from "@/components/exec/ExecutiveIntelligence";
+import { ExecutiveCommandCenter } from "@/components/exec/ExecutiveCommandCenter";
 import { EnterpriseActivityFeed } from "@/components/feed/EnterpriseActivityFeed";
 import { KpiDrillSheet, type KpiDrill } from "@/components/exec/KpiDrillSheet";
 import { AnimatedCounter } from "@/components/ui-bits/AnimatedCounter";
