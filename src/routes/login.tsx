@@ -83,6 +83,12 @@ function LoginPage() {
       setError("Invalid credentials. Check your enterprise email and password.");
       return;
     }
+    // Signal a fresh sign-in so the dashboard opens the Daily Briefing (Phase B).
+    try {
+      sessionStorage.setItem("coresphere:justSignedIn", "1");
+    } catch {
+      // storage unavailable — non-critical
+    }
     navigate({ to: "/" });
   }
 
