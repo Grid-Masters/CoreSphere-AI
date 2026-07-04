@@ -356,6 +356,42 @@ export type Database = {
         }
         Relationships: []
       }
+      suggestions: {
+        Row: {
+          ai_category: string | null
+          ai_summary: string | null
+          body: string
+          category: string
+          created_at: string
+          id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_category?: string | null
+          ai_summary?: string | null
+          body: string
+          category?: string
+          created_at?: string
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_category?: string | null
+          ai_summary?: string | null
+          body?: string
+          category?: string
+          created_at?: string
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
