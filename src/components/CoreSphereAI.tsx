@@ -132,6 +132,18 @@ export function CoreSphereAI() {
     window.addEventListener(OPEN_AI_EVENT, handler);
     return () => window.removeEventListener(OPEN_AI_EVENT, handler);
   }, []);
+  // Fresh sign-in (Phase F): auto-open the Daily Briefing once after login.
+  useEffect(() => {
+    try {
+      if (sessionStorage.getItem("coresphere:justSignedIn") === "1") {
+        sessionStorage.removeItem("coresphere:justSignedIn");
+        setTab("briefing");
+        setOpen(true);
+      }
+    } catch {
+      // storage unavailable — skip
+    }
+  }, []);
   useEffect(() => {
     setHello(greetingForHour(new Date().getHours()));
   }, [open]);
