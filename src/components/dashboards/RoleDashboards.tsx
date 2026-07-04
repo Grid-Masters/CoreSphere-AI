@@ -612,6 +612,8 @@ export function GroupHeadDashboard({ user }: { user: DirectoryEntry }) {
 
       <div className="mt-4"><ExecutiveIntelligence /></div>
 
+      <div className="mt-4"><ExecutiveCommandCenter /></div>
+
       <div className="mt-4"><KnowledgeGapInsights title="Enterprise Knowledge Gap Engine" /></div>
 
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
