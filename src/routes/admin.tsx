@@ -3,6 +3,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, StatCard, StatusBadge } from "@/components/ui-bits/Card";
 import { Users, ShieldCheck, FileCheck2, Building2, CheckCircle2, XCircle } from "lucide-react";
 import { departments } from "@/lib/mock-data";
+import { RoleGuard } from "@/components/auth/RoleGuard";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -15,8 +16,16 @@ export const Route = createFileRoute("/admin")({
     ],
     links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/admin" }],
   }),
-  component: Admin,
+  component: GuardedAdmin,
 });
+
+function GuardedAdmin() {
+  return (
+    <RoleGuard allow={["ld", "group_head"]}>
+      <Admin />
+    </RoleGuard>
+  );
+}
 
 const pendingApprovals = [
   { id: 1, title: "SOP-005 — Live Chat Escalation Matrix", submittedBy: "L&D Staff: O. Akande", type: "SOP Update" },
