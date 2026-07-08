@@ -3,6 +3,7 @@ import { TrendingUp, Users, BookOpen, Award } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, StatCard } from "@/components/ui-bits/Card";
 import { qaScores } from "@/lib/mock-data";
+import { RoleGuard } from "@/components/auth/RoleGuard";
 
 export const Route = createFileRoute("/analytics")({
   head: () => ({
@@ -15,8 +16,16 @@ export const Route = createFileRoute("/analytics")({
     ],
     links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/analytics" }],
   }),
-  component: Analytics,
+  component: GuardedAnalytics,
 });
+
+function GuardedAnalytics() {
+  return (
+    <RoleGuard allow={["qa", "ld", "team_lead", "group_head"]}>
+      <Analytics />
+    </RoleGuard>
+  );
+}
 
 const completion = [
   { dept: "FHD", value: 92 },
