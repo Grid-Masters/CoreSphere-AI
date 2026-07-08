@@ -18,6 +18,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, StatCard, StatusBadge } from "@/components/ui-bits/Card";
 import { directory, roleLabels, type Role } from "@/lib/directory";
 import { departments } from "@/lib/mock-data";
+import { RoleGuard } from "@/components/auth/RoleGuard";
 
 export const Route = createFileRoute("/administration")({
   head: () => ({
@@ -30,8 +31,16 @@ export const Route = createFileRoute("/administration")({
     ],
     links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/administration" }],
   }),
-  component: AdministrationCenter,
+  component: GuardedAdministrationCenter,
 });
+
+function GuardedAdministrationCenter() {
+  return (
+    <RoleGuard allow={["sysadmin"]}>
+      <AdministrationCenter />
+    </RoleGuard>
+  );
+}
 
 type ModuleId =
   | "users"

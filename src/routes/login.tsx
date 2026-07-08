@@ -1,10 +1,12 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { ShieldCheck, Lock, Mail, ArrowRight, Sparkles } from "lucide-react";
 import { UbaLogo } from "@/components/brand/UbaLogo";
 import { findByEmail } from "@/lib/directory";
 import { demoProfiles } from "@/lib/demo-profiles";
 import { supabase } from "@/integrations/supabase/client";
+import { demoSignIn } from "@/lib/demo-auth.functions";
 import { quotes } from "@/lib/quotes";
 import {
   Dialog,
@@ -31,9 +33,6 @@ export const Route = createFileRoute("/login")({
   component: LoginPage,
 });
 
-// Shared password for the internally provisioned UBA directory accounts.
-const DEMO_PASSWORD = "CoreSphere#2026";
-
 const slides = [
   {
     img: ops1,
@@ -54,6 +53,7 @@ const slides = [
 
 function LoginPage() {
   const navigate = useNavigate();
+  const requestDemoSession = useServerFn(demoSignIn);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -92,8 +92,35 @@ function LoginPage() {
     navigate({ to: "/" });
   }
 
-  function signInDemo(targetEmail: string) {
-    void signIn(targetEmail, DEMO_PASSWORD);
+  async function signInDemo(targetEmail: string) {
+    setError("");
+    setBusy(true);
+    try {
+      const result = await requestDemoSession({ data: { email: targetEmail } });
+      if (!result.ok) {
+        setBusy(false);
+        setError("Demo access is currently unavailable. Please try again later.");
+        return;
+      }
+      const { error: sessionError } = await supabase.auth.setSession({
+        access_token: result.access_token,
+        refresh_token: result.refresh_token,
+      });
+      setBusy(false);
+      if (sessionError) {
+        setError("Demo access is currently unavailable. Please try again later.");
+        return;
+      }
+      try {
+        sessionStorage.setItem("coresphere:justSignedIn", "1");
+      } catch {
+        // storage unavailable — non-critical
+      }
+      navigate({ to: "/" });
+    } catch {
+      setBusy(false);
+      setError("Demo access is currently unavailable. Please try again later.");
+    }
   }
 
   return (
@@ -269,7 +296,7 @@ function LoginPage() {
               return (
                 <button
                   key={p.email}
-                  onClick={() => signInDemo(p.email)}
+                  onClick={() => void signInDemo(p.email)}
                   className="flex items-center gap-3 rounded-md border bg-card hover:bg-muted transition-colors px-3 py-2.5 text-left"
                 >
                   <div className="h-9 w-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-semibold shrink-0">
