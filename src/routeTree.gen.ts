@@ -15,7 +15,6 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ScenariosRouteImport } from './routes/scenarios'
 import { Route as QaCoachingRouteImport } from './routes/qa-coaching'
-import { Route as ProductsRouteImport } from './routes/products'
 import { Route as PerformanceIntelligenceRouteImport } from './routes/performance-intelligence'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MemosRouteImport } from './routes/memos'
@@ -61,11 +60,6 @@ const ScenariosRoute = ScenariosRouteImport.update({
 const QaCoachingRoute = QaCoachingRouteImport.update({
   id: '/qa-coaching',
   path: '/qa-coaching',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProductsRoute = ProductsRouteImport.update({
-  id: '/products',
-  path: '/products',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PerformanceIntelligenceRoute = PerformanceIntelligenceRouteImport.update({
@@ -164,7 +158,6 @@ export interface FileRoutesByFullPath {
   '/memos': typeof MemosRoute
   '/notifications': typeof NotificationsRoute
   '/performance-intelligence': typeof PerformanceIntelligenceRoute
-  '/products': typeof ProductsRoute
   '/qa-coaching': typeof QaCoachingRoute
   '/scenarios': typeof ScenariosRoute
   '/settings': typeof SettingsRoute
@@ -189,7 +182,6 @@ export interface FileRoutesByTo {
   '/memos': typeof MemosRoute
   '/notifications': typeof NotificationsRoute
   '/performance-intelligence': typeof PerformanceIntelligenceRoute
-  '/products': typeof ProductsRoute
   '/qa-coaching': typeof QaCoachingRoute
   '/scenarios': typeof ScenariosRoute
   '/settings': typeof SettingsRoute
@@ -215,7 +207,6 @@ export interface FileRoutesById {
   '/memos': typeof MemosRoute
   '/notifications': typeof NotificationsRoute
   '/performance-intelligence': typeof PerformanceIntelligenceRoute
-  '/products': typeof ProductsRoute
   '/qa-coaching': typeof QaCoachingRoute
   '/scenarios': typeof ScenariosRoute
   '/settings': typeof SettingsRoute
@@ -242,7 +233,6 @@ export interface FileRouteTypes {
     | '/memos'
     | '/notifications'
     | '/performance-intelligence'
-    | '/products'
     | '/qa-coaching'
     | '/scenarios'
     | '/settings'
@@ -267,7 +257,6 @@ export interface FileRouteTypes {
     | '/memos'
     | '/notifications'
     | '/performance-intelligence'
-    | '/products'
     | '/qa-coaching'
     | '/scenarios'
     | '/settings'
@@ -292,7 +281,6 @@ export interface FileRouteTypes {
     | '/memos'
     | '/notifications'
     | '/performance-intelligence'
-    | '/products'
     | '/qa-coaching'
     | '/scenarios'
     | '/settings'
@@ -318,7 +306,6 @@ export interface RootRouteChildren {
   MemosRoute: typeof MemosRoute
   NotificationsRoute: typeof NotificationsRoute
   PerformanceIntelligenceRoute: typeof PerformanceIntelligenceRoute
-  ProductsRoute: typeof ProductsRoute
   QaCoachingRoute: typeof QaCoachingRoute
   ScenariosRoute: typeof ScenariosRoute
   SettingsRoute: typeof SettingsRoute
@@ -371,13 +358,6 @@ declare module '@tanstack/react-router' {
       path: '/qa-coaching'
       fullPath: '/qa-coaching'
       preLoaderRoute: typeof QaCoachingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/products': {
-      id: '/products'
-      path: '/products'
-      fullPath: '/products'
-      preLoaderRoute: typeof ProductsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/performance-intelligence': {
@@ -510,7 +490,6 @@ const rootRouteChildren: RootRouteChildren = {
   MemosRoute: MemosRoute,
   NotificationsRoute: NotificationsRoute,
   PerformanceIntelligenceRoute: PerformanceIntelligenceRoute,
-  ProductsRoute: ProductsRoute,
   QaCoachingRoute: QaCoachingRoute,
   ScenariosRoute: ScenariosRoute,
   SettingsRoute: SettingsRoute,

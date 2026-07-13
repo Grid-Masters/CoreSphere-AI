@@ -24,7 +24,7 @@ import {
   Trophy,
   Medal,
 } from "lucide-react";
-import { Package, Siren, MessageSquarePlus } from "lucide-react";
+import { Siren, MessageSquarePlus } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useActiveUser } from "@/lib/active-user";
 import type { Role } from "@/lib/directory";
@@ -38,11 +38,10 @@ const groups: { label: string; items: NavItem[] }[] = [
     label: "Operations",
     items: [
       { to: "/", icon: LayoutDashboard, label: "Dashboard", roles: ALL },
-      { to: "/knowledge-hub", icon: BookOpen, label: "Knowledge Hub", roles: ALL },
+      { to: "/knowledge-hub", icon: BookOpen, label: "Enterprise Knowledge Hub", roles: ALL },
       { to: "/assessments", icon: GraduationCap, label: "Assessments", roles: ALL },
       { to: "/scenarios", icon: Bot, label: "Scenario Simulator", roles: ALL },
       { to: "/faq", icon: HelpCircle, label: "FAQ Center", roles: ALL },
-      { to: "/products", icon: Package, label: "Product Intelligence", roles: ALL },
       { to: "/alerts", icon: Siren, label: "Alert Center", roles: ALL },
     ],
   },
