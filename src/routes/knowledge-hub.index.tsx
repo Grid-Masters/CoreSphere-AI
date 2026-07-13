@@ -10,7 +10,6 @@ import {
   ShieldAlert,
   Headphones,
   Mail,
-  MessageSquare,
   Megaphone,
   Scale,
   FileText,
@@ -405,5 +404,3 @@ function SopCard({ sop: s }: { sop: (typeof sops)[number] }) {
   );
 }
 
-// MessageSquare imported for search-corpus icon parity; referenced to satisfy tree-shaking lint.
-void MessageSquare;
