@@ -1,11 +1,23 @@
 export type CorpusEntry = {
   id: string;
   title: string;
-  category: "SOP" | "Policy" | "FAQ" | "Coaching" | "Video" | "Assessment" | "Announcement" | "Advisory";
+  category: "SOP" | "Policy" | "FAQ" | "Coaching" | "Video" | "Assessment" | "Announcement" | "Advisory" | "Product";
   snippet: string;
   href?: string;
   tags?: string[];
 };
+
+import { PRODUCTS } from "./products";
+
+// Product Intelligence records now live inside the Enterprise Knowledge Hub.
+const productEntries: CorpusEntry[] = PRODUCTS.map((p) => ({
+  id: `prod-${p.id}`,
+  category: "Product",
+  title: p.name,
+  snippet: p.overview,
+  href: "/knowledge-hub",
+  tags: [p.category.toLowerCase(), "product"],
+}));
 
 export const corpus: CorpusEntry[] = [
   { id: "c1", category: "SOP", title: "Card Block & Unblock", snippet: "Step-by-step for card freeze, replacement and reactivation workflows.", href: "/knowledge-hub", tags: ["cards", "block"] },
@@ -20,6 +32,7 @@ export const corpus: CorpusEntry[] = [
   { id: "c10", category: "Assessment", title: "May 2026 — Service Excellence", snippet: "Monthly assessment covering service excellence pillars.", href: "/assessments" },
   { id: "c11", category: "Announcement", title: "Q2 service standards reminder", snippet: "Group Head broadcast — Q2 standards across Customer Fulfilment.", href: "/leadership" },
   { id: "c12", category: "Advisory", title: "Fraud: SIM-swap voice impersonation", snippet: "New typology guidance — verify with secondary signal.", href: "/memos" },
+  ...productEntries,
 ];
 
 function lev(a: string, b: string): number {
