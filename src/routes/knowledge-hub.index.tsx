@@ -182,138 +182,93 @@ function SopSection() {
 }
 
 function ProductSection() {
-  const [country, setCountry] = useState<CountryCode>(DEFAULT_COUNTRY);
-  const [cat, setCat] = useState<ProductCategory | "All">("All");
+function ProductSection() {
   const [q, setQ] = useState("");
-  const [open, setOpen] = useState<string | null>(null);
-
-  const products = useMemo(() => {
+  const tiles = useMemo(() => {
     const query = q.trim().toLowerCase();
-    return productsForCountry(country).filter(
-      (p) =>
-        (cat === "All" || p.category === cat) &&
-        (!query || `${p.name} ${p.overview} ${p.category}`.toLowerCase().includes(query)),
+    if (!query) return PRODUCT_TILES;
+    return PRODUCT_TILES.filter(
+      (t) =>
+        `${t.name} ${t.description}`.toLowerCase().includes(query) ||
+        t.items.some((i) => i.name.toLowerCase().includes(query)),
     );
-  }, [country, cat, q]);
+  }, [q]);
 
   return (
     <>
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-muted-foreground">
-          Verified product knowledge with talking points and escalation paths — {getCountry(country)?.name}.
-        </p>
-        <label className="text-sm">
-          <span className="sr-only">Country</span>
-          <select
-            value={country}
-            onChange={(e) => setCountry(e.target.value as CountryCode)}
-            className="h-9 rounded-md border border-input bg-background px-3 text-sm"
-          >
-            {COUNTRIES.map((c) => (
-              <option key={c.code} value={c.code} disabled={c.status !== "active"}>
-                {c.flag} {c.name}{c.status !== "active" ? " (coming soon)" : ""}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-2 mb-4">
-        <div className="relative flex-1 min-w-[200px]">
+      <div className="mb-5">
+        <div className="relative max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search products…"
+            placeholder="Search product knowledge…"
             className="w-full h-10 pl-9 pr-3 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring/40"
           />
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-5">
-        {(["All", ...PRODUCT_CATEGORIES] as const).map((c) => (
-          <button
-            key={c}
-            onClick={() => setCat(c as ProductCategory | "All")}
-            className={`h-8 px-3 rounded-full border text-xs font-medium transition-colors ${
-              cat === c ? "bg-primary text-primary-foreground border-primary" : "hover:bg-muted"
-            }`}
-          >
-            {c}
-          </button>
-        ))}
-      </div>
-
-      {products.length === 0 ? (
+      <h2 className="sr-only">Product Knowledge</h2>
+      {tiles.length === 0 ? (
         <PanelCard>
           <div className="py-10 text-center text-sm text-muted-foreground">
             <Package className="h-6 w-6 mx-auto mb-2 opacity-60" />
-            No products match your filters in {getCountry(country)?.name}.
+            No product knowledge matches your search.
           </div>
         </PanelCard>
       ) : (
-        <div className="space-y-3">
-          {products.map((p) => {
-            const isOpen = open === p.id;
-            return (
-              <div key={p.id} className="bg-card border rounded-xl shadow-sm overflow-hidden">
-                <button
-                  onClick={() => setOpen(isOpen ? null : p.id)}
-                  className="w-full flex items-center justify-between gap-3 px-5 py-4 text-left"
-                >
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold">{p.name}</span>
-                      <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/10 text-primary">{p.category}</span>
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-0.5">{p.tagline}</div>
-                  </div>
-                  <ChevronDown className={`h-4 w-4 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`} />
-                </button>
-                {isOpen && (
-                  <div className="px-5 pb-5 pt-1 border-t grid md:grid-cols-2 gap-5 text-sm">
-                    <div className="md:col-span-2">
-                      <div className="text-[11px] uppercase tracking-wider text-muted-foreground mb-1">Overview</div>
-                      <p className="text-muted-foreground">{p.overview}</p>
-                    </div>
-                    <ProductList title="Features" items={p.features} />
-                    <ProductList title="Benefits" items={p.benefits} />
-                    <ProductList title="Escalation Paths" items={p.escalation} />
-                    <ProductList title="Talking Points" items={p.talkingPoints} />
-                    <div className="md:col-span-2">
-                      <div className="text-[11px] uppercase tracking-wider text-muted-foreground mb-2">FAQs</div>
-                      <ul className="space-y-2">
-                        {p.faqs.map((f, i) => (
-                          <li key={i} className="rounded-lg border bg-background p-3">
-                            <div className="font-medium">{f.q}</div>
-                            <p className="text-muted-foreground mt-1">{f.a}</p>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          {tiles.map((t) => (
+            <ProductTileCard key={t.id} tile={t} />
+          ))}
         </div>
       )}
     </>
   );
 }
 
-function ProductList({ title, items }: { title: string; items: string[] }) {
+function ProductTileCard({ tile: t }: { tile: (typeof PRODUCT_TILES)[number] }) {
+  const Icon = t.icon;
   return (
-    <div>
-      <div className="text-[11px] uppercase tracking-wider text-muted-foreground mb-1.5">{title}</div>
-      <ul className="space-y-1.5">
-        {items.map((it, i) => (
-          <li key={i} className="flex items-start gap-2 text-muted-foreground">
-            <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
-            <span>{it}</span>
-          </li>
-        ))}
-      </ul>
+    <div className="relative">
+      <div
+        aria-hidden
+        className="absolute -bottom-2 left-3 right-3 h-3 rounded-full bg-foreground/15 blur-md opacity-60"
+      />
+      <Link
+        to="/knowledge-hub/product/$categoryId"
+        params={{ categoryId: t.id }}
+        className="group relative block bg-card border rounded-xl overflow-hidden shadow-md shadow-black/5 hover:border-primary/50 hover:shadow-xl hover:-translate-y-0.5 transition-all"
+      >
+        <div className={`relative aspect-[16/10] bg-gradient-to-br ${t.gradient} overflow-hidden`}>
+          <div className="absolute inset-0 opacity-30 mix-blend-overlay [background-image:radial-gradient(circle_at_20%_20%,white,transparent_45%),radial-gradient(circle_at_80%_70%,white,transparent_50%)]" />
+          <div className="absolute inset-0 [background-image:linear-gradient(white_1px,transparent_1px),linear-gradient(90deg,white_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.07]" />
+          <Icon className="absolute right-4 bottom-4 h-20 w-20 text-white/15" strokeWidth={1.2} />
+          <div className="absolute top-3 left-3">
+            <span className="text-[10px] uppercase tracking-wider bg-black/40 text-white px-2 py-1 rounded backdrop-blur-sm font-medium">
+              Product Knowledge
+            </span>
+          </div>
+          <div
+            aria-hidden
+            className="absolute inset-0 flex items-center justify-center text-white/10 text-2xl font-bold rotate-[-18deg] select-none pointer-events-none tracking-widest"
+          >
+            UBA • INTERNAL
+          </div>
+        </div>
+        <div className="p-4">
+          <h3 className="text-sm font-semibold leading-snug group-hover:text-primary transition-colors">
+            {t.name}
+          </h3>
+          <p className="text-xs text-muted-foreground mt-2 line-clamp-2">{t.description}</p>
+          <div className="mt-3 pt-3 border-t flex items-center justify-between text-[10px] text-muted-foreground">
+            <span>{t.items.length} products</span>
+            <span className="inline-flex items-center gap-1">
+              <Lock className="h-3 w-3" /> {currentUser.department}
+            </span>
+          </div>
+        </div>
+      </Link>
     </div>
   );
 }
