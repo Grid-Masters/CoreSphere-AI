@@ -36,7 +36,7 @@ function AlertCenter() {
   return (
     <AppShell>
       <div className="mb-6">
-        <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Knowledge & Product Intelligence</div>
+        <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Knowledge & Product Knowledge</div>
         <h1 className="text-2xl font-semibold tracking-tight mt-1">Operational Alert Center</h1>
         <p className="text-sm text-muted-foreground mt-1">
           Real-time operational alerts and reusable lessons from resolved incidents.
