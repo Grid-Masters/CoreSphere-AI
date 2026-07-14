@@ -68,7 +68,7 @@ function Catalogue() {
 
       <h2 className="sr-only">{tile.name} product catalogue</h2>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {tile.items.map((p) => (
+        {tile.items.map((p: typeof tile.items[number]) => (
           <Link
             key={p.id}
             to="/knowledge-hub/product/$categoryId/$productId"

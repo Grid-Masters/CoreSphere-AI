@@ -129,7 +129,7 @@ function ProductDetailPage() {
           </Section>
           <Section title="Operational Workflow" icon={ListChecks}>
             <ol className="space-y-2 text-sm">
-              {p.workflow.map((w, i) => (
+              {p.workflow.map((w: string, i: number) => (
                 <li key={i} className="flex items-start gap-3 text-muted-foreground">
                   <span className="shrink-0 h-5 w-5 rounded-full bg-primary/10 text-primary text-[11px] font-semibold flex items-center justify-center">{i + 1}</span>
                   <span>{w}</span>
@@ -143,7 +143,7 @@ function ProductDetailPage() {
           </div>
           <Section title="Fees & Charges" icon={Receipt}>
             <ul className="divide-y text-sm">
-              {p.fees.map((f, i) => (
+              {p.fees.map((f: { label: string; value: string }, i: number) => (
                 <li key={i} className="flex items-center justify-between py-2">
                   <span className="text-muted-foreground">{f.label}</span>
                   <span className="font-medium">{f.value}</span>
@@ -170,7 +170,7 @@ function ProductDetailPage() {
 
           <Section title="Version History" icon={History}>
             <ul className="space-y-3 text-sm">
-              {p.versionHistory.map((v, i) => (
+              {p.versionHistory.map((v: { version: string; date: string; note: string }, i: number) => (
                 <li key={i} className="relative pl-4 border-l border-border">
                   <span className="absolute -left-[5px] top-1.5 h-2 w-2 rounded-full bg-primary" />
                   <div className="flex items-center gap-2">
@@ -185,7 +185,7 @@ function ProductDetailPage() {
 
           <Section title="Related SOPs" icon={FileText}>
             <ul className="space-y-1.5 text-sm">
-              {p.relatedSops.map((s, i) => (
+              {p.relatedSops.map((s: string, i: number) => (
                 <li key={i}>
                   <Link to="/knowledge-hub" className="text-primary hover:underline inline-flex items-center gap-1">
                     <FileText className="h-3.5 w-3.5" /> {s}
@@ -197,21 +197,21 @@ function ProductDetailPage() {
           <Section title="Related Policies" icon={ShieldCheck}><Bullets items={p.relatedPolicies} /></Section>
           <Section title="Related FAQs" icon={HelpCircle}>
             <ul className="space-y-1.5 text-sm">
-              {p.relatedFaqs.map((f, i) => (
+              {p.relatedFaqs.map((f: string, i: number) => (
                 <li key={i}><Link to="/faq" className="text-primary hover:underline">{f}</Link></li>
               ))}
             </ul>
           </Section>
           <Section title="Related Assessments" icon={GraduationCap}>
             <ul className="space-y-1.5 text-sm">
-              {p.relatedAssessments.map((a, i) => (
+              {p.relatedAssessments.map((a: string, i: number) => (
                 <li key={i}><Link to="/assessments" className="text-primary hover:underline">{a}</Link></li>
               ))}
             </ul>
           </Section>
           <Section title="Training Videos" icon={PlayCircle}>
             <ul className="space-y-2 text-sm">
-              {p.videos.map((v, i) => (
+              {p.videos.map((v: { title: string; duration: string }, i: number) => (
                 <li key={i} className="flex items-center justify-between rounded-lg border bg-background p-3">
                   <span className="inline-flex items-center gap-2"><PlayCircle className="h-4 w-4 text-primary" /> {v.title}</span>
                   <span className="text-[11px] text-muted-foreground tabular-nums">{v.duration}</span>
