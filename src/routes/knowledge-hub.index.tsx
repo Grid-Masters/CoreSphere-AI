@@ -21,8 +21,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, ProgressBar, StatusBadge } from "@/components/ui-bits/Card";
 import { sops, currentUser } from "@/lib/mock-data";
 import { useVideoProgress, useTheoryProgress } from "@/lib/progress-store";
-import { PRODUCT_CATEGORIES, productsForCountry, type ProductCategory } from "@/lib/products";
-import { COUNTRIES, DEFAULT_COUNTRY, getCountry, type CountryCode } from "@/lib/org-structure";
+import { PRODUCT_TILES } from "@/lib/product-knowledge";
 
 const categoryStyles: Record<
   string,
