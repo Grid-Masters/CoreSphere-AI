@@ -181,7 +181,6 @@ function SopSection() {
 }
 
 function ProductSection() {
-function ProductSection() {
   const [q, setQ] = useState("");
   const tiles = useMemo(() => {
     const query = q.trim().toLowerCase();
