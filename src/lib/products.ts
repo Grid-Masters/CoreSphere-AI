@@ -1,5 +1,5 @@
 // ============================================================================
-// Phase C — Product Intelligence Hub
+// Product Knowledge — an Enterprise Knowledge Hub asset type
 // Country-aware product knowledge for the Customer Fulfilment Group.
 // Static, verified content the UI reads directly. Nigeria (NG) active;
 // other countries scaffolded through the org-structure country framework.
