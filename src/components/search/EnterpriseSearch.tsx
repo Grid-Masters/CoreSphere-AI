@@ -12,6 +12,7 @@ import {
   Sparkles,
   Search as SearchIcon,
   Clock,
+  Package,
 } from "lucide-react";
 import {
   Command,
@@ -39,6 +40,7 @@ const catIcon: Record<CorpusEntry["category"], any> = {
   Assessment: ClipboardList,
   Announcement: Megaphone,
   Advisory: ShieldAlert,
+  "Product Knowledge": Package,
 };
 
 function readRecent(): string[] {
