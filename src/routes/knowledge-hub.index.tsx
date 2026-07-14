@@ -15,7 +15,6 @@ import {
   FileText,
   BookOpen,
   Package,
-  ChevronDown,
 } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, ProgressBar, StatusBadge } from "@/components/ui-bits/Card";
