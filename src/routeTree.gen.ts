@@ -32,6 +32,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as KnowledgeHubIndexRouteImport } from './routes/knowledge-hub.index'
 import { Route as KnowledgeHubSopIdRouteImport } from './routes/knowledge-hub.$sopId'
 import { Route as KnowledgeHubProductCategoryIdRouteImport } from './routes/knowledge-hub.product.$categoryId'
+import { Route as KnowledgeHubProductCategoryIdProductIdRouteImport } from './routes/knowledge-hub.product.$categoryId.$productId'
 
 const TownhallRoute = TownhallRouteImport.update({
   id: '/townhall',
@@ -149,6 +150,12 @@ const KnowledgeHubProductCategoryIdRoute =
     path: '/knowledge-hub/product/$categoryId',
     getParentRoute: () => rootRouteImport,
   } as any)
+const KnowledgeHubProductCategoryIdProductIdRoute =
+  KnowledgeHubProductCategoryIdProductIdRouteImport.update({
+    id: '/$productId',
+    path: '/$productId',
+    getParentRoute: () => KnowledgeHubProductCategoryIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -173,7 +180,8 @@ export interface FileRoutesByFullPath {
   '/townhall': typeof TownhallRoute
   '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
   '/knowledge-hub/': typeof KnowledgeHubIndexRoute
-  '/knowledge-hub/product/$categoryId': typeof KnowledgeHubProductCategoryIdRoute
+  '/knowledge-hub/product/$categoryId': typeof KnowledgeHubProductCategoryIdRouteWithChildren
+  '/knowledge-hub/product/$categoryId/$productId': typeof KnowledgeHubProductCategoryIdProductIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -198,7 +206,8 @@ export interface FileRoutesByTo {
   '/townhall': typeof TownhallRoute
   '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
   '/knowledge-hub': typeof KnowledgeHubIndexRoute
-  '/knowledge-hub/product/$categoryId': typeof KnowledgeHubProductCategoryIdRoute
+  '/knowledge-hub/product/$categoryId': typeof KnowledgeHubProductCategoryIdRouteWithChildren
+  '/knowledge-hub/product/$categoryId/$productId': typeof KnowledgeHubProductCategoryIdProductIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -224,7 +233,8 @@ export interface FileRoutesById {
   '/townhall': typeof TownhallRoute
   '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
   '/knowledge-hub/': typeof KnowledgeHubIndexRoute
-  '/knowledge-hub/product/$categoryId': typeof KnowledgeHubProductCategoryIdRoute
+  '/knowledge-hub/product/$categoryId': typeof KnowledgeHubProductCategoryIdRouteWithChildren
+  '/knowledge-hub/product/$categoryId/$productId': typeof KnowledgeHubProductCategoryIdProductIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -252,6 +262,7 @@ export interface FileRouteTypes {
     | '/knowledge-hub/$sopId'
     | '/knowledge-hub/'
     | '/knowledge-hub/product/$categoryId'
+    | '/knowledge-hub/product/$categoryId/$productId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -277,6 +288,7 @@ export interface FileRouteTypes {
     | '/knowledge-hub/$sopId'
     | '/knowledge-hub'
     | '/knowledge-hub/product/$categoryId'
+    | '/knowledge-hub/product/$categoryId/$productId'
   id:
     | '__root__'
     | '/'
@@ -302,6 +314,7 @@ export interface FileRouteTypes {
     | '/knowledge-hub/$sopId'
     | '/knowledge-hub/'
     | '/knowledge-hub/product/$categoryId'
+    | '/knowledge-hub/product/$categoryId/$productId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -327,7 +340,7 @@ export interface RootRouteChildren {
   TownhallRoute: typeof TownhallRoute
   KnowledgeHubSopIdRoute: typeof KnowledgeHubSopIdRoute
   KnowledgeHubIndexRoute: typeof KnowledgeHubIndexRoute
-  KnowledgeHubProductCategoryIdRoute: typeof KnowledgeHubProductCategoryIdRoute
+  KnowledgeHubProductCategoryIdRoute: typeof KnowledgeHubProductCategoryIdRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -493,8 +506,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KnowledgeHubProductCategoryIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/knowledge-hub/product/$categoryId/$productId': {
+      id: '/knowledge-hub/product/$categoryId/$productId'
+      path: '/$productId'
+      fullPath: '/knowledge-hub/product/$categoryId/$productId'
+      preLoaderRoute: typeof KnowledgeHubProductCategoryIdProductIdRouteImport
+      parentRoute: typeof KnowledgeHubProductCategoryIdRoute
+    }
   }
 }
+
+interface KnowledgeHubProductCategoryIdRouteChildren {
+  KnowledgeHubProductCategoryIdProductIdRoute: typeof KnowledgeHubProductCategoryIdProductIdRoute
+}
+
+const KnowledgeHubProductCategoryIdRouteChildren: KnowledgeHubProductCategoryIdRouteChildren =
+  {
+    KnowledgeHubProductCategoryIdProductIdRoute:
+      KnowledgeHubProductCategoryIdProductIdRoute,
+  }
+
+const KnowledgeHubProductCategoryIdRouteWithChildren =
+  KnowledgeHubProductCategoryIdRoute._addFileChildren(
+    KnowledgeHubProductCategoryIdRouteChildren,
+  )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -519,7 +554,8 @@ const rootRouteChildren: RootRouteChildren = {
   TownhallRoute: TownhallRoute,
   KnowledgeHubSopIdRoute: KnowledgeHubSopIdRoute,
   KnowledgeHubIndexRoute: KnowledgeHubIndexRoute,
-  KnowledgeHubProductCategoryIdRoute: KnowledgeHubProductCategoryIdRoute,
+  KnowledgeHubProductCategoryIdRoute:
+    KnowledgeHubProductCategoryIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
