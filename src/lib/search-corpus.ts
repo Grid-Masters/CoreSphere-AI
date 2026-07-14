@@ -7,16 +7,17 @@ export type CorpusEntry = {
   tags?: string[];
 };
 
-import { PRODUCTS } from "./products";
+import { PRODUCT_ITEMS } from "./product-knowledge";
 
-// Product Intelligence records now live inside the Enterprise Knowledge Hub.
-const productEntries: CorpusEntry[] = PRODUCTS.map((p) => ({
+// Product Knowledge records live inside the Enterprise Knowledge Hub — there is
+// no separate product index. Each entry deep-links to its detail page.
+const productEntries: CorpusEntry[] = PRODUCT_ITEMS.map((p) => ({
   id: `prod-${p.id}`,
   category: "Product Knowledge",
   title: p.name,
   snippet: p.overview,
-  href: "/knowledge-hub",
-  tags: [p.category.toLowerCase(), "product"],
+  href: `/knowledge-hub/product/${p.categoryId}/${p.id}`,
+  tags: [...p.tags, p.categoryName.toLowerCase()],
 }));
 
 export const corpus: CorpusEntry[] = [
