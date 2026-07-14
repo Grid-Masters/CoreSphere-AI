@@ -69,7 +69,7 @@ function KnowledgeHub() {
           </div>
           <h1 className="text-2xl font-semibold tracking-tight mt-1">Enterprise Knowledge Hub</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Approved SOPs, policies, playbooks and product intelligence for your role.
+            Approved SOPs, policies, playbooks and product knowledge for your role.
           </p>
         </div>
       </div>
@@ -79,7 +79,7 @@ function KnowledgeHub() {
           SOPs &amp; Policies
         </TabButton>
         <TabButton active={tab === "products"} onClick={() => setTab("products")} icon={Package}>
-          Product Intelligence
+          Product Knowledge
         </TabButton>
       </div>
 

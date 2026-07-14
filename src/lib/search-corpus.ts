@@ -1,7 +1,7 @@
 export type CorpusEntry = {
   id: string;
   title: string;
-  category: "SOP" | "Policy" | "FAQ" | "Coaching" | "Video" | "Assessment" | "Announcement" | "Advisory" | "Product";
+  category: "SOP" | "Policy" | "FAQ" | "Coaching" | "Video" | "Assessment" | "Announcement" | "Advisory" | "Product Knowledge";
   snippet: string;
   href?: string;
   tags?: string[];
@@ -12,7 +12,7 @@ import { PRODUCTS } from "./products";
 // Product Intelligence records now live inside the Enterprise Knowledge Hub.
 const productEntries: CorpusEntry[] = PRODUCTS.map((p) => ({
   id: `prod-${p.id}`,
-  category: "Product",
+  category: "Product Knowledge",
   title: p.name,
   snippet: p.overview,
   href: "/knowledge-hub",
