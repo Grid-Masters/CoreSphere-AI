@@ -86,15 +86,16 @@ export const logAuditEvent = createServerFn({ method: "POST" })
       ip = null;
     }
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    // Best-effort lookup of user_id from email if present
+    // Best-effort lookup of user_id from email via Auth admin API.
     let user_id: string | null = null;
     if (data.user_email) {
-      const { data: u } = await supabaseAdmin
-        .from("profiles")
-        .select("id")
-        .eq("email", data.user_email)
-        .maybeSingle();
-      user_id = u?.id ?? null;
+      try {
+        const { data: page } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 200 });
+        const match = page?.users?.find((u) => u.email?.toLowerCase() === data.user_email!.toLowerCase());
+        user_id = match?.id ?? null;
+      } catch {
+        user_id = null;
+      }
     }
     await supabaseAdmin.from("audit_events").insert({
       user_id,
