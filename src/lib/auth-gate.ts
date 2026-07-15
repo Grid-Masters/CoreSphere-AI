@@ -11,10 +11,15 @@ export function useAuthGate() {
   const navigate = useNavigate();
   const path = useRouterState({ select: (s) => s.location.pathname });
   useEffect(() => {
-    if (path === "/login") return;
+    if (path === "/login" || path === "/mfa") return;
     let active = true;
     supabase.auth.getSession().then(({ data }) => {
       if (active && !data.session) navigate({ to: "/login", replace: true });
+      // External-network sessions must complete hard-token MFA before entering the app.
+      if (active && data.session) {
+        const verified = typeof window !== "undefined" && sessionStorage.getItem("coresphere:mfa") === "1";
+        if (!verified) navigate({ to: "/mfa", replace: true });
+      }
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!session) navigate({ to: "/login", replace: true });

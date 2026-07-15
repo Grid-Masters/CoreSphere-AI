@@ -17,6 +17,7 @@ import { Route as ScenariosRouteImport } from './routes/scenarios'
 import { Route as QaCoachingRouteImport } from './routes/qa-coaching'
 import { Route as PerformanceIntelligenceRouteImport } from './routes/performance-intelligence'
 import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as MfaRouteImport } from './routes/mfa'
 import { Route as MemosRouteImport } from './routes/memos'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LeadershipRouteImport } from './routes/leadership'
@@ -72,6 +73,11 @@ const PerformanceIntelligenceRoute = PerformanceIntelligenceRouteImport.update({
 const NotificationsRoute = NotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MfaRoute = MfaRouteImport.update({
+  id: '/mfa',
+  path: '/mfa',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MemosRoute = MemosRouteImport.update({
@@ -170,6 +176,7 @@ export interface FileRoutesByFullPath {
   '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
   '/memos': typeof MemosRoute
+  '/mfa': typeof MfaRoute
   '/notifications': typeof NotificationsRoute
   '/performance-intelligence': typeof PerformanceIntelligenceRoute
   '/qa-coaching': typeof QaCoachingRoute
@@ -196,6 +203,7 @@ export interface FileRoutesByTo {
   '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
   '/memos': typeof MemosRoute
+  '/mfa': typeof MfaRoute
   '/notifications': typeof NotificationsRoute
   '/performance-intelligence': typeof PerformanceIntelligenceRoute
   '/qa-coaching': typeof QaCoachingRoute
@@ -223,6 +231,7 @@ export interface FileRoutesById {
   '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
   '/memos': typeof MemosRoute
+  '/mfa': typeof MfaRoute
   '/notifications': typeof NotificationsRoute
   '/performance-intelligence': typeof PerformanceIntelligenceRoute
   '/qa-coaching': typeof QaCoachingRoute
@@ -251,6 +260,7 @@ export interface FileRouteTypes {
     | '/leadership'
     | '/login'
     | '/memos'
+    | '/mfa'
     | '/notifications'
     | '/performance-intelligence'
     | '/qa-coaching'
@@ -277,6 +287,7 @@ export interface FileRouteTypes {
     | '/leadership'
     | '/login'
     | '/memos'
+    | '/mfa'
     | '/notifications'
     | '/performance-intelligence'
     | '/qa-coaching'
@@ -303,6 +314,7 @@ export interface FileRouteTypes {
     | '/leadership'
     | '/login'
     | '/memos'
+    | '/mfa'
     | '/notifications'
     | '/performance-intelligence'
     | '/qa-coaching'
@@ -330,6 +342,7 @@ export interface RootRouteChildren {
   LeadershipRoute: typeof LeadershipRoute
   LoginRoute: typeof LoginRoute
   MemosRoute: typeof MemosRoute
+  MfaRoute: typeof MfaRoute
   NotificationsRoute: typeof NotificationsRoute
   PerformanceIntelligenceRoute: typeof PerformanceIntelligenceRoute
   QaCoachingRoute: typeof QaCoachingRoute
@@ -399,6 +412,13 @@ declare module '@tanstack/react-router' {
       path: '/notifications'
       fullPath: '/notifications'
       preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mfa': {
+      id: '/mfa'
+      path: '/mfa'
+      fullPath: '/mfa'
+      preLoaderRoute: typeof MfaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/memos': {
@@ -544,6 +564,7 @@ const rootRouteChildren: RootRouteChildren = {
   LeadershipRoute: LeadershipRoute,
   LoginRoute: LoginRoute,
   MemosRoute: MemosRoute,
+  MfaRoute: MfaRoute,
   NotificationsRoute: NotificationsRoute,
   PerformanceIntelligenceRoute: PerformanceIntelligenceRoute,
   QaCoachingRoute: QaCoachingRoute,
@@ -560,13 +581,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
