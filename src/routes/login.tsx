@@ -7,6 +7,11 @@ import { findByEmail } from "@/lib/directory";
 import { demoProfiles } from "@/lib/demo-profiles";
 import { supabase } from "@/integrations/supabase/client";
 import { demoSignIn } from "@/lib/demo-auth.functions";
+import {
+  classifyNetwork,
+  createSession,
+  logAuditEvent,
+} from "@/lib/platform-foundation.functions";
 import { quotes } from "@/lib/quotes";
 import {
   Dialog,
@@ -54,6 +59,9 @@ const slides = [
 function LoginPage() {
   const navigate = useNavigate();
   const requestDemoSession = useServerFn(demoSignIn);
+  const classify = useServerFn(classifyNetwork);
+  const startSession = useServerFn(createSession);
+  const audit = useServerFn(logAuditEvent);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -71,6 +79,65 @@ function LoginPage() {
     return () => clearInterval(t);
   }, []);
 
+  function browserInfo() {
+    if (typeof navigator === "undefined") return { device: "unknown", browser: "unknown" };
+    return {
+      device: navigator.platform || "unknown",
+      browser: navigator.userAgent.slice(0, 200),
+    };
+  }
+
+  async function afterSignIn(targetEmail: string, opts: { isDemo: boolean }) {
+    const info = browserInfo();
+    let net: { classification: "internal" | "external"; ip: string | null } = {
+      classification: "external",
+      ip: null,
+    };
+    try {
+      const r = await classify();
+      net = { classification: r.classification, ip: r.ip };
+    } catch {
+      // fall back to external → MFA required
+    }
+    // Demo personas bypass MFA to preserve the existing preview flow.
+    const requireMfa = net.classification === "external" && !opts.isDemo;
+
+    let sessionId: string | null = null;
+    try {
+      const res = await startSession({ data: {
+        device: info.device,
+        browser: info.browser,
+        network_classification: net.classification,
+        mfa_verified: !requireMfa,
+      }});
+      sessionId = res.session_id;
+      sessionStorage.setItem("coresphere:sid", sessionId);
+    } catch {
+      // non-fatal — dashboard still renders
+    }
+
+    await audit({ data: {
+      event_type: "login_success", outcome: "success",
+      action: opts.isDemo ? "Demo sign-in" : "Password sign-in",
+      user_email: targetEmail,
+      device: info.device, browser: info.browser,
+      network_classification: net.classification,
+      session_id: sessionId,
+    }}).catch(() => {});
+
+    if (requireMfa) {
+      navigate({ to: "/mfa" });
+      return;
+    }
+    sessionStorage.setItem("coresphere:mfa", "1");
+    try {
+      sessionStorage.setItem("coresphere:justSignedIn", "1");
+    } catch {
+      // storage unavailable — non-critical
+    }
+    navigate({ to: "/" });
+  }
+
   async function signIn(targetEmail: string, targetPassword: string) {
     setError("");
     setBusy(true);
@@ -78,18 +145,18 @@ function LoginPage() {
       email: targetEmail.trim(),
       password: targetPassword,
     });
-    setBusy(false);
     if (signInError) {
+      setBusy(false);
+      await audit({ data: {
+        event_type: "login_failed", outcome: "failure",
+        action: "Password sign-in rejected",
+        user_email: targetEmail,
+      }}).catch(() => {});
       setError("Invalid credentials. Check your enterprise email and password.");
       return;
     }
-    // Signal a fresh sign-in so the dashboard opens the Daily Briefing (Phase B).
-    try {
-      sessionStorage.setItem("coresphere:justSignedIn", "1");
-    } catch {
-      // storage unavailable — non-critical
-    }
-    navigate({ to: "/" });
+    await afterSignIn(targetEmail, { isDemo: false });
+    setBusy(false);
   }
 
   async function signInDemo(targetEmail: string) {
@@ -106,17 +173,13 @@ function LoginPage() {
         access_token: result.access_token,
         refresh_token: result.refresh_token,
       });
-      setBusy(false);
       if (sessionError) {
+        setBusy(false);
         setError("Demo access is currently unavailable. Please try again later.");
         return;
       }
-      try {
-        sessionStorage.setItem("coresphere:justSignedIn", "1");
-      } catch {
-        // storage unavailable — non-critical
-      }
-      navigate({ to: "/" });
+      await afterSignIn(targetEmail, { isDemo: true });
+      setBusy(false);
     } catch {
       setBusy(false);
       setError("Demo access is currently unavailable. Please try again later.");
