@@ -47,6 +47,48 @@ export type Database = {
         }
         Relationships: []
       }
+      approved_quotes: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          author: string | null
+          category: string
+          created_at: string
+          id: string
+          is_active: boolean
+          quote: string
+          source_module: string
+          submitted_by: string | null
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          author?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          quote: string
+          source_module?: string
+          submitted_by?: string | null
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          author?: string | null
+          category?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          quote?: string
+          source_module?: string
+          submitted_by?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       audit_events: {
         Row: {
           action: string | null
