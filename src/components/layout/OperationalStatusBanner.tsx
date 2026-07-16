@@ -5,10 +5,10 @@ import { supabase } from "@/integrations/supabase/client";
 type Banner = {
   id: string;
   title: string;
-  body: string | null;
-  severity: string | null;
-  starts_at: string | null;
-  ends_at: string | null;
+  message: string;
+  severity: string;
+  active_from: string;
+  active_to: string | null;
 };
 
 const DISMISS_KEY = "coresphere.opsbanner.dismissed";
@@ -39,9 +39,9 @@ export function OperationalStatusBanner() {
       const nowIso = new Date().toISOString();
       const { data } = await supabase
         .from("incident_banners")
-        .select("id, title, body, severity, starts_at, ends_at")
-        .lte("starts_at", nowIso)
-        .or(`ends_at.is.null,ends_at.gte.${nowIso}`)
+        .select("id, title, message, severity, active_from, active_to")
+        .lte("active_from", nowIso)
+        .or(`active_to.is.null,active_to.gte.${nowIso}`)
         .order("severity", { ascending: false })
         .limit(1)
         .maybeSingle();
@@ -82,7 +82,7 @@ export function OperationalStatusBanner() {
       <Icon className="h-4 w-4 mt-0.5 shrink-0" aria-hidden />
       <div className="flex-1 min-w-0 text-sm">
         <span className="font-semibold">{banner.title}</span>
-        {banner.body && <span className="ml-2 text-foreground/80">{banner.body}</span>}
+        {banner.message && <span className="ml-2 text-foreground/80">{banner.message}</span>}
       </div>
       {!critical && (
         <button
