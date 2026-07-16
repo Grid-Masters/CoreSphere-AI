@@ -15,12 +15,15 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ScenariosRouteImport } from './routes/scenarios'
 import { Route as QaCoachingRouteImport } from './routes/qa-coaching'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PerformanceIntelligenceRouteImport } from './routes/performance-intelligence'
 import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as MyActivityRouteImport } from './routes/my-activity'
 import { Route as MfaRouteImport } from './routes/mfa'
 import { Route as MemosRouteImport } from './routes/memos'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LeadershipRouteImport } from './routes/leadership'
+import { Route as HelpRouteImport } from './routes/help'
 import { Route as HallOfFameRouteImport } from './routes/hall-of-fame'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as AssessmentsRouteImport } from './routes/assessments'
@@ -65,6 +68,11 @@ const QaCoachingRoute = QaCoachingRouteImport.update({
   path: '/qa-coaching',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PerformanceIntelligenceRoute = PerformanceIntelligenceRouteImport.update({
   id: '/performance-intelligence',
   path: '/performance-intelligence',
@@ -73,6 +81,11 @@ const PerformanceIntelligenceRoute = PerformanceIntelligenceRouteImport.update({
 const NotificationsRoute = NotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MyActivityRoute = MyActivityRouteImport.update({
+  id: '/my-activity',
+  path: '/my-activity',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MfaRoute = MfaRouteImport.update({
@@ -93,6 +106,11 @@ const LoginRoute = LoginRouteImport.update({
 const LeadershipRoute = LeadershipRouteImport.update({
   id: '/leadership',
   path: '/leadership',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HelpRoute = HelpRouteImport.update({
+  id: '/help',
+  path: '/help',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HallOfFameRoute = HallOfFameRouteImport.update({
@@ -173,12 +191,15 @@ export interface FileRoutesByFullPath {
   '/assessments': typeof AssessmentsRoute
   '/faq': typeof FaqRoute
   '/hall-of-fame': typeof HallOfFameRoute
+  '/help': typeof HelpRoute
   '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
   '/memos': typeof MemosRoute
   '/mfa': typeof MfaRoute
+  '/my-activity': typeof MyActivityRoute
   '/notifications': typeof NotificationsRoute
   '/performance-intelligence': typeof PerformanceIntelligenceRoute
+  '/profile': typeof ProfileRoute
   '/qa-coaching': typeof QaCoachingRoute
   '/scenarios': typeof ScenariosRoute
   '/settings': typeof SettingsRoute
@@ -200,12 +221,15 @@ export interface FileRoutesByTo {
   '/assessments': typeof AssessmentsRoute
   '/faq': typeof FaqRoute
   '/hall-of-fame': typeof HallOfFameRoute
+  '/help': typeof HelpRoute
   '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
   '/memos': typeof MemosRoute
   '/mfa': typeof MfaRoute
+  '/my-activity': typeof MyActivityRoute
   '/notifications': typeof NotificationsRoute
   '/performance-intelligence': typeof PerformanceIntelligenceRoute
+  '/profile': typeof ProfileRoute
   '/qa-coaching': typeof QaCoachingRoute
   '/scenarios': typeof ScenariosRoute
   '/settings': typeof SettingsRoute
@@ -228,12 +252,15 @@ export interface FileRoutesById {
   '/assessments': typeof AssessmentsRoute
   '/faq': typeof FaqRoute
   '/hall-of-fame': typeof HallOfFameRoute
+  '/help': typeof HelpRoute
   '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
   '/memos': typeof MemosRoute
   '/mfa': typeof MfaRoute
+  '/my-activity': typeof MyActivityRoute
   '/notifications': typeof NotificationsRoute
   '/performance-intelligence': typeof PerformanceIntelligenceRoute
+  '/profile': typeof ProfileRoute
   '/qa-coaching': typeof QaCoachingRoute
   '/scenarios': typeof ScenariosRoute
   '/settings': typeof SettingsRoute
@@ -257,12 +284,15 @@ export interface FileRouteTypes {
     | '/assessments'
     | '/faq'
     | '/hall-of-fame'
+    | '/help'
     | '/leadership'
     | '/login'
     | '/memos'
     | '/mfa'
+    | '/my-activity'
     | '/notifications'
     | '/performance-intelligence'
+    | '/profile'
     | '/qa-coaching'
     | '/scenarios'
     | '/settings'
@@ -284,12 +314,15 @@ export interface FileRouteTypes {
     | '/assessments'
     | '/faq'
     | '/hall-of-fame'
+    | '/help'
     | '/leadership'
     | '/login'
     | '/memos'
     | '/mfa'
+    | '/my-activity'
     | '/notifications'
     | '/performance-intelligence'
+    | '/profile'
     | '/qa-coaching'
     | '/scenarios'
     | '/settings'
@@ -311,12 +344,15 @@ export interface FileRouteTypes {
     | '/assessments'
     | '/faq'
     | '/hall-of-fame'
+    | '/help'
     | '/leadership'
     | '/login'
     | '/memos'
     | '/mfa'
+    | '/my-activity'
     | '/notifications'
     | '/performance-intelligence'
+    | '/profile'
     | '/qa-coaching'
     | '/scenarios'
     | '/settings'
@@ -339,12 +375,15 @@ export interface RootRouteChildren {
   AssessmentsRoute: typeof AssessmentsRoute
   FaqRoute: typeof FaqRoute
   HallOfFameRoute: typeof HallOfFameRoute
+  HelpRoute: typeof HelpRoute
   LeadershipRoute: typeof LeadershipRoute
   LoginRoute: typeof LoginRoute
   MemosRoute: typeof MemosRoute
   MfaRoute: typeof MfaRoute
+  MyActivityRoute: typeof MyActivityRoute
   NotificationsRoute: typeof NotificationsRoute
   PerformanceIntelligenceRoute: typeof PerformanceIntelligenceRoute
+  ProfileRoute: typeof ProfileRoute
   QaCoachingRoute: typeof QaCoachingRoute
   ScenariosRoute: typeof ScenariosRoute
   SettingsRoute: typeof SettingsRoute
@@ -400,6 +439,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QaCoachingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/performance-intelligence': {
       id: '/performance-intelligence'
       path: '/performance-intelligence'
@@ -412,6 +458,13 @@ declare module '@tanstack/react-router' {
       path: '/notifications'
       fullPath: '/notifications'
       preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-activity': {
+      id: '/my-activity'
+      path: '/my-activity'
+      fullPath: '/my-activity'
+      preLoaderRoute: typeof MyActivityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mfa': {
@@ -440,6 +493,13 @@ declare module '@tanstack/react-router' {
       path: '/leadership'
       fullPath: '/leadership'
       preLoaderRoute: typeof LeadershipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/help': {
+      id: '/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof HelpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hall-of-fame': {
@@ -561,12 +621,15 @@ const rootRouteChildren: RootRouteChildren = {
   AssessmentsRoute: AssessmentsRoute,
   FaqRoute: FaqRoute,
   HallOfFameRoute: HallOfFameRoute,
+  HelpRoute: HelpRoute,
   LeadershipRoute: LeadershipRoute,
   LoginRoute: LoginRoute,
   MemosRoute: MemosRoute,
   MfaRoute: MfaRoute,
+  MyActivityRoute: MyActivityRoute,
   NotificationsRoute: NotificationsRoute,
   PerformanceIntelligenceRoute: PerformanceIntelligenceRoute,
+  ProfileRoute: ProfileRoute,
   QaCoachingRoute: QaCoachingRoute,
   ScenariosRoute: ScenariosRoute,
   SettingsRoute: SettingsRoute,
@@ -581,13 +644,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
