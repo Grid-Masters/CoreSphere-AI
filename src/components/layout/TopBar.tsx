@@ -1,5 +1,5 @@
-import { Bell, Search, Menu, PanelLeftClose, PanelLeftOpen, Sparkles, ListChecks, LogOut, ChevronDown } from "lucide-react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Bell, Search, Menu, PanelLeftClose, PanelLeftOpen, Sparkles, ListChecks, LogOut, ChevronDown, User, Activity, LifeBuoy, Settings as SettingsIcon, Star } from "lucide-react";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +13,7 @@ import { OPEN_SEARCH_EVENT } from "@/components/search/EnterpriseSearch";
 import { OPEN_AI_EVENT } from "@/components/CoreSphereAI";
 import { useActiveUser } from "@/lib/active-user";
 import { supabase } from "@/integrations/supabase/client";
+import { toggleFavorite, useFavorites } from "@/lib/workspace-prefs";
 
 function fire(name: string) {
   if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(name));
@@ -50,6 +51,11 @@ function IconButton({
 export function TopBar({ onOpenMobile, onToggleCollapsed, collapsed }: Props) {
   const user = useActiveUser();
   const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const favs = useFavorites();
+  const isFav = favs.some((f) => f.path === pathname);
+  const currentLabel = deriveLabel(pathname);
+  const canFavorite = pathname !== "/" && pathname !== "/login" && pathname !== "/mfa";
 
   const signOut = async () => {
     // Best-effort: record logout in the immutable audit log and end the session row.
@@ -129,6 +135,15 @@ export function TopBar({ onOpenMobile, onToggleCollapsed, collapsed }: Props) {
           <Sparkles className="h-4 w-4 text-primary" />
         </IconButton>
 
+        {canFavorite && (
+          <IconButton
+            label={isFav ? "Unpin this page" : "Pin this page"}
+            onClick={() => toggleFavorite(pathname, currentLabel)}
+          >
+            <Star className={`h-4 w-4 ${isFav ? "text-primary fill-current" : ""}`} />
+          </IconButton>
+        )}
+
         <Link
           to="/"
           aria-label="My tasks"
@@ -171,8 +186,22 @@ export function TopBar({ onOpenMobile, onToggleCollapsed, collapsed }: Props) {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link to="/settings">Settings</Link>
+                <Link to="/profile"><User className="h-4 w-4" /> My Profile</Link>
               </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/my-activity"><Activity className="h-4 w-4" /> My Activity</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/notifications"><Bell className="h-4 w-4" /> My Notifications</Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link to="/settings"><SettingsIcon className="h-4 w-4" /> Theme & Settings</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/help"><LifeBuoy className="h-4 w-4" /> Help & Support</Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
               <DropdownMenuItem onSelect={signOut} className="text-destructive focus:text-destructive">
                 <LogOut className="h-4 w-4" /> Sign out
               </DropdownMenuItem>
@@ -182,4 +211,12 @@ export function TopBar({ onOpenMobile, onToggleCollapsed, collapsed }: Props) {
       </div>
     </header>
   );
+}
+
+function deriveLabel(path: string): string {
+  if (!path || path === "/") return "Dashboard";
+  const seg = path.split("/").filter(Boolean)[0] ?? "";
+  return seg
+    .replace(/[-_]/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
 }
