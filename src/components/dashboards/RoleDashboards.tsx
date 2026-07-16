@@ -42,8 +42,10 @@ import { ExecutiveCommandCenter } from "@/components/exec/ExecutiveCommandCenter
 import { EnterpriseActivityFeed } from "@/components/feed/EnterpriseActivityFeed";
 import { KpiDrillSheet, type KpiDrill } from "@/components/exec/KpiDrillSheet";
 import { AnimatedCounter } from "@/components/ui-bits/AnimatedCounter";
-import { pickQuote, greetingForHour } from "@/lib/quotes";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { WelcomeBanner } from "@/components/welcome/WelcomeBanner";
+import { SmartQuickActions } from "@/components/quick-actions/SmartQuickActions";
+import { FavoritesRecent } from "@/components/layout/FavoritesRecent";
 import {
   announcements,
   assessments,
@@ -57,30 +59,15 @@ import {
 import { directory, type DirectoryEntry } from "@/lib/directory";
 
 function Greeting({ user, subtitle }: { user: DirectoryEntry; subtitle: string }) {
-  const [quote, setQuote] = useState(() => pickQuote(new Date(0)));
-  const [hello, setHello] = useState("Good morning");
-  useEffect(() => {
-    const now = new Date();
-    setQuote(pickQuote(now));
-    setHello(greetingForHour(now.getHours()));
-  }, []);
   return (
-    <div className="mb-6">
+    <div>
       <h1 className="sr-only">Operational Dashboard</h1>
-      <div className="flex items-end justify-between flex-wrap gap-3">
-      <div>
-        <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-          {user.department} • {user.unit}
-        </div>
-        <p className="text-2xl font-semibold tracking-tight mt-1">
-          {hello}, {user.name.split(" ")[0]} <span aria-hidden>👋</span>
-        </p>
-        <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>
+      <WelcomeBanner />
+      <p className="-mt-4 mb-4 text-sm text-muted-foreground">{subtitle}</p>
+      <div className="grid lg:grid-cols-3 gap-4 mb-4">
+        <div className="lg:col-span-2"><SmartQuickActions /></div>
+        <FavoritesRecent />
       </div>
-      </div>
-      <blockquote className="mt-3 text-sm italic text-muted-foreground border-l-2 border-primary/40 pl-3">
-        “{quote}”
-      </blockquote>
     </div>
   );
 }
@@ -96,6 +83,11 @@ export function StaffDashboard({ user }: { user: DirectoryEntry }) {
     <>
       <div className="mb-6">
         <ProductsAndNews />
+      </div>
+      <WelcomeBanner />
+      <div className="grid lg:grid-cols-3 gap-4 mb-4">
+        <div className="lg:col-span-2"><SmartQuickActions /></div>
+        <FavoritesRecent />
       </div>
       <MissionControl user={user} />
 
