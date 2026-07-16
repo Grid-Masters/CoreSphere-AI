@@ -23,6 +23,7 @@ import { Route as MfaRouteImport } from './routes/mfa'
 import { Route as MemosRouteImport } from './routes/memos'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LeadershipRouteImport } from './routes/leadership'
+import { Route as HelpRouteImport } from './routes/help'
 import { Route as HallOfFameRouteImport } from './routes/hall-of-fame'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as AssessmentsRouteImport } from './routes/assessments'
@@ -107,6 +108,11 @@ const LeadershipRoute = LeadershipRouteImport.update({
   path: '/leadership',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HelpRoute = HelpRouteImport.update({
+  id: '/help',
+  path: '/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HallOfFameRoute = HallOfFameRouteImport.update({
   id: '/hall-of-fame',
   path: '/hall-of-fame',
@@ -185,6 +191,7 @@ export interface FileRoutesByFullPath {
   '/assessments': typeof AssessmentsRoute
   '/faq': typeof FaqRoute
   '/hall-of-fame': typeof HallOfFameRoute
+  '/help': typeof HelpRoute
   '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
   '/memos': typeof MemosRoute
@@ -214,6 +221,7 @@ export interface FileRoutesByTo {
   '/assessments': typeof AssessmentsRoute
   '/faq': typeof FaqRoute
   '/hall-of-fame': typeof HallOfFameRoute
+  '/help': typeof HelpRoute
   '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
   '/memos': typeof MemosRoute
@@ -244,6 +252,7 @@ export interface FileRoutesById {
   '/assessments': typeof AssessmentsRoute
   '/faq': typeof FaqRoute
   '/hall-of-fame': typeof HallOfFameRoute
+  '/help': typeof HelpRoute
   '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
   '/memos': typeof MemosRoute
@@ -275,6 +284,7 @@ export interface FileRouteTypes {
     | '/assessments'
     | '/faq'
     | '/hall-of-fame'
+    | '/help'
     | '/leadership'
     | '/login'
     | '/memos'
@@ -304,6 +314,7 @@ export interface FileRouteTypes {
     | '/assessments'
     | '/faq'
     | '/hall-of-fame'
+    | '/help'
     | '/leadership'
     | '/login'
     | '/memos'
@@ -333,6 +344,7 @@ export interface FileRouteTypes {
     | '/assessments'
     | '/faq'
     | '/hall-of-fame'
+    | '/help'
     | '/leadership'
     | '/login'
     | '/memos'
@@ -363,6 +375,7 @@ export interface RootRouteChildren {
   AssessmentsRoute: typeof AssessmentsRoute
   FaqRoute: typeof FaqRoute
   HallOfFameRoute: typeof HallOfFameRoute
+  HelpRoute: typeof HelpRoute
   LeadershipRoute: typeof LeadershipRoute
   LoginRoute: typeof LoginRoute
   MemosRoute: typeof MemosRoute
@@ -480,6 +493,13 @@ declare module '@tanstack/react-router' {
       path: '/leadership'
       fullPath: '/leadership'
       preLoaderRoute: typeof LeadershipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/help': {
+      id: '/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof HelpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hall-of-fame': {
@@ -601,6 +621,7 @@ const rootRouteChildren: RootRouteChildren = {
   AssessmentsRoute: AssessmentsRoute,
   FaqRoute: FaqRoute,
   HallOfFameRoute: HallOfFameRoute,
+  HelpRoute: HelpRoute,
   LeadershipRoute: LeadershipRoute,
   LoginRoute: LoginRoute,
   MemosRoute: MemosRoute,
