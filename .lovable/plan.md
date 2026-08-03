@@ -1,116 +1,138 @@
-# Batch 0 — Pre-Implementation Verification Report (read-only)
+# CoreSphere AI — Controlling Implementation Baseline
 
-Inspection only. No code, database, settings, visibility or publication changes were made. The project remains unpublished.
+CONTROLLING DOCUMENT. This file supersedes all earlier planning material, including the Phases A–F roadmap, which is now historical and non-controlling. Batch 0 verification findings are retained, non-controlling, at `.lovable/audits/batch-0-preflight.md`.
 
-## 1. Checkpoint and build status
-- Latest checkpoint: `f087a26 Work in progress` (preceded by `46f4ce1 Expanded profile & shell build`).
-- Stack: TanStack Start v1 + Vite 7 + Tailwind v4, Lovable Cloud (Supabase) enabled.
-- App compiles and the dev server serves; last recorded typecheck in this workspace was clean. No published deployment exists.
+## 1. Locked project identity
+1. Official name: CoreSphere AI.
+2. Purpose: internal Customer Fulfilment Centre enterprise knowledge, learning, QA coaching and operations-intelligence platform.
+3. The project remains unpublished until authenticated UAT is formally approved.
+4. Production is internal and non-indexable. Demo behaviour must ultimately be separated by environment.
 
-## 2. Routes and navigation
-28 route files under `src/routes/`: `index`, `login`, `mfa`, `profile`, `my-activity`, `notifications`, `settings`, `help`, `alerts`, `memos`, `townhall`, `leadership`, `analytics`, `admin`, `administration`, `assessments`, `achievements`, `hall-of-fame`, `scenarios`, `faq`, `suggestions`, `qa-coaching`, `performance-intelligence`, `knowledge-hub.index`, `knowledge-hub.$sopId`, `knowledge-hub.product.$categoryId`, `knowledge-hub.product.$categoryId.$productId`, `sitemap[.]xml`, plus `__root`.
-- Navigation is role-filtered in `src/components/layout/AppSidebar.tsx`; no standalone Product Intelligence entry remains.
-- Shell: `AppShell` + `TopBar` + `AppSidebar`; welcome banner, pulse ticker and AI orb mount inside the shell.
+## 2. Locked information architecture
+1. No standalone Product Intelligence sidebar item.
+2. Products & Services is one of eight Knowledge Hub domains.
+3. The eight domains: CFC Foundations; Complaints; Enquiries; Requests; Products & Services; Logging & Escalation Guides; Forms & Resources; BO Engagement & Directories.
+4. No top-level Service Excellence Centre.
+5. Learning Pulse is a governed publication stream, not an independent uncontrolled source of truth.
+6. Meeting minutes, Weekly Digests, Did You Know publications and briefing points are source evidence. They must not become direct AI truth unless an approved canonical knowledge record is created from them.
 
-## 3. Roles, active user and dashboard selection
-- `src/lib/directory.ts` defines only six roles: `staff | qa | ld | team_lead | group_head | sysadmin`, mirrored by the DB enum `app_role` (`staff, qa, ld, team_lead, group_head, sysadmin`).
-- Active user: `src/lib/active-user.ts` resolves the Supabase session email against the static `directory` array; unmatched emails silently fall back to `directory[0]` (Adaeze Okafor, CEE).
-- Dashboard selection: `src/routes/index.tsx` switches on `user.role` across five dashboards; `sysadmin` is redirected to `/administration`.
+## 3. Locked role and position hierarchy
+Customer Experience Executive (CEE); Team Lead; Unit Head; QA Officer; QA Team Lead; QA Unit Head; L&D Officer; L&D Team Lead; L&D Unit Head; Head of CFC Operations; Group Head; Platform Administrator; Temporary or Delegated Approver.
 
-## 4. Database objects
-Tables: `acknowledgments, approved_quotes, audit_events, certificates, departments, failed_searches, feedback, hard_tokens, incident_banners, onboarding_progress, profiles, recognition_archives, recognition_photos, risk_snapshots, sop_versions, sub_departments, suggestions, team_members, teams, trusted_networks, user_roles, user_sessions`. All have RLS enabled with policies; `audit_events` is append-only via triggers.
-Functions: `has_role` (security definer, intentional), `enforce_single_active_team`, `block_audit_mutation`, `update_updated_at_column`. 9 migrations applied. Storage: private `recognition` bucket.
-Gap: there are **no tables for SOPs, product knowledge, assessments, attempts, missions, QA reviews or AI knowledge grounding** — all of that is static frontend data.
+QA Officer, QA Team Lead and QA Unit Head must not be collapsed into a single `qa` role. L&D levels must not be collapsed. Platform Administrator holds technical authority only and cannot approve operational knowledge by virtue of technical access.
 
-## 5. Static / mock / deterministic data
-- `src/lib/mock-data.ts` — SOPs, assessments (`attempts` hardcoded), townhall, products/news.
-- `src/lib/product-knowledge.ts`, `products.ts`, `directory.ts`, `org-structure.ts`, `demo-profiles.ts`, `scenarios.ts`, `faq.ts`, `news.ts`, `shifts.ts`, `workflows.ts`, `search-corpus.ts`, `recognition.ts`, `leaderboards.ts`, `voice-of-customer.ts`, `pulse-health.ts`, `knowledge-gaps.ts`, `at-risk.ts`, `compliance-health.ts`, `briefing.ts`, `quotes.ts`, `alerts.ts`, `activity-feed.ts`.
-- Hash/date-derived deterministic values: `gamification.ts`, `badges.ts`, `activity-feed.ts`, `compliance-health.ts`, `product-knowledge.ts`, `demo-profiles.ts`, `components/feed/EnterpriseActivityFeed.tsx`, `components/governance/AckTracker.tsx` (scores, streaks, readiness, badges and feed entries derived from email hashes and the current date).
-- Progress and acknowledgements persist to `localStorage` (`progress-store.ts`, `ack-store.ts`, `workspace-prefs.ts`).
+## 4. Locked organisational structure
+Configurable hierarchy, not a flat hardcoded department list.
 
-## 6. CoreSphere AI grounding
-- Three server functions: `coresphere-ai.functions.ts`, `coresphere-writer.functions.ts`, `coresphere-scenario.functions.ts` — all call the Lovable AI Gateway (`google/gemini-3-flash-preview`) with a governance system prompt.
-- **No retrieval layer exists.** No SOP text, product content, meeting record or approved-knowledge corpus is passed to the model, and no citation is returned. Answers are model-generated, not grounded.
-- Fallback: hardcoded static answers when `LOVABLE_API_KEY` is missing or the gateway errors — presented to the user as cached SOP guidance.
-- Daily Briefing (`briefing.ts`) is fully deterministic local content, not AI output.
+```text
+Customer Fulfilment Group
+├─ Office of the Group Head
+├─ CFC Operations
+├─ Dispute Resolution & Service Recovery Portfolio
+├─ Alternative Channel Sales Portfolio
+├─ Inbound
+├─ Service Recovery
+├─ Quality Assurance
+├─ Learning & Development
+├─ Video Validation
+├─ BPI
+├─ Social Media
+├─ Multimedia
+│  ├─ Email
+│  └─ Live Chat
+├─ Resolution
+├─ Operations Support
+├─ Virtual Banking Dispute Team
+├─ Fraud Help Desk
+│  ├─ FHD Operations / Fraud Help Desk
+│  ├─ Incident Containment
+│  └─ Block Card
+└─ Alternative Channels
+```
 
-## 7. Authentication, MFA and route protection
-- Supabase email/password auth; `src/lib/demo-auth.functions.ts` signs demo personas server-side with the `DEMO_PASSWORD` secret.
-- `src/lib/auth-gate.ts` is a **client-side `useEffect` gate** — redirects to `/login` without a session and to `/mfa` unless `sessionStorage["coresphere:mfa"] === "1"`.
-- MFA is a hard-token serial check against `hard_tokens` via `platform-foundation.functions.ts`; demo personas bypass MFA. The MFA flag lives in `sessionStorage` and is client-trusted.
-- No `_authenticated` route-tree gate; `RoleGuard` protects `/administration`, `/admin`, `/analytics` at render time only.
+Supported unit types: GROUP, EXECUTIVE_PORTFOLIO, DEPARTMENT, LINE_OF_BUSINESS, UNIT, TEAM, DESK. Parent-child assignment, scope and effective dates must all be configurable.
 
-## 8. Assessment attempts and result visibility
-- Attempt data is static in `mock-data.ts`; `assessments.tsx` displays `Attempts: {n}/2` and text about locking after two failures, but **no attempt enforcement, no persistence and no retake flow exist**.
-- Results are only shown to the logged-in staff persona; there is no cross-employee assessment result view anywhere (so the QA restriction is not currently violated — but also not enforced by any rule).
+## 5. Locked knowledge governance
+1. Original source files belong in an immutable Source Vault.
+2. Uploading or registering a source does not publish it.
+3. Staff-facing operational guidance comes only from approved Canonical Knowledge Registry records.
+4. Published knowledge retains authoritative source links, version, effective date, owner and audience scope.
+5. Approved versions are immutable; later changes create new versions with supersession links.
+6. Unresolved conflicts are quarantined and excluded from AI, assessments, Mission Control generation and simulations.
+7. Latest document date alone does not establish authority.
+8. Knowledge Conflict Queue visibility is limited to L&D personnel, Head of CFC Operations and Group Head.
+9. QA Unit Head and process owners may receive restricted clarification requests without gaining queue access.
+10. Only approved current customer-facing forms may be downloaded. Internal SOPs, policies, manuals, directories, minutes, digests, QA materials and training videos remain controlled view-only or stream-only.
 
-## 9. Mission Control and gamification
-- `components/mission/MissionControl.tsx` renders locally derived daily missions; there is **no assignment source field** (no CoreSphere AI / L&D / QA Officer / Team Lead / Unit Head attribution) and no assignment persistence.
-- Gamification (`gamification.ts`, `badges.ts`, `leaderboards.ts`, `ReadinessScore`) is deterministic from email hash + date; Knowledge Levels Explorer→Legend and weighted readiness are computed client-side only.
+## 6. Locked Mission Control model
+1. A persisted personalised learning-assignment engine for CEEs and eligible operational staff — not a deterministic daily card.
+2. Assignment sources: CoreSphere AI under L&D-approved rules; L&D; the CEE's currently assigned QA Officer; Team Lead for their own team; Unit Head for their own department.
+3. Mission items may include approved SOPs, policies, product guides, process updates, service standards, theory, video, logging exercises, scenarios and acknowledgements.
+4. AI may assign based on QA development areas, failed assessment topics, repeated logging mistakes, incomplete mandatory learning, newly approved knowledge and role-relevant gaps.
+5. Duplicate assignments for the same employee, knowledge version and overlapping period merge into one visible mission while retaining every source and reason.
+6. Points, readiness, levels and streaks derive from real persisted events — never email hashes or the calendar alone.
+7. Confidential QA findings must not appear on leaderboards or public recognition views.
 
-## 10. QA Coaching and QA role logic
-- `/qa-coaching` is a static coaching board keyed off `directory` entries and mock scores.
-- The directory carries `assignedQAOfficer` per staff member, but no logic scopes QA visibility by that assignment. Role `qa` is labelled "QA Team Lead" globally — QA Officer and QA Unit Head do not exist.
+## 7. Locked assessment model
+1. Weekly AI Knowledge Check is personalised from assessment-eligible Mission Control items assigned to that CEE in the applicable weekly cycle.
+2. Monthly L&D Assessment remains L&D-owned; AI may create a draft only.
+3. Monthly workflow: L&D Officer → L&D Team Lead → L&D Unit Head.
+4. AI cannot independently publish the monthly assessment.
+5. Every question retains the exact approved knowledge version and supporting source section.
+6. General assessment attempts: attempt 1 initial, attempt 2 retake, maximum 2 total.
+7. No automatic third attempt; reopening requires an authorised exception.
+8. General assessment-result visibility: CEE own result; Team Lead own team; Unit Head own department; authorised L&D assigned/enterprise scope; Head of CFC Operations enterprise operational oversight; Group Head enterprise oversight; QA Officer / QA Team Lead / QA Unit Head their own personal result only, never results of CEEs they audit; Platform Administrator own personal result only.
+9. QA may see completion status of a QA-assigned corrective mission, but never the CEE's Weekly AI Knowledge Check or Monthly L&D Assessment score or responses.
 
-## 11. Knowledge Hub categories and product placement
-- Categories are derived dynamically from SOP records: Cards Operations, Containment, Customer Service, Multimedia, Reputation, Compliance, Operations.
-- Product Knowledge is an asset type inside the hub with tiles routing to `/knowledge-hub/product/$categoryId(/$productId)`; the standalone module is gone.
-- The eight locked domains (CFC Foundations; Complaints; Enquiries; Requests; Products & Services; Logging & Escalation Guides; Forms & Resources; BO Engagement & Directories) are **not implemented**.
+## 8. Locked CoreSphere AI behaviour
+1. Operational answers must be grounded only in approved, active, effective, scoped, non-expired, non-superseded, non-conflicted, AI-eligible canonical knowledge.
+2. Every answer cites the knowledge record and version used.
+3. When verified evidence is unavailable, respond safely rather than inventing guidance.
+4. Never fabricate procedures, timelines, limits, escalation routes or compliance rules.
+5. Preserve existing HR governance restrictions: no promotion, pay, disciplinary, transfer or succession recommendations; no employment ranking.
 
-## 12. Obsolete references
-- `src/lib/org-structure.ts:2` — "CoreSphere Pulse AI".
-- `src/lib/alerts.ts:2` — "Phase C"; `src/lib/recognition.ts:2` — "Phase D"; `src/components/CoreSphereAI.tsx:135` — "Phase F".
-- `src/lib/product-knowledge.ts:6` — legacy "Product Intelligence" migration comment.
-- Historical plan archives under `.lovable/plan/` still describe the Phases C–F roadmap.
+## 9. Locked QA model
+1. QA Officer, QA Team Lead and QA Unit Head are distinct.
+2. QA Officer accesses and coaches only staff assigned for the active QA period.
+3. QA Team Lead manages QA Officer assignments and reviews QA work.
+4. QA Unit Head oversees QA governance, scorecard standards and cross-team trends.
+5. QA scorecards remain monthly only.
+6. QA development actions may create approved Mission Control assignments.
+7. QA roles gain no general assessment-result access.
 
-## 13. Public-deployment assumptions
-- `public/robots.txt` sets `User-agent: * / Allow: /` and points at `https://ubacoresphere-pulse.lovable.app/sitemap.xml`.
-- `src/routes/sitemap[.]xml.tsx` emits absolute URLs on that host; every major route carries canonical + `og:url` on the same host; `__root.tsx` ships Organization + WebSite JSON-LD, and SOP/memo/leadership routes ship HowTo/Article JSON-LD.
-- `public/llms.txt` publicly describes the platform. These all assume a public, indexable deployment that does not currently exist.
+## 10. Locked implementation dependency order
+1. Identity and organisational capability model
+2. Authentication, server-side route protection and RLS
+3. AI safety and demonstration-data containment
+4. Source Vault
+5. Canonical Knowledge Registry
+6. Knowledge conflict and supersession governance
+7. Governed Knowledge Hub and enterprise search
+8. Grounded CoreSphere AI
+9. Mission Control
+10. Weekly and monthly assessment engine
+11. Interactive Logging Lab and Scenario Simulator
+12. QA Coaching and Performance workflows
+13. Migration of the reviewed 291-file corpus
+14. Authenticated UAT, and only then a publication decision
 
-## 14. Conflicts with locked decisions
-| Locked decision | Status |
-| --- | --- |
-| Name "CoreSphere AI" | Conflict — "CoreSphere Pulse AI" in `org-structure.ts`; titles use "UBA CoreSphere" |
-| No standalone Product Intelligence menu | Compliant |
-| Eight Knowledge Hub domains | Conflict — seven ad-hoc SOP-derived categories instead |
-| Full position hierarchy (13 positions) | Conflict — only 6 roles; missing Unit Head, QA Officer, QA Unit Head, L&D Team Lead, L&D Unit Head, Head of CFC Operations, Delegated Approver |
-| FHD = FHD Operations / Incident Containment / Block Card | Partial — unit is named "Containment", not "Incident Containment" |
-| Assessments: 1 attempt + 1 retake (max 2) | Conflict — displayed only, never enforced or persisted |
-| QA roles cannot view others' general assessment results | Not enforced by rule (no such view exists today) |
-| Mission assignment sources | Conflict — no assignment source model at all |
-| Raw meeting records are evidence, not AI truth | Conflict — no meeting-record entity and no evidence/truth separation in the AI layer |
+## 11. Locked delivery rules
+1. One controlled batch at a time.
+2. Preserve useful visual components; do not rebuild from scratch.
+3. Do not implement later batches early.
+4. Before each batch, establish a checkpoint and record affected schema.
+5. After each batch, run build/type checks, report files and database objects changed, then stop.
+6. Never publish automatically.
+7. No broad "improve anything else" requests.
+8. No mock or static record may be treated as production authority.
+9. Stop at a failed acceptance gate.
 
----
+## 12. Deferred housekeeping (not authorised in Batch 1)
+Recorded for the batch that owns the relevant surface:
+- Rename "CoreSphere Pulse AI" in `src/lib/org-structure.ts` — Batch for the identity/organisation model.
+- Remove Phase C/D/F comments in `src/lib/alerts.ts`, `src/lib/recognition.ts`, `src/components/CoreSphereAI.tsx` — with their owning feature batches.
+- Remove the legacy "Product Intelligence" comment in `src/lib/product-knowledge.ts` — with the Knowledge Hub batch.
+- Align `robots.txt`, `llms.txt`, sitemap and canonical metadata with non-indexable internal production — with the UAT/publication-readiness batch.
 
-## A. Files requiring correction
-1. `src/lib/directory.ts` — expand `Role`/`roleLabels` to the 13-position hierarchy.
-2. `src/lib/org-structure.ts` — rename to CoreSphere AI; rename "Containment" → "Incident Containment"; add unit/position mapping.
-3. `src/routes/index.tsx` + `src/components/dashboards/RoleDashboards.tsx` — dashboard selection for new positions.
-4. `src/components/layout/AppSidebar.tsx` + `src/components/auth/RoleGuard.tsx` — navigation and guards for new roles.
-5. `src/routes/knowledge-hub.index.tsx`, `src/lib/mock-data.ts`, `src/lib/product-knowledge.ts`, `src/lib/search-corpus.ts` — the eight locked domains.
-6. `src/routes/assessments.tsx` (+ new attempt service) — enforce max two attempts and result visibility rules.
-7. `src/components/mission/MissionControl.tsx` — assignment-source model.
-8. `src/routes/qa-coaching.tsx` — assigned-QA scoping and QA position split.
-9. `src/lib/coresphere-ai.functions.ts`, `coresphere-scenario.functions.ts`, `coresphere-writer.functions.ts` — grounding/retrieval + citations; make the fallback explicitly non-authoritative.
-10. `src/lib/auth-gate.ts` — replace client `useEffect` gating with a route-tree gate; move MFA state off `sessionStorage`.
-11. `public/robots.txt`, `public/llms.txt`, `src/routes/sitemap[.]xml.tsx`, `src/routes/__root.tsx` and per-route canonicals/JSON-LD — align with unpublished/non-indexed status.
-12. Comment cleanup: `alerts.ts`, `recognition.ts`, `CoreSphereAI.tsx`, `product-knowledge.ts`.
-
-## B. Database objects requiring correction
-1. `app_role` enum — extend to the full position hierarchy (additive migration; existing values retained).
-2. New tables required: knowledge domains/articles, product knowledge, assessments + assessment_attempts (with a 2-attempt constraint), missions + mission_assignments (with source), QA reviews / QA officer assignment, meeting_records (evidence-only) and an AI knowledge/citation index — with GRANTs and RLS.
-3. `departments` / `sub_departments` rows — seed to the official structure including "Incident Containment".
-4. RLS additions to block QA positions from other employees' general assessment results.
-5. Keep `has_role` SECURITY DEFINER as-is (required RBAC pattern; linter warning is expected).
-
-## C. Blocking risks
-1. **No persistence layer for core domain data** — SOPs, products, assessments, missions and QA are static, so every locked rule is presentational only. This is the single largest blocker.
-2. **Client-side-only auth/MFA gate** — protected content can render before redirect and the MFA flag is browser-controlled.
-3. **Ungrounded AI** — answers are model-invented and static fallbacks are presented as SOP guidance; unsafe for banking operations without retrieval and citations.
-4. **Silent identity fallback** — an unknown signed-in email resolves to the first CEE in the directory, granting an unintended persona.
-5. **Role enum expansion** touches dashboards, sidebar, guards and RLS simultaneously — must be sequenced as one coordinated migration + refactor.
-6. **Public-indexing assumptions baked in** while the project must stay unpublished.
-
-## D. Confirmation
-Nothing was changed. No files were edited, no migration was run, no settings or visibility were touched, and the project remains unpublished. This document is a read-only verification report.
+## 13. Batch 1 scope (this batch)
+Documentation and planning alignment only. No application code, no database change, no publication, no visibility change.
