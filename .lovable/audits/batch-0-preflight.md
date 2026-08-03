@@ -1,3 +1,6 @@
+> NON-CONTROLLING AUDIT DOCUMENT — Batch 0 pre-implementation verification, read-only findings only.
+> The controlling baseline is `.lovable/plan.md`. Nothing in this file authorises implementation work.
+
 # Batch 0 — Pre-Implementation Verification Report (read-only)
 
 Inspection only. No code, database, settings, visibility or publication changes were made. The project remains unpublished.
