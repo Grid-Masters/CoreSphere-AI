@@ -140,6 +140,36 @@ export type Database = {
         }
         Relationships: []
       }
+      capabilities: {
+        Row: {
+          code: string
+          created_at: string
+          description: string | null
+          domain: string
+          id: string
+          is_active: boolean
+          name: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description?: string | null
+          domain: string
+          id?: string
+          is_active?: boolean
+          name: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string | null
+          domain?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+        }
+        Relationships: []
+      }
       certificates: {
         Row: {
           badge_key: string | null
@@ -169,6 +199,69 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      delegations: {
+        Row: {
+          accepted_at: string | null
+          capability_id: string | null
+          created_at: string
+          delegate_user_id: string
+          delegated_position_id: string | null
+          delegator_user_id: string
+          effective_from: string
+          effective_to: string
+          id: string
+          reason: string | null
+          scope_id: string | null
+          scope_type: Database["public"]["Enums"]["capability_scope_type"]
+          status: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          capability_id?: string | null
+          created_at?: string
+          delegate_user_id: string
+          delegated_position_id?: string | null
+          delegator_user_id: string
+          effective_from?: string
+          effective_to: string
+          id?: string
+          reason?: string | null
+          scope_id?: string | null
+          scope_type?: Database["public"]["Enums"]["capability_scope_type"]
+          status?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          capability_id?: string | null
+          created_at?: string
+          delegate_user_id?: string
+          delegated_position_id?: string | null
+          delegator_user_id?: string
+          effective_from?: string
+          effective_to?: string
+          id?: string
+          reason?: string | null
+          scope_id?: string | null
+          scope_type?: Database["public"]["Enums"]["capability_scope_type"]
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "delegations_capability_id_fkey"
+            columns: ["capability_id"]
+            isOneToOne: false
+            referencedRelation: "capabilities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "delegations_delegated_position_id_fkey"
+            columns: ["delegated_position_id"]
+            isOneToOne: false
+            referencedRelation: "positions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       departments: {
         Row: {
@@ -338,41 +431,274 @@ export type Database = {
         }
         Relationships: []
       }
+      organisation_units: {
+        Row: {
+          code: string
+          country_code: string | null
+          created_at: string
+          display_name: string
+          effective_from: string
+          effective_to: string | null
+          id: string
+          is_active: boolean
+          metadata: Json
+          name: string
+          parent_unit_id: string | null
+          unit_type: Database["public"]["Enums"]["org_unit_type"]
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          country_code?: string | null
+          created_at?: string
+          display_name: string
+          effective_from?: string
+          effective_to?: string | null
+          id?: string
+          is_active?: boolean
+          metadata?: Json
+          name: string
+          parent_unit_id?: string | null
+          unit_type: Database["public"]["Enums"]["org_unit_type"]
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          country_code?: string | null
+          created_at?: string
+          display_name?: string
+          effective_from?: string
+          effective_to?: string | null
+          id?: string
+          is_active?: boolean
+          metadata?: Json
+          name?: string
+          parent_unit_id?: string | null
+          unit_type?: Database["public"]["Enums"]["org_unit_type"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organisation_units_parent_unit_id_fkey"
+            columns: ["parent_unit_id"]
+            isOneToOne: false
+            referencedRelation: "organisation_units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      position_assignments: {
+        Row: {
+          created_at: string
+          effective_from: string
+          effective_to: string | null
+          id: string
+          is_primary: boolean
+          organisation_unit_id: string
+          position_id: string
+          reports_to_assignment_id: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          effective_from?: string
+          effective_to?: string | null
+          id?: string
+          is_primary?: boolean
+          organisation_unit_id: string
+          position_id: string
+          reports_to_assignment_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          effective_from?: string
+          effective_to?: string | null
+          id?: string
+          is_primary?: boolean
+          organisation_unit_id?: string
+          position_id?: string
+          reports_to_assignment_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "position_assignments_organisation_unit_id_fkey"
+            columns: ["organisation_unit_id"]
+            isOneToOne: false
+            referencedRelation: "organisation_units"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "position_assignments_position_id_fkey"
+            columns: ["position_id"]
+            isOneToOne: false
+            referencedRelation: "positions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "position_assignments_reports_to_assignment_id_fkey"
+            columns: ["reports_to_assignment_id"]
+            isOneToOne: false
+            referencedRelation: "position_assignments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      position_capabilities: {
+        Row: {
+          capability_id: string
+          created_at: string
+          default_scope_type: Database["public"]["Enums"]["capability_scope_type"]
+          id: string
+          position_id: string
+        }
+        Insert: {
+          capability_id: string
+          created_at?: string
+          default_scope_type?: Database["public"]["Enums"]["capability_scope_type"]
+          id?: string
+          position_id: string
+        }
+        Update: {
+          capability_id?: string
+          created_at?: string
+          default_scope_type?: Database["public"]["Enums"]["capability_scope_type"]
+          id?: string
+          position_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "position_capabilities_capability_id_fkey"
+            columns: ["capability_id"]
+            isOneToOne: false
+            referencedRelation: "capabilities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "position_capabilities_position_id_fkey"
+            columns: ["position_id"]
+            isOneToOne: false
+            referencedRelation: "positions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      positions: {
+        Row: {
+          code: string
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          position_family: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          position_family: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          position_family?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
+          corporate_email: string | null
+          country_code: string
           created_at: string
           department: string | null
           display_name: string | null
+          employee_number: string | null
+          employment_status: string
+          end_date: string | null
+          full_name: string | null
           id: string
+          is_demo: boolean
+          preferred_name: string | null
+          primary_org_unit_id: string | null
+          profile_status: string
           role_label: string | null
+          start_date: string
           unit: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
           avatar_url?: string | null
+          corporate_email?: string | null
+          country_code?: string
           created_at?: string
           department?: string | null
           display_name?: string | null
+          employee_number?: string | null
+          employment_status?: string
+          end_date?: string | null
+          full_name?: string | null
           id?: string
+          is_demo?: boolean
+          preferred_name?: string | null
+          primary_org_unit_id?: string | null
+          profile_status?: string
           role_label?: string | null
+          start_date?: string
           unit?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
           avatar_url?: string | null
+          corporate_email?: string | null
+          country_code?: string
           created_at?: string
           department?: string | null
           display_name?: string | null
+          employee_number?: string | null
+          employment_status?: string
+          end_date?: string | null
+          full_name?: string | null
           id?: string
+          is_demo?: boolean
+          preferred_name?: string | null
+          primary_org_unit_id?: string | null
+          profile_status?: string
           role_label?: string | null
+          start_date?: string
           unit?: string | null
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_primary_org_unit_fkey"
+            columns: ["primary_org_unit_id"]
+            isOneToOne: false
+            referencedRelation: "organisation_units"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       recognition_archives: {
         Row: {
@@ -696,6 +1022,56 @@ export type Database = {
         }
         Relationships: []
       }
+      user_capability_grants: {
+        Row: {
+          capability_id: string
+          created_at: string
+          effective_from: string
+          effective_to: string | null
+          granted_by_user_id: string | null
+          id: string
+          reason: string | null
+          scope_id: string | null
+          scope_type: Database["public"]["Enums"]["capability_scope_type"]
+          status: string
+          user_id: string
+        }
+        Insert: {
+          capability_id: string
+          created_at?: string
+          effective_from?: string
+          effective_to?: string | null
+          granted_by_user_id?: string | null
+          id?: string
+          reason?: string | null
+          scope_id?: string | null
+          scope_type?: Database["public"]["Enums"]["capability_scope_type"]
+          status?: string
+          user_id: string
+        }
+        Update: {
+          capability_id?: string
+          created_at?: string
+          effective_from?: string
+          effective_to?: string | null
+          granted_by_user_id?: string | null
+          id?: string
+          reason?: string | null
+          scope_id?: string | null
+          scope_type?: Database["public"]["Enums"]["capability_scope_type"]
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_capability_grants_capability_id_fkey"
+            columns: ["capability_id"]
+            isOneToOne: false
+            referencedRelation: "capabilities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -767,6 +1143,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      has_capability: {
+        Args: { _code: string; _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -777,6 +1157,21 @@ export type Database = {
     }
     Enums: {
       app_role: "staff" | "qa" | "ld" | "team_lead" | "group_head" | "sysadmin"
+      capability_scope_type:
+        | "SELF"
+        | "TEAM"
+        | "DEPARTMENT"
+        | "ENTERPRISE"
+        | "ASSIGNED_STAFF"
+        | "PLATFORM"
+      org_unit_type:
+        | "GROUP"
+        | "EXECUTIVE_PORTFOLIO"
+        | "DEPARTMENT"
+        | "LINE_OF_BUSINESS"
+        | "UNIT"
+        | "TEAM"
+        | "DESK"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -905,6 +1300,23 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["staff", "qa", "ld", "team_lead", "group_head", "sysadmin"],
+      capability_scope_type: [
+        "SELF",
+        "TEAM",
+        "DEPARTMENT",
+        "ENTERPRISE",
+        "ASSIGNED_STAFF",
+        "PLATFORM",
+      ],
+      org_unit_type: [
+        "GROUP",
+        "EXECUTIVE_PORTFOLIO",
+        "DEPARTMENT",
+        "LINE_OF_BUSINESS",
+        "UNIT",
+        "TEAM",
+        "DESK",
+      ],
     },
   },
 } as const
