@@ -12,24 +12,24 @@ import {
 import { PanelCard } from "@/components/ui-bits/Card";
 import { useResolvedUser } from "@/components/identity/IdentityProvider";
 import { useRecent } from "@/lib/workspace-prefs";
-import type { Role } from "@/lib/directory";
+import type { PositionCode } from "@/lib/identity";
 
 type Action = {
   to: string;
   label: string;
   hint: string;
   icon: React.ComponentType<{ className?: string }>;
-  roles?: Role[];
+  roles?: PositionCode[];
 };
 
 const BASE: Action[] = [
   { to: "/knowledge-hub", label: "View Latest SOP", hint: "Enterprise Knowledge Hub", icon: BookOpen },
   { to: "/assessments", label: "Resume Assessment", hint: "Monthly cycle", icon: ClipboardList },
   { to: "/performance-intelligence", label: "Open Monthly Scorecard", hint: "Your latest QA snapshot", icon: Award },
-  { to: "/qa-coaching", label: "Continue Coaching", hint: "Latest coaching thread", icon: MessagesSquare, roles: ["staff", "qa", "team_lead", "group_head", "ld"] },
+  { to: "/qa-coaching", label: "Continue Coaching", hint: "Latest coaching thread", icon: MessagesSquare, roles: ["CEE", "DELEGATED_APPROVER", "QA_OFFICER", "QA_TEAM_LEAD", "QA_UNIT_HEAD", "LD_OFFICER", "LD_TEAM_LEAD", "LD_UNIT_HEAD", "TEAM_LEAD", "UNIT_HEAD", "HEAD_CFC_OPERATIONS", "GROUP_HEAD"] },
   { to: "/scenarios", label: "Practice a Scenario", hint: "AI-guided simulation", icon: Sparkles },
-  { to: "/analytics", label: "Team Dashboard", hint: "Team performance", icon: Users, roles: ["qa", "ld", "team_lead", "group_head"] },
-  { to: "/admin", label: "Review Pending Approvals", hint: "Maker-Checker queue", icon: ShieldCheck, roles: ["ld", "group_head"] },
+  { to: "/analytics", label: "Team Dashboard", hint: "Team performance", icon: Users, roles: ["QA_OFFICER", "QA_TEAM_LEAD", "QA_UNIT_HEAD", "LD_OFFICER", "LD_TEAM_LEAD", "LD_UNIT_HEAD", "TEAM_LEAD", "UNIT_HEAD", "HEAD_CFC_OPERATIONS", "GROUP_HEAD"] },
+  { to: "/admin", label: "Review Pending Approvals", hint: "Maker-Checker queue", icon: ShieldCheck, roles: ["LD_TEAM_LEAD", "LD_UNIT_HEAD", "HEAD_CFC_OPERATIONS", "GROUP_HEAD"] },
   { to: "/knowledge-hub", label: "Continue Last Learning", hint: "Where you left off", icon: GraduationCap },
 ];
 
@@ -41,7 +41,7 @@ export function SmartQuickActions() {
   const user = useResolvedUser();
   const recent = useRecent();
 
-  const allowed = BASE.filter((a) => !a.roles || a.roles.includes(user.role));
+  const allowed = BASE.filter((a) => !a.roles || a.roles.includes(user.positionCode));
   const recentPaths = new Set(recent.map((r) => r.path));
   const prioritized = [
     ...allowed.filter((a) => recentPaths.has(a.to)),
