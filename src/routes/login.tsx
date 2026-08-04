@@ -349,13 +349,12 @@ function LoginPage() {
               <Sparkles className="h-4 w-4 text-primary" /> Demo Access
             </DialogTitle>
             <DialogDescription>
-              Instantly preview CoreSphere from any role. Identity and permissions are
-              resolved from the simulated UBA directory.
+              Preview CoreSphere from any position. After sign-in, identity and
+              permissions are resolved from your database profile and position.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-2">
             {demoProfiles.map((p) => {
-              const entry = findByEmail(p.email);
               return (
                 <button
                   key={p.email}
@@ -363,12 +362,12 @@ function LoginPage() {
                   className="flex items-center gap-3 rounded-md border bg-card hover:bg-muted transition-colors px-3 py-2.5 text-left"
                 >
                   <div className="h-9 w-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-semibold shrink-0">
-                    {entry?.initials}
+                    {p.initials}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="text-sm font-medium truncate">{p.label}</div>
                     <div className="text-[11px] text-muted-foreground truncate">
-                      {entry?.name} • {entry?.department}
+                      {p.name} • {p.unit}
                     </div>
                   </div>
                   <ArrowRight className="h-4 w-4 text-muted-foreground shrink-0" />
