@@ -57,8 +57,12 @@ function writeJSON(key: string, val: unknown) {
   window.dispatchEvent(new CustomEvent("coresphere:prefs", { detail: key }));
 }
 
+const _subs = new Map<string, (cb: () => void) => () => void>();
+
 function subscribeFactory(key: string) {
-  return (cb: () => void) => {
+  const cached = _subs.get(key);
+  if (cached) return cached;
+  const sub = (cb: () => void) => {
     const listener = (e: Event) => {
       if ((e as CustomEvent).detail === key || (e as StorageEvent).key === key) {
         invalidate(key);
@@ -72,11 +76,21 @@ function subscribeFactory(key: string) {
       window.removeEventListener("storage", listener);
     };
   };
+  _subs.set(key, sub);
+  return sub;
 }
+
+// Stable empty snapshots (server + empty-storage cases) so getSnapshot and
+// getServerSnapshot return referentially identical values across renders.
+const EMPTY_FAVORITES: FavoriteEntry[] = [];
+const EMPTY_RECENT: RecentEntry[] = [];
+const EMPTY_NOTIF_READ = { readIds: [] as string[] };
+const EMPTY_NOTIF_PREFS = { muted: [] as string[] };
+const EMPTY_WIDGETS = { hidden: [] as string[] };
 
 // ── Favorites ────────────────────────────────────────────────────────────────
 export function getFavorites(): FavoriteEntry[] {
-  return readJSON<FavoriteEntry[]>(FAV_KEY, []);
+  return readJSON<FavoriteEntry[]>(FAV_KEY, EMPTY_FAVORITES);
 }
 export function toggleFavorite(path: string, label: string) {
   const list = getFavorites();
@@ -93,14 +107,14 @@ export function useFavorites(): FavoriteEntry[] {
   return useSyncExternalStore(
     subscribeFactory(FAV_KEY),
     () => getFavorites(),
-    () => [] as FavoriteEntry[],
+    () => EMPTY_FAVORITES,
   );
 }
 
 // ── Recent items ─────────────────────────────────────────────────────────────
 const MAX_RECENT = 10;
 export function getRecent(): RecentEntry[] {
-  return readJSON<RecentEntry[]>(RECENT_KEY, []);
+  return readJSON<RecentEntry[]>(RECENT_KEY, EMPTY_RECENT);
 }
 export function recordRecent(path: string, label: string) {
   if (!path || path === "/login" || path === "/mfa") return;
@@ -112,14 +126,14 @@ export function useRecent(): RecentEntry[] {
   return useSyncExternalStore(
     subscribeFactory(RECENT_KEY),
     () => getRecent(),
-    () => [] as RecentEntry[],
+    () => EMPTY_RECENT,
   );
 }
 
 // ── Notification read state ──────────────────────────────────────────────────
 export type NotifReadState = { readIds: string[] };
 export function getNotifRead(): NotifReadState {
-  return readJSON<NotifReadState>(NOTIF_READ_KEY, { readIds: [] });
+  return readJSON<NotifReadState>(NOTIF_READ_KEY, EMPTY_NOTIF_READ);
 }
 export function markNotifRead(id: string) {
   const s = getNotifRead();
@@ -133,7 +147,7 @@ export function useNotifRead(): NotifReadState {
   return useSyncExternalStore(
     subscribeFactory(NOTIF_READ_KEY),
     () => getNotifRead(),
-    () => ({ readIds: [] as string[] }),
+    () => EMPTY_NOTIF_READ,
   );
 }
 
@@ -141,7 +155,7 @@ export function useNotifRead(): NotifReadState {
 export type NotifPrefs = { muted: string[] };
 export const MANDATORY_NOTIF_CATEGORIES = ["security", "governance", "compliance"];
 export function getNotifPrefs(): NotifPrefs {
-  return readJSON<NotifPrefs>(NOTIF_PREFS_KEY, { muted: [] });
+  return readJSON<NotifPrefs>(NOTIF_PREFS_KEY, EMPTY_NOTIF_PREFS);
 }
 export function toggleMuteCategory(category: string) {
   if (MANDATORY_NOTIF_CATEGORIES.includes(category)) return;
@@ -155,14 +169,14 @@ export function useNotifPrefs(): NotifPrefs {
   return useSyncExternalStore(
     subscribeFactory(NOTIF_PREFS_KEY),
     () => getNotifPrefs(),
-    () => ({ muted: [] as string[] }),
+    () => EMPTY_NOTIF_PREFS,
   );
 }
 
 // ── Widget visibility (dashboard personalization) ────────────────────────────
 export type WidgetPrefs = { hidden: string[] };
 export function getWidgetPrefs(): WidgetPrefs {
-  return readJSON<WidgetPrefs>(WIDGET_KEY, { hidden: [] });
+  return readJSON<WidgetPrefs>(WIDGET_KEY, EMPTY_WIDGETS);
 }
 export function toggleWidget(id: string) {
   const p = getWidgetPrefs();
@@ -175,7 +189,7 @@ export function useWidgetPrefs(): WidgetPrefs {
   return useSyncExternalStore(
     subscribeFactory(WIDGET_KEY),
     () => getWidgetPrefs(),
-    () => ({ hidden: [] as string[] }),
+    () => EMPTY_WIDGETS,
   );
 }
 export function useIsWidgetVisible(id: string): boolean {
