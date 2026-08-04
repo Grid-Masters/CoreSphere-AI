@@ -3,7 +3,7 @@ import { Award, Flame, Sparkles, Trophy, Zap } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, ProgressBar, StatCard } from "@/components/ui-bits/Card";
 import { BadgeGrid } from "@/components/mission/BadgeGrid";
-import { useActiveUser } from "@/lib/active-user";
+import { useActiveUser, type ActiveUser } from "@/lib/active-user";
 import { badgesForUser, badgeStats, type BadgeCategory } from "@/lib/badges";
 import { levelFor, pulsePoints, readinessScore, streakFor, LEVELS } from "@/lib/gamification";
 
@@ -27,6 +27,11 @@ const CATEGORIES: BadgeCategory[] = [
 
 function Achievements() {
   const user = useActiveUser();
+  if (!user) return <AppShell>{null}</AppShell>;
+  return <AchievementsBody user={user} />;
+}
+
+function AchievementsBody({ user }: { user: ActiveUser }) {
   const badges = badgesForUser(user);
   const stats = badgeStats(user);
   const points = pulsePoints(user);

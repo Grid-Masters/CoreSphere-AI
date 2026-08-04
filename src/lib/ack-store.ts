@@ -42,12 +42,12 @@ function compound(email: string, targetId: string) {
   return `${email}::${targetId}`;
 }
 
-export function isAcknowledged(targetId: string, email = getActiveUser().email): boolean {
+export function isAcknowledged(targetId: string, email = getActiveUser()?.email ?? ""): boolean {
   return Boolean(read()[compound(email, targetId)]);
 }
 
 export function acknowledge(targetId: string, targetKind = "memo") {
-  const email = getActiveUser().email;
+  const email = getActiveUser()?.email ?? "";
   const store = read();
   const k = compound(email, targetId);
   if (store[k]) return;

@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { Siren, MessageSquarePlus } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { useActiveUser } from "@/lib/active-user";
+import { useResolvedUser } from "@/components/identity/IdentityProvider";
 import type { Role } from "@/lib/directory";
 import { UbaLogo } from "@/components/brand/UbaLogo";
 
@@ -89,7 +89,7 @@ type Props = {
 
 export function AppSidebar({ collapsed, mobileOpen, onCloseMobile, onToggleCollapsed }: Props) {
   const path = useRouterState({ select: (s) => s.location.pathname });
-  const user = useActiveUser();
+  const user = useResolvedUser();
   const visibleGroups = groups
     .map((g) => ({ ...g, items: g.items.filter((i) => !i.roles || i.roles.includes(user.role)) }))
     .filter((g) => g.items.length > 0);

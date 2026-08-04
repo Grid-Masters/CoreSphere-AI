@@ -5,7 +5,7 @@ import { useState } from "react";
 import { AlertTriangle, ArrowRight, BadgeCheck, Bot, Loader2, RefreshCw, ShieldAlert } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard } from "@/components/ui-bits/Card";
-import { useActiveUser } from "@/lib/active-user";
+import { useActiveUser, type ActiveUser } from "@/lib/active-user";
 import { assessScenario, SCENARIO_LIBRARY, type ScenarioAssessment, type ScenarioPrompt } from "@/lib/coresphere-scenario.functions";
 
 export const Route = createFileRoute("/scenarios")({
@@ -36,6 +36,11 @@ const verdictTone: Record<ScenarioAssessment["verdict"], string> = {
 
 function Scenarios() {
   const user = useActiveUser();
+  if (!user) return <AppShell>{null}</AppShell>;
+  return <ScenariosBody user={user} />;
+}
+
+function ScenariosBody({ user }: { user: ActiveUser }) {
   const [active, setActive] = useState<ScenarioPrompt>(SCENARIO_LIBRARY[0]);
   const [answer, setAnswer] = useState("");
   const run = useServerFn(assessScenario);

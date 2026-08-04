@@ -3,7 +3,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard } from "@/components/ui-bits/Card";
 import { Bell, Lock, User, Monitor, ShieldCheck } from "lucide-react";
 import { useTheme, type ThemeMode } from "@/lib/theme";
-import { useActiveUser } from "@/lib/active-user";
+import { useActiveUser, type ActiveUser } from "@/lib/active-user";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({
@@ -21,6 +21,11 @@ export const Route = createFileRoute("/settings")({
 
 function Settings() {
   const user = useActiveUser();
+  if (!user) return <AppShell>{null}</AppShell>;
+  return <SettingsBody user={user} />;
+}
+
+function SettingsBody({ user }: { user: ActiveUser }) {
   const [theme, setTheme] = useTheme();
   const isGroupHead = user.role === "group_head";
   const lockedNotifs = ["Leadership announcements", "Compliance alerts", "Mandatory enterprise notifications"];

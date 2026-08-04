@@ -11,7 +11,7 @@ import {
 import { UbaLogo } from "@/components/brand/UbaLogo";
 import { OPEN_SEARCH_EVENT } from "@/components/search/EnterpriseSearch";
 import { OPEN_AI_EVENT } from "@/components/CoreSphereAI";
-import { useActiveUser } from "@/lib/active-user";
+import { useResolvedUser } from "@/components/identity/IdentityProvider";
 import { supabase } from "@/integrations/supabase/client";
 import { toggleFavorite, useFavorites } from "@/lib/workspace-prefs";
 
@@ -49,7 +49,7 @@ function IconButton({
 }
 
 export function TopBar({ onOpenMobile, onToggleCollapsed, collapsed }: Props) {
-  const user = useActiveUser();
+  const user = useResolvedUser();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const favs = useFavorites();

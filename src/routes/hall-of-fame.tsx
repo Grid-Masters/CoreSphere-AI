@@ -5,7 +5,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard } from "@/components/ui-bits/Card";
 import { Leaderboards } from "@/components/mission/Leaderboards";
 import { ShiftScheduler } from "@/components/mission/ShiftScheduler";
-import { useActiveUser } from "@/lib/active-user";
+import { useActiveUser, type ActiveUser } from "@/lib/active-user";
 import { DEPARTMENTS_WITH_STAFF } from "@/lib/leaderboards";
 import { champions, departmentalRecognition, spotlightStory, type ChampionCategory } from "@/lib/recognition";
 import { supabase } from "@/integrations/supabase/client";
@@ -35,6 +35,11 @@ type PhotoRow = { subject_email: string; category: string; photo_path: string };
 
 function HallOfExcellence() {
   const user = useActiveUser();
+  if (!user) return <AppShell>{null}</AppShell>;
+  return <HallOfExcellenceBody user={user} />;
+}
+
+function HallOfExcellenceBody({ user }: { user: ActiveUser }) {
   const canManage = user.role === "ld" || user.role === "group_head" || user.role === "sysadmin";
   const showShifts = user.role === "team_lead";
   const dept = user.role === "team_lead" ? user.department : undefined;

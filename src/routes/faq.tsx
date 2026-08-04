@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { AlertCircle, CheckCircle2, FileQuestion, Lightbulb, Lock, Search, Sparkles } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, StatCard } from "@/components/ui-bits/Card";
-import { useActiveUser } from "@/lib/active-user";
+import { useActiveUser, type ActiveUser } from "@/lib/active-user";
 import { faqs, failedSearches, faqPermissions, type FaqStatus } from "@/lib/faq";
 import { knowledgeDecay } from "@/lib/alerts";
 
@@ -29,6 +29,11 @@ const statusTone: Record<FaqStatus, string> = {
 
 function FaqCenter() {
   const user = useActiveUser();
+  if (!user) return <AppShell>{null}</AppShell>;
+  return <FaqCenterBody user={user} />;
+}
+
+function FaqCenterBody({ user }: { user: ActiveUser }) {
   const perms = faqPermissions(user.role, user.department);
   const [q, setQ] = useState("");
   const decay = useMemo(

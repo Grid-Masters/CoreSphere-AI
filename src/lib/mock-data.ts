@@ -15,7 +15,8 @@ type LegacyCurrentUser = {
 export const currentUser: LegacyCurrentUser = new Proxy({} as LegacyCurrentUser, {
   get(_t, prop: keyof LegacyCurrentUser) {
     const u = getActiveUser();
-    if (prop === "role") return u.roleLabel;
+    if (!u) return "" as never;
+    if (prop === "role") return u.roleLabel as never;
     return u[prop as keyof typeof u] as never;
   },
 }) as LegacyCurrentUser;

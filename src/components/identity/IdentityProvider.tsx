@@ -61,3 +61,13 @@ export function useIdentity(): IdentityState {
 export function useActiveUser(): ActiveUser | null {
   return useContext(IdentityContext).user;
 }
+
+/**
+ * For components that are only ever mounted inside the resolved application
+ * shell (AppShell gates on identity state before rendering them).
+ */
+export function useResolvedUser(): ActiveUser {
+  const user = useContext(IdentityContext).user;
+  if (!user) throw new Error("useResolvedUser used outside a resolved identity boundary");
+  return user;
+}

@@ -10,7 +10,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { PanelCard } from "@/components/ui-bits/Card";
-import { useActiveUser } from "@/lib/active-user";
+import { useResolvedUser } from "@/components/identity/IdentityProvider";
 import { useRecent } from "@/lib/workspace-prefs";
 import type { Role } from "@/lib/directory";
 
@@ -38,7 +38,7 @@ const BASE: Action[] = [
  * user's recent activity when available.
  */
 export function SmartQuickActions() {
-  const user = useActiveUser();
+  const user = useResolvedUser();
   const recent = useRecent();
 
   const allowed = BASE.filter((a) => !a.roles || a.roles.includes(user.role));

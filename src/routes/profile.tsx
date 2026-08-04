@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard } from "@/components/ui-bits/Card";
-import { useActiveUser } from "@/lib/active-user";
+import { useActiveUser, type ActiveUser } from "@/lib/active-user";
 import { User, Mail, Building2, Users, Briefcase, Shield } from "lucide-react";
 
 export const Route = createFileRoute("/profile")({
@@ -16,6 +16,11 @@ export const Route = createFileRoute("/profile")({
 
 function ProfilePage() {
   const user = useActiveUser();
+  if (!user) return <AppShell>{null}</AppShell>;
+  return <ProfilePageBody user={user} />;
+}
+
+function ProfilePageBody({ user }: { user: ActiveUser }) {
   const items = [
     { icon: User, label: "Full name", value: user.name },
     { icon: Mail, label: "Enterprise email", value: user.email },
