@@ -24,6 +24,7 @@ export const SHIFT_TIMES: Record<ShiftSlot, string> = {
 const KEY = "coresphere.shifts";
 let _shifts: ShiftAssignment[] = [];
 const listeners = new Set<() => void>();
+const EMPTY_SHIFTS: ShiftAssignment[] = [];
 let _hydrated = false;
 
 function load(): ShiftAssignment[] {
@@ -64,7 +65,7 @@ function subscribe(l: () => void) {
 }
 
 export function useShifts(): ShiftAssignment[] {
-  return useSyncExternalStore(subscribe, () => _shifts, () => []);
+  return useSyncExternalStore(subscribe, () => _shifts, () => EMPTY_SHIFTS);
 }
 
 export function isScheduled(email: string): boolean {
