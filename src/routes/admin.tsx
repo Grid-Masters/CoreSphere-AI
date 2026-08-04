@@ -21,7 +21,7 @@ export const Route = createFileRoute("/admin")({
 
 function GuardedAdmin() {
   return (
-    <RoleGuard allow={["ld", "group_head"]}>
+    <RoleGuard allow={["LD_TEAM_LEAD", "LD_UNIT_HEAD", "HEAD_CFC_OPERATIONS", "GROUP_HEAD"]}>
       <Admin />
     </RoleGuard>
   );

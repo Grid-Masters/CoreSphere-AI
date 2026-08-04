@@ -27,11 +27,11 @@ import {
 import { Siren, MessageSquarePlus } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useResolvedUser } from "@/components/identity/IdentityProvider";
-import type { Role } from "@/lib/directory";
+import { POSITION_CODES, type PositionCode } from "@/lib/identity";
 import { UbaLogo } from "@/components/brand/UbaLogo";
 
-type NavItem = { to: string; icon: any; label: string; roles?: Role[] };
-const ALL: Role[] = ["staff", "qa", "ld", "team_lead", "group_head", "sysadmin"];
+type NavItem = { to: string; icon: any; label: string; roles?: PositionCode[] };
+const ALL: PositionCode[] = [...POSITION_CODES];
 
 const groups: { label: string; items: NavItem[] }[] = [
   {
@@ -72,9 +72,9 @@ const groups: { label: string; items: NavItem[] }[] = [
   {
     label: "Administration",
     items: [
-      { to: "/administration", icon: ShieldCheck, label: "Administration Center", roles: ["sysadmin"] },
-      { to: "/analytics", icon: BarChart3, label: "Analytics", roles: ["qa", "ld", "team_lead", "group_head"] },
-      { to: "/admin", icon: ShieldCheck, label: "Admin Panel", roles: ["ld", "group_head"] },
+      { to: "/administration", icon: ShieldCheck, label: "Administration Center", roles: ["PLATFORM_ADMINISTRATOR"] },
+      { to: "/analytics", icon: BarChart3, label: "Analytics", roles: ["QA_OFFICER", "QA_TEAM_LEAD", "QA_UNIT_HEAD", "LD_OFFICER", "LD_TEAM_LEAD", "LD_UNIT_HEAD", "TEAM_LEAD", "UNIT_HEAD", "HEAD_CFC_OPERATIONS", "GROUP_HEAD"] },
+      { to: "/admin", icon: ShieldCheck, label: "Admin Panel", roles: ["LD_TEAM_LEAD", "LD_UNIT_HEAD", "HEAD_CFC_OPERATIONS", "GROUP_HEAD"] },
       { to: "/settings", icon: Settings, label: "Settings", roles: ALL },
     ],
   },
@@ -91,7 +91,7 @@ export function AppSidebar({ collapsed, mobileOpen, onCloseMobile, onToggleColla
   const path = useRouterState({ select: (s) => s.location.pathname });
   const user = useResolvedUser();
   const visibleGroups = groups
-    .map((g) => ({ ...g, items: g.items.filter((i) => !i.roles || i.roles.includes(user.role)) }))
+    .map((g) => ({ ...g, items: g.items.filter((i) => !i.roles || i.roles.includes(user.positionCode)) }))
     .filter((g) => g.items.length > 0);
 
   useEffect(() => {

@@ -22,7 +22,7 @@ export const Route = createFileRoute("/analytics")({
 
 function GuardedAnalytics() {
   return (
-    <RoleGuard allow={["qa", "ld", "team_lead", "group_head"]}>
+    <RoleGuard allow={["QA_OFFICER", "QA_TEAM_LEAD", "QA_UNIT_HEAD", "LD_OFFICER", "LD_TEAM_LEAD", "LD_UNIT_HEAD", "TEAM_LEAD", "UNIT_HEAD", "HEAD_CFC_OPERATIONS", "GROUP_HEAD"]}>
       <Analytics />
     </RoleGuard>
   );
