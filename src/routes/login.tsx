@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { ShieldCheck, Lock, Mail, ArrowRight, Sparkles } from "lucide-react";
 import { UbaLogo } from "@/components/brand/UbaLogo";
-import { findByEmail } from "@/lib/directory";
 import { demoProfiles } from "@/lib/demo-profiles";
 import { supabase } from "@/integrations/supabase/client";
 import { demoSignIn } from "@/lib/demo-auth.functions";
