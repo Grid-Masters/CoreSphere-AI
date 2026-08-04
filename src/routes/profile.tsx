@@ -21,13 +21,18 @@ function ProfilePage() {
 }
 
 function ProfilePageBody({ user }: { user: ActiveUser }) {
+  const hierarchy = [...user.orgUnitAncestors]
+    .reverse()
+    .map((u) => u.displayName)
+    .concat(user.orgUnit.displayName)
+    .join(" › ");
   const items = [
     { icon: User, label: "Full name", value: user.name },
     { icon: Mail, label: "Enterprise email", value: user.email },
-    { icon: Briefcase, label: "Role", value: user.roleLabel },
+    { icon: Briefcase, label: "Position", value: `${user.positionTitle} (${user.positionCode})` },
     { icon: Building2, label: "Department", value: user.department },
-    { icon: Users, label: "Team", value: user.unit },
-    { icon: Shield, label: "Reports to", value: user.reportsTo ?? "—" },
+    { icon: Users, label: "Organisation unit", value: user.orgUnit.displayName },
+    { icon: Shield, label: "Reporting hierarchy", value: hierarchy },
   ];
   return (
     <AppShell>
