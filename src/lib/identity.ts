@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Role } from "./directory";
+import type { CountryCode } from "./org-structure";
 
 /**
  * Database-backed identity model (Batch 2B).
@@ -79,7 +80,7 @@ export type ActiveUser = {
   unit: string;
   reportsTo?: string;
   assignedQAOfficer?: string;
-  country?: string;
+  country?: CountryCode;
   /** @deprecated presentation-only legacy grouping; use positionCode */
   role: Role;
 };
@@ -261,7 +262,7 @@ export async function resolveIdentity(): Promise<IdentityState> {
     roleLabel: assignment.positions.title,
     department: departmentRef.displayName,
     unit: orgUnit.displayName,
-    country: profile.country_code ?? undefined,
+    country: (profile.country_code as CountryCode | null) ?? undefined,
     role: LEGACY_ROLE_BY_POSITION[positionCode],
   };
 
