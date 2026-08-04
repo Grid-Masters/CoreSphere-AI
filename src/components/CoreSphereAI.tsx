@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import { askCoreSphereAI, type AiAnswer } from "@/lib/coresphere-ai.functions";
 import { runWritingAssistant, WRITER_TOOLS, type WriterTool } from "@/lib/coresphere-writer.functions";
-import { useActiveUser } from "@/lib/active-user";
+import { useResolvedUser } from "@/components/identity/IdentityProvider";
 import { greetingForHour } from "@/lib/quotes";
 import { buildBriefing, type DailyBriefing } from "@/lib/briefing";
 import { IntelligenceOrb } from "@/components/IntelligenceOrb";
@@ -109,7 +109,7 @@ export function CoreSphereAI() {
   const [tab, setTab] = useState<Tab>("briefing");
   const [mode, setMode] = useState<DisplayMode>("floating");
   const [input, setInput] = useState("");
-  const user = useActiveUser();
+  const user = useResolvedUser();
   const ask = useServerFn(askCoreSphereAI);
   const write = useServerFn(runWritingAssistant);
   const [busy, setBusy] = useState(false);

@@ -36,7 +36,7 @@ export const Route = createFileRoute("/administration")({
 
 function GuardedAdministrationCenter() {
   return (
-    <RoleGuard allow={["sysadmin"]}>
+    <RoleGuard allow={["PLATFORM_ADMINISTRATOR"]}>
       <AdministrationCenter />
     </RoleGuard>
   );

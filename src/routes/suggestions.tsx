@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { Lightbulb, Send, Sparkles, TrendingUp, Inbox, ShieldCheck } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, StatCard } from "@/components/ui-bits/Card";
-import { useActiveUser } from "@/lib/active-user";
+import { useActiveUser, type ActiveUser } from "@/lib/active-user";
 import {
   SUGGESTION_CATEGORIES,
   submitSuggestion,
@@ -41,6 +41,11 @@ const STATUSES = ["Submitted", "Under Review", "Planned", "Implemented", "Archiv
 
 function SuggestionBox() {
   const user = useActiveUser();
+  if (!user) return <AppShell>{null}</AppShell>;
+  return <SuggestionBoxBody user={user} />;
+}
+
+function SuggestionBoxBody({ user }: { user: ActiveUser }) {
   const isMgmt = user.role === "team_lead" || user.role === "ld" || user.role === "group_head";
 
   const submit = useServerFn(submitSuggestion);

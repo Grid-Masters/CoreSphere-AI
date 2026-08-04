@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Sparkles, Clock, Users, Building2, Briefcase } from "lucide-react";
-import { useActiveUser } from "@/lib/active-user";
+import { useResolvedUser } from "@/components/identity/IdentityProvider";
 import { useApprovedQuote } from "@/lib/approved-quotes";
 import { greetingForHour } from "@/lib/quotes";
 import { useShifts } from "@/lib/shifts";
@@ -21,7 +21,7 @@ function useCurrentHour(): number {
  * Corporate Communications approved library.
  */
 export function WelcomeBanner() {
-  const user = useActiveUser();
+  const user = useResolvedUser();
   const shifts = useShifts();
   const quote = useApprovedQuote();
   const hour = useCurrentHour();

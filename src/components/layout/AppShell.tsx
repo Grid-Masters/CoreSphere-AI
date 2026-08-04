@@ -6,7 +6,12 @@ import { ActivityTicker } from "./ActivityTicker";
 import { OperationalStatusBanner } from "./OperationalStatusBanner";
 import { CoreSphereAI } from "@/components/CoreSphereAI";
 import { EnterpriseSearch } from "@/components/search/EnterpriseSearch";
-import { useActiveUser } from "@/lib/active-user";
+import { useIdentity } from "@/components/identity/IdentityProvider";
+import {
+  AccessNotProvisioned,
+  IdentityError,
+  IdentityLoading,
+} from "@/components/identity/IdentityStates";
 import { useAuthGate } from "@/lib/auth-gate";
 import { recordRecent } from "@/lib/workspace-prefs";
 
@@ -20,7 +25,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   });
   const [mobileOpen, setMobileOpen] = useState(false);
   const path = useRouterState({ select: (s) => s.location.pathname });
-  const user = useActiveUser();
+  const identity = useIdentity();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -42,6 +47,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     recordRecent(path, label);
   }, [path]);
 
+  // Identity gate: never fall back to another employee.
+  if (identity.status === "loading") return <IdentityLoading />;
+  if (identity.status === "access_not_provisioned") return <AccessNotProvisioned />;
+  if (identity.status === "error") return <IdentityError reason={identity.reason} />;
+
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <TopBar
@@ -59,7 +69,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="flex-1 flex flex-col min-w-0">
           <OperationalStatusBanner />
           <ActivityTicker />
-          <main key={user.email} className="flex-1 overflow-y-auto">
+          <main key={identity.user.userId} className="flex-1 overflow-y-auto">
             <div className="p-4 lg:p-8 max-w-[1500px] mx-auto w-full">{children}</div>
           </main>
         </div>

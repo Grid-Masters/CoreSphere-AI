@@ -109,7 +109,7 @@ export function EnterpriseSearch() {
     pushRecent(q);
     const user = getActiveUser();
     try {
-      await supabase.from("failed_searches").insert({ query: q, department: user.department });
+      await supabase.from("failed_searches").insert({ query: q, department: user?.department ?? null });
     } catch {
       /* best-effort telemetry */
     }

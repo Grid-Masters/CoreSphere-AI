@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { AppShell } from "@/components/layout/AppShell";
-import { useActiveUser } from "@/lib/active-user";
+import { useActiveUser, type ActiveUser } from "@/lib/active-user";
+import type { PositionCode } from "@/lib/identity";
 import {
   StaffDashboard,
   QADashboard,
@@ -29,15 +30,31 @@ function Dashboard() {
   const user = useActiveUser();
   const navigate = useNavigate();
   useEffect(() => {
-    if (user.role === "sysadmin") navigate({ to: "/administration", replace: true });
-  }, [user.role, navigate]);
+    if (user?.positionCode === "PLATFORM_ADMINISTRATOR") {
+      navigate({ to: "/administration", replace: true });
+    }
+  }, [user?.positionCode, navigate]);
+  if (!user) return <AppShell>{null}</AppShell>;
+  return <DashboardBody user={user} />;
+}
+
+// Dashboard surface is selected from the database position code — never from
+// an email pattern or a static directory record.
+const CEE_POSITIONS: PositionCode[] = ["CEE", "DELEGATED_APPROVER"];
+const QA_POSITIONS: PositionCode[] = ["QA_OFFICER", "QA_TEAM_LEAD", "QA_UNIT_HEAD"];
+const LD_POSITIONS: PositionCode[] = ["LD_OFFICER", "LD_TEAM_LEAD", "LD_UNIT_HEAD"];
+const LEAD_POSITIONS: PositionCode[] = ["TEAM_LEAD", "UNIT_HEAD"];
+const EXEC_POSITIONS: PositionCode[] = ["GROUP_HEAD", "HEAD_CFC_OPERATIONS"];
+
+function DashboardBody({ user }: { user: ActiveUser }) {
+  const position = user.positionCode;
   return (
     <AppShell>
-      {user.role === "staff" && <StaffDashboard user={user} />}
-      {user.role === "qa" && <QADashboard user={user} />}
-      {user.role === "ld" && <LDDashboard user={user} />}
-      {user.role === "team_lead" && <TeamLeadDashboard user={user} />}
-      {user.role === "group_head" && <GroupHeadDashboard user={user} />}
+      {CEE_POSITIONS.includes(position) && <StaffDashboard user={user} />}
+      {QA_POSITIONS.includes(position) && <QADashboard user={user} />}
+      {LD_POSITIONS.includes(position) && <LDDashboard user={user} />}
+      {LEAD_POSITIONS.includes(position) && <TeamLeadDashboard user={user} />}
+      {EXEC_POSITIONS.includes(position) && <GroupHeadDashboard user={user} />}
     </AppShell>
   );
 }

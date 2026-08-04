@@ -2,11 +2,12 @@ import { Link } from "@tanstack/react-router";
 import { ShieldAlert } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { useActiveUser } from "@/lib/active-user";
-import type { Role } from "@/lib/directory";
+import type { PositionCode } from "@/lib/identity";
 
 /**
  * Client-side authorization gate for privileged routes. Renders the protected
- * content only when the signed-in user's role is in `allow`; otherwise shows a
+ * content only when the signed-in user's database position code is in `allow`;
+ * otherwise shows a
  * 403 panel. This complements (does not replace) database RLS, which remains
  * the server-authoritative protection for the underlying data.
  */
@@ -14,12 +15,12 @@ export function RoleGuard({
   allow,
   children,
 }: {
-  allow: Role[];
+  allow: PositionCode[];
   children: React.ReactNode;
 }) {
   const user = useActiveUser();
 
-  if (!allow.includes(user.role)) {
+  if (!user || !allow.includes(user.positionCode)) {
     return (
       <AppShell>
         <div className="max-w-md mx-auto mt-16 text-center">
