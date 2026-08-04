@@ -15,14 +15,36 @@ const NOTIF_READ_KEY = "coresphere.notif.read.v1";
 const NOTIF_PREFS_KEY = "coresphere.notif.prefs.v1";
 const WIDGET_KEY = "coresphere.widgets.v1";
 
+/**
+ * Parsed snapshots are memoized per key so `useSyncExternalStore` receives a
+ * referentially stable value between store notifications. Re-parsing on every
+ * getSnapshot call returns a fresh object each render and sends React into an
+ * infinite update loop.
+ */
+const _cache = new Map<string, { raw: string | null; value: unknown }>();
+
+function invalidate(key: string) {
+  _cache.delete(key);
+}
+
 function readJSON<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") return fallback;
+  let raw: string | null = null;
   try {
-    const raw = window.localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as T) : fallback;
+    raw = window.localStorage.getItem(key);
   } catch {
     return fallback;
   }
+  const hit = _cache.get(key);
+  if (hit && hit.raw === raw) return hit.value as T;
+  let value: T = fallback;
+  try {
+    if (raw) value = JSON.parse(raw) as T;
+  } catch {
+    value = fallback;
+  }
+  _cache.set(key, { raw, value });
+  return value;
 }
 function writeJSON(key: string, val: unknown) {
   if (typeof window === "undefined") return;
@@ -31,13 +53,17 @@ function writeJSON(key: string, val: unknown) {
   } catch {
     /* ignore quota */
   }
+  invalidate(key);
   window.dispatchEvent(new CustomEvent("coresphere:prefs", { detail: key }));
 }
 
 function subscribeFactory(key: string) {
   return (cb: () => void) => {
     const listener = (e: Event) => {
-      if ((e as CustomEvent).detail === key || (e as StorageEvent).key === key) cb();
+      if ((e as CustomEvent).detail === key || (e as StorageEvent).key === key) {
+        invalidate(key);
+        cb();
+      }
     };
     window.addEventListener("coresphere:prefs", listener);
     window.addEventListener("storage", listener);
