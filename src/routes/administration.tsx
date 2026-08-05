@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Users,
   ShieldCheck,
@@ -16,9 +16,12 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, StatCard, StatusBadge } from "@/components/ui-bits/Card";
-import { directory, roleLabels, type Role } from "@/lib/directory";
-import { departments } from "@/lib/mock-data";
 import { RoleGuard } from "@/components/auth/RoleGuard";
+import {
+  loadAdministrationRegistry,
+  type AdministrationRegistry,
+  type AdminOrgUnit,
+} from "@/lib/administration-registry";
 
 export const Route = createFileRoute("/administration")({
   head: () => ({
@@ -55,8 +58,8 @@ type ModuleId =
 
 const modules: { id: ModuleId; label: string; icon: any; desc: string }[] = [
   { id: "users", label: "User Management", icon: Users, desc: "Accounts, provisioning & access" },
-  { id: "roles", label: "Role Management", icon: ShieldCheck, desc: "Roles & permission sets" },
-  { id: "departments", label: "Department Management", icon: Building2, desc: "Org units & structure" },
+  { id: "roles", label: "Position Management", icon: ShieldCheck, desc: "Enterprise positions & capabilities" },
+  { id: "departments", label: "Organisation Management", icon: Building2, desc: "Organisation units & structure" },
   { id: "security", label: "Security Center", icon: Lock, desc: "Policies & threat posture" },
   { id: "audit", label: "Audit Center", icon: ScrollText, desc: "System & user activity trail" },
   { id: "ai", label: "AI Governance Center", icon: Bot, desc: "Model usage & guardrails" },
@@ -64,8 +67,6 @@ const modules: { id: ModuleId; label: string; icon: any; desc: string }[] = [
   { id: "reporting", label: "Reporting Structure", icon: Network, desc: "Reporting lines & hierarchy" },
   { id: "config", label: "Enterprise Configuration", icon: SlidersHorizontal, desc: "Platform-wide settings" },
 ];
-
-const ROLE_ORDER: Role[] = ["staff", "qa", "ld", "team_lead", "group_head", "sysadmin"];
 
 const auditTrail = [
   { who: "Daniel Obi", action: "Updated QA scorecard weighting", at: "2 min ago", tone: "info" },
@@ -82,25 +83,37 @@ const loginEvents = [
   { user: "s.eze@ubagroup.com", ip: "197.210.x.x", device: "Safari • macOS", status: "Success", at: "07:44" },
 ];
 
-const permissionMatrix: Record<Role, string[]> = {
-  staff: ["Knowledge Hub", "Assessments", "Memos", "AI Assistant"],
-  qa: ["QA Coaching", "Scorecards", "Analytics", "Knowledge Hub"],
-  ld: ["Content Authoring", "Approvals", "Analytics", "Assessments"],
-  team_lead: ["Team Oversight", "Acknowledgements", "Analytics", "Memos"],
-  group_head: ["Executive Command", "All Analytics", "Broadcasts", "Approvals"],
-  sysadmin: ["Full Platform Control", "User & Role Mgmt", "Security & Audit", "Configuration"],
-};
-
 function AdministrationCenter() {
   const [active, setActive] = useState<ModuleId>("users");
   const [query, setQuery] = useState("");
+  const [registry, setRegistry] = useState<AdministrationRegistry | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
-  const users = directory.filter(
-    (d) =>
-      d.name.toLowerCase().includes(query.toLowerCase()) ||
-      d.email.toLowerCase().includes(query.toLowerCase()) ||
-      d.department.toLowerCase().includes(query.toLowerCase()),
-  );
+  useEffect(() => {
+    let cancelled = false;
+    loadAdministrationRegistry()
+      .then((data) => {
+        if (!cancelled) setRegistry(data);
+      })
+      .catch((error: unknown) => {
+        if (!cancelled)
+          setLoadError(error instanceof Error ? error.message : "Failed to load identity data");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const users = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    const all = registry?.users ?? [];
+    if (!q) return all;
+    return all.filter((u) =>
+      [u.name, u.email, u.positionTitle ?? "", u.orgUnit ?? ""].some((v) =>
+        v.toLowerCase().includes(q),
+      ),
+    );
+  }, [registry, query]);
 
   return (
     <AppShell>
@@ -117,9 +130,9 @@ function AdministrationCenter() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <StatCard label="Active Users" value={directory.length} icon={Users} tone="primary" />
-        <StatCard label="Departments" value={departments.length} icon={Building2} />
-        <StatCard label="Roles" value={ROLE_ORDER.length} icon={ShieldCheck} />
+        <StatCard label="Active Profiles" value={registry?.users.length ?? "—"} icon={Users} tone="primary" />
+        <StatCard label="Organisation Units" value={countUnits(registry?.orgTree ?? []) || "—"} icon={Building2} />
+        <StatCard label="Positions" value={registry?.positions.length ?? "—"} icon={ShieldCheck} />
         <StatCard label="Security Alerts" value={1} icon={AlertTriangle} tone="warning" />
       </div>
 
@@ -160,62 +173,85 @@ function AdministrationCenter() {
                   className="w-full h-10 pl-10 pr-3 rounded-md border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring/40"
                 />
               </div>
-              <div className="divide-y -my-2">
-                {users.map((u) => (
-                  <div key={u.email} className="py-3 flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center text-[11px] font-semibold shrink-0">
-                      {u.initials}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium truncate">{u.name}</div>
-                      <div className="text-[11px] text-muted-foreground truncate">
-                        {roleLabels[u.role]} • {u.department} • {u.email}
+              <ModuleState
+                error={loadError}
+                loading={!registry}
+                empty={users.length === 0}
+                emptyLabel="No active profiles match this search."
+              >
+                <div className="text-[11px] text-muted-foreground mb-2">
+                  {registry?.users.length} active profiles • {registry?.activeAssignments} current primary
+                  assignments
+                </div>
+                <div className="divide-y -my-2">
+                  {users.map((u) => (
+                    <div key={u.userId} className="py-3 flex items-center gap-3">
+                      <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center text-[11px] font-semibold shrink-0">
+                        {u.initials}
                       </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium truncate">{u.name}</div>
+                        <div className="text-[11px] text-muted-foreground truncate">
+                          {u.positionTitle ?? "No active assignment"}
+                          {u.positionCode ? ` (${u.positionCode})` : ""} • {u.orgUnit ?? "Unassigned"} •{" "}
+                          {u.email}
+                        </div>
+                      </div>
+                      <StatusBadge status={u.assignmentId ? "On Duty" : "Failed"} />
                     </div>
-                    <StatusBadge status="On Duty" />
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              </ModuleState>
             </PanelCard>
           )}
 
           {active === "roles" && (
-            <PanelCard title="Role Management">
-              <div className="grid sm:grid-cols-2 gap-3">
-                {ROLE_ORDER.map((r) => (
-                  <div key={r} className="rounded-md border bg-card p-3">
-                    <div className="flex items-center gap-2">
-                      <ShieldCheck className="h-4 w-4 text-primary" />
-                      <div className="text-sm font-medium">{roleLabels[r]}</div>
-                    </div>
-                    <div className="mt-2 flex flex-wrap gap-1">
-                      {permissionMatrix[r].map((p) => (
-                        <span key={p} className="text-[11px] px-1.5 py-0.5 rounded border bg-background">
-                          {p}
+            <PanelCard title="Position Management">
+              <ModuleState
+                error={loadError}
+                loading={!registry}
+                empty={(registry?.positions.length ?? 0) === 0}
+                emptyLabel="No positions are configured."
+              >
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {registry?.positions.map((p) => (
+                    <div key={p.id} className="rounded-md border bg-card p-3">
+                      <div className="flex items-center gap-2">
+                        <ShieldCheck className="h-4 w-4 text-primary" />
+                        <div className="text-sm font-medium">{p.title}</div>
+                      </div>
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        <span className="text-[11px] px-1.5 py-0.5 rounded border bg-background font-mono">
+                          {p.code}
                         </span>
-                      ))}
+                        <span className="text-[11px] px-1.5 py-0.5 rounded border bg-background">
+                          {p.family}
+                        </span>
+                        <span className="text-[11px] px-1.5 py-0.5 rounded border bg-background">
+                          {p.capabilityCount} capabilities
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              </ModuleState>
             </PanelCard>
           )}
 
           {active === "departments" && (
-            <PanelCard title="Department Management">
-              <ul className="space-y-3">
-                {departments.map((d) => (
-                  <li key={d.name} className="rounded-md border bg-card p-3">
-                    <div className="flex items-center gap-2">
-                      <Building2 className="h-4 w-4 text-muted-foreground" />
-                      <div className="text-sm font-medium">{d.name}</div>
-                    </div>
-                    {d.units.length > 0 && (
-                      <div className="text-[11px] text-muted-foreground mt-1">{d.units.join(" • ")}</div>
-                    )}
-                  </li>
-                ))}
-              </ul>
+            <PanelCard title="Organisation Management">
+              <ModuleState
+                error={loadError}
+                loading={!registry}
+                empty={(registry?.orgTree.length ?? 0) === 0}
+                emptyLabel="No organisation units are configured."
+              >
+                <ul className="space-y-2">
+                  {registry?.orgTree.map((u) => (
+                    <OrgNode key={u.id} node={u} depth={0} />
+                  ))}
+                </ul>
+              </ModuleState>
             </PanelCard>
           )}
 
@@ -310,21 +346,28 @@ function AdministrationCenter() {
 
           {active === "reporting" && (
             <PanelCard title="Reporting Structure Management">
-              <ul className="space-y-2">
-                {directory
-                  .filter((d) => d.reportsTo)
-                  .map((d) => {
-                    const mgr = directory.find((m) => m.email === d.reportsTo);
-                    return (
-                      <li key={d.email} className="flex items-center gap-2 text-sm rounded-md border bg-card px-3 py-2">
-                        <span className="font-medium">{d.name}</span>
-                        <Network className="h-3.5 w-3.5 text-muted-foreground" />
-                        <span className="text-muted-foreground">reports to</span>
-                        <span className="font-medium">{mgr?.name ?? "—"}</span>
-                      </li>
-                    );
-                  })}
-              </ul>
+              <ModuleState
+                error={loadError}
+                loading={!registry}
+                empty={(registry?.reporting.length ?? 0) === 0}
+                emptyLabel="Reporting lines are not configured yet. No reports-to relationships exist on current primary assignments."
+              >
+                <ul className="space-y-2">
+                  {registry?.reporting.map((r) => (
+                    <li
+                      key={r.id}
+                      className="flex flex-wrap items-center gap-2 text-sm rounded-md border bg-card px-3 py-2"
+                    >
+                      <span className="font-medium">{r.personName}</span>
+                      <span className="text-[11px] text-muted-foreground">{r.personPosition}</span>
+                      <Network className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span className="text-muted-foreground">reports to</span>
+                      <span className="font-medium">{r.managerName ?? "—"}</span>
+                      <span className="text-[11px] text-muted-foreground">{r.managerPosition}</span>
+                    </li>
+                  ))}
+                </ul>
+              </ModuleState>
             </PanelCard>
           )}
 
@@ -350,4 +393,74 @@ function AdministrationCenter() {
       </div>
     </AppShell>
   );
+}
+
+function countUnits(nodes: AdminOrgUnit[]): number {
+  return nodes.reduce((sum, n) => sum + 1 + countUnits(n.children), 0);
+}
+
+function OrgNode({ node, depth }: { node: AdminOrgUnit; depth: number }) {
+  return (
+    <li>
+      <div
+        className="rounded-md border bg-card p-3"
+        style={{ marginLeft: depth * 16 }}
+      >
+        <div className="flex items-center gap-2">
+          <Building2 className="h-4 w-4 text-muted-foreground shrink-0" />
+          <div className="text-sm font-medium">{node.displayName}</div>
+          <span className="text-[11px] px-1.5 py-0.5 rounded border bg-background font-mono">
+            {node.code}
+          </span>
+          <span className="text-[11px] text-muted-foreground">{node.unitType}</span>
+        </div>
+      </div>
+      {node.children.length > 0 && (
+        <ul className="space-y-2 mt-2">
+          {node.children.map((c) => (
+            <OrgNode key={c.id} node={c} depth={depth + 1} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+
+function ModuleState({
+  loading,
+  error,
+  empty,
+  emptyLabel,
+  children,
+}: {
+  loading: boolean;
+  error: string | null;
+  empty: boolean;
+  emptyLabel: string;
+  children: React.ReactNode;
+}) {
+  if (error) {
+    return (
+      <div className="flex items-start gap-2 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm">
+        <AlertTriangle className="h-4 w-4 text-destructive mt-0.5 shrink-0" />
+        <div>
+          <div className="font-medium">Unable to load identity data</div>
+          <div className="text-[11px] text-muted-foreground">{error}</div>
+        </div>
+      </div>
+    );
+  }
+  if (loading) {
+    return (
+      <div className="space-y-2" aria-busy="true">
+        {[0, 1, 2, 3].map((i) => (
+          <div key={i} className="h-12 rounded-md border bg-muted/40 animate-pulse" />
+        ))}
+      </div>
+    );
+  }
+  if (empty) {
+    return <p className="text-sm text-muted-foreground">{emptyLabel}</p>;
+  }
+  return <>{children}</>;
 }
