@@ -136,3 +136,91 @@ Recorded for the batch that owns the relevant surface:
 
 ## 13. Batch 1 scope (this batch)
 Documentation and planning alignment only. No application code, no database change, no publication, no visibility change.
+
+---
+
+# Batch 3 — Authentication, Route Boundary, Session and RLS Hardening
+
+Read-only audit complete. Base checkpoint `b0f1d1fa1c328ccd1869abc5a05c427cdc991e88`. Project stays private and unpublished.
+
+## A. Verified current risks (each confirmed by reading code or querying the database)
+
+1. **Route protection is entirely client-side.** `AppShell` calls `useAuthGate()`, which runs inside `useEffect`, reads `supabase.auth.getSession()` and redirects with `navigate()`. No route uses `beforeLoad`, and there is no `_authenticated` layout in `src/routes/`.
+2. **MFA state is a client flag.** `src/lib/auth-gate.ts` treats `sessionStorage["coresphere:mfa"] === "1"` as verified; `/mfa` sets it. Anyone can set it in devtools and skip MFA. The authoritative `user_sessions.mfa_verified` column exists but is never re-read as a gate.
+3. **Hard-token MFA is not real verification.** `verifyHardToken` validates only `/^\d{6}$/` plus the existence of an active `hard_tokens` row. Any 6-digit string succeeds — fake MFA success.
+4. **Session id is client-supplied.** `verifyHardToken`, `touchSession`, `endSession` accept `session_id` from `sessionStorage`. Scoping by `user_id` blocks cross-user abuse, but a user can mark any of their own sessions verified, and no expiry or revocation is ever checked.
+5. **Demo sign-in is not environment-gated.** `demoSignIn` only checks the persona allow-list, then signs in with the server `DEMO_PASSWORD`. It would work identically in production, and `login.tsx` lets demo sessions **bypass MFA** (`requireMfa = external && !isDemo`).
+6. **Deceptive login controls.** "Remember this device" is an unwired checkbox; "Forgot password?" is `<a href="#">`.
+7. **RoleGuard is UI-only** (correctly documented as such), so for `/administration` the real boundary is RLS alone — see item 9.
+8. **Legacy `has_role`/`app_role` is still the authorization source for most policies.** Confirmed `has_role(...,'sysadmin')` grants ALL on `capabilities`, `positions`, `organisation_units`, `position_capabilities`, `position_assignments`, `user_capability_grants`, `delegations`, `hard_tokens`, `trusted_networks`, and SELECT on all `audit_events` and all `user_sessions` — making Platform Administrator a database super-user, contrary to the "technical only" lock.
+9. **`profiles` SELECT too broad.** `Leaders view all profiles` grants every `ld`, `team_lead`, `group_head` **and `qa`** enterprise-wide read of all profiles, with no org-unit scoping.
+10. **Reference tables readable with `USING (true)`**: `positions`, `organisation_units`, `position_capabilities`, `capabilities`, `departments`, and notably **`trusted_networks`** — the bank's internal CIDR allow-list is exposed to every signed-in user.
+11. **`audit_events` INSERT allows `user_id IS NULL`** from any authenticated client, permitting unattributed audit rows. `logAuditEvent` also resolves users by listing up to 200 auth users by email.
+12. **Public indexing is enabled.** `robots.txt` is `Allow: /` with a live `Sitemap:`; `llms.txt` advertises the platform; `sitemap[.]xml.tsx` publishes route URLs; routes carry absolute canonical/OG URLs to `ubacoresphere-pulse.lovable.app`.
+13. **No service-role exposure found** — `client.server.ts` is imported only inside handlers (`await import`). Invariant holds.
+14. **No `user_metadata` / email-pattern authorization found.** `src/lib/identity.ts` resolves strictly from `profiles` + `position_assignments` + capabilities. Preserve.
+
+## B. Batch 3 scope (exactly this)
+
+1. Server-side protected-route boundary. 2. Fail-closed MFA. 3. Authoritative session lifecycle. 4. Environment-enforced demo access. 5. Remove deceptive login controls. 6. Least-privilege RLS correction. 7. Internal/non-indexable protections.
+No feature changes, no new domain tables, no AI containment, Source Vault, Registry, Mission Control, assessment or QA work.
+
+## C. Proposed approach, migrations and functions
+
+### C1. Route boundary (no wholesale auth migration)
+Move protected routes under `src/routes/_authenticated/` using the managed `ssr: false` gate, paired with **server-side authorization on every data path**. Rationale: Supabase keeps the session in `localStorage`, so an SSR cookie gate needs an httpOnly cookie bridge plus custom middleware — a second source of session truth and a hard-refresh redirect-loop risk, not justified here. The real boundary is the data: every read/write already runs as the signed-in user under RLS via `requireSupabaseAuth`. Privileged screens (`/administration`, `/admin`, `/analytics`) additionally get a server function that returns data only when the caller holds the required capability, so `RoleGuard` becomes cosmetic rather than the control. Verified by: unauthenticated fetch of a protected route returns no protected data; server functions 401 without a bearer; a signed-in non-admin is rejected server-side.
+
+### C2. MFA, fail-closed
+`verifyHardToken` cannot verify an OTP and no external token service will be fabricated. It becomes fail-closed: no path returns success from format matching. A new `getSessionAssurance` server function returns `{ authenticated, mfa_required, mfa_verified, session_valid }` from `user_sessions` plus live network classification; the gate consumes only that, replacing the `coresphere:mfa` flag. `/mfa` becomes an honest "additional verification required — contact IT Support or sign in from the UBA network" state. Internal trusted-network sign-in remains fully usable.
+
+### C3. Session lifecycle
+The server derives the active session itself (latest non-ended session for `context.userId`) instead of trusting a client `session_id` for state changes. Idle timeout (proposed 30 minutes on `last_activity_at`) and absolute cap (proposed 12 hours) enforced in `getSessionAssurance`; expiry ends the session and signs the user out. Sign-out does the ordered teardown: cancel queries, clear cache, `endSession`, `signOut()`, `navigate({ to: '/login', replace: true })`, plus an audit event. Ended/revoked sessions are rejected at the next assurance check.
+
+### C4. Demo access
+`demoSignIn` returns `{ ok: false }` unless an explicit server env flag (e.g. `DEMO_ACCESS_ENABLED === 'true'`) is set; absence means disabled. UI hiding is secondary. Demo sessions no longer bypass MFA.
+
+### C5. Proposed migrations (additive, rollback-safe, RLS preserved everywhere)
+Migration 1 — least privilege on identity/security tables:
+- `trusted_networks`: drop the authenticated-readable policy; SELECT requires `platform.security.manage`. Server classification is unaffected (it uses the server-side client).
+- `profiles`: replace `Leaders view all profiles` with own-profile, identity-manager (existing capability policy) and leader-scoped-to-own-org-subtree access via a new `SECURITY DEFINER` helper `public.can_view_profile(_viewer uuid, _profile_user uuid)`. The blanket `qa` enterprise read is removed.
+- `audit_events`: INSERT `WITH CHECK (user_id = auth.uid())` (no NULL); SELECT via `platform.audit.read` instead of `has_role('sysadmin')`.
+- `user_sessions`: replace the `sysadmin` SELECT with the security capability; own-row access unchanged.
+- `hard_tokens`: replace `sysadmin` ALL with `platform.security.manage`; own-row SELECT kept.
+- `capabilities`, `positions`, `position_capabilities`, `organisation_units`, `position_assignments`, `user_capability_grants`, `delegations`: replace `sysadmin` ALL with `platform.identity.manage`, keeping Platform Administrator technical-only and never granting operational approval authority.
+- Reference SELECT on `positions`, `capabilities`, `position_capabilities`, `organisation_units` stays authenticated-readable (no personal data; the app needs it).
+
+Migration 2 — `public.session_is_valid(_session_id uuid)` `SECURITY DEFINER`, false when ended, revoked, idle-expired or absolutely expired.
+
+No new domain tables; no changes to `auth`, `storage`, `realtime`, `vault`. Locked assessment/QA visibility rules untouched.
+
+### C6. Indexing protections
+`robots.txt` → `Disallow: /`, no `Sitemap:`. `llms.txt` → single restricted-system line or removed. Delete `src/routes/sitemap[.]xml.tsx`. Add `noindex, nofollow` in `__root.tsx` and drop stale absolute canonical/OG URLs from route `head()` blocks, keeping titles and descriptions.
+
+## D. Files likely to change
+`src/lib/auth-gate.ts`; new `src/routes/_authenticated/route.tsx` plus relocation of protected routes; `src/components/layout/AppShell.tsx`; `src/components/auth/RoleGuard.tsx`; `src/routes/login.tsx`; `src/routes/mfa.tsx`; `src/routes/__root.tsx`; `src/lib/platform-foundation.functions.ts`; `src/lib/demo-auth.functions.ts`; `src/lib/demo-profiles.ts`; `src/components/layout/TopBar.tsx`; `src/routes/administration.tsx`, `admin.tsx`, `analytics.tsx`; `public/robots.txt`; `public/llms.txt`; delete `src/routes/sitemap[.]xml.tsx`; two migrations.
+`src/lib/identity.ts` and `IdentityProvider.tsx` are consumed, not redesigned.
+
+## E. Security invariants
+1. No service-role key or `client.server` import reachable from browser code. 2. No authorization from `user_metadata`, email patterns, names or fixtures. 3. No MFA path succeeds without real verification. 4. RLS enabled everywhere; no `USING (true)` on personal, security or audit data. 5. Platform Administrator technical-only. 6. All 13 positions remain distinct. 7. Demo access impossible without an explicit server env flag. 8. Project stays private and unpublished.
+
+## F. Acceptance tests
+1. Unauthenticated navigation to `/`, `/administration`, `/admin`, `/analytics`, `/qa-coaching` redirects to `/login` with no protected data in HTML or network responses.
+2. Server functions without a bearer return 401.
+3. Idle-expired and ended/revoked sessions are rejected and force sign-out.
+4. No-profile, inactive-profile and no-assignment users reach "Access not provisioned" with no data.
+5. External-network sign-in cannot enter the app; no 6-digit string grants access.
+6. Internal trusted-network sign-in completes normally.
+7. With the demo flag unset, `demoSignIn` returns not-ok and Demo Access UI is absent.
+8. A non-admin calling the administration data function is rejected server-side.
+9. RLS negative tests: non-privileged users cannot read others' profiles, sessions, audit events, `trusted_networks` or hard tokens.
+10. A foreign `session_id` cannot alter another session's MFA state (fixation/replay).
+11. Sign-out clears cache, ends the session row, and Back does not restore protected content.
+12. Repository search confirms no service-role reference and no `user_metadata` authorization in client-reachable code.
+13. TypeScript build passes; browser console clean on login, MFA, dashboard, administration.
+14. `robots.txt` disallows all; no sitemap route; `noindex, nofollow` present; project still unpublished.
+
+## G. Rollback / checkpoints
+Checkpoint 3.0 = `b0f1d1fa`. Four independently revertable steps: (3.1) route boundary + session assurance; (3.2) MFA fail-closed + demo env gate + login control cleanup; (3.3) RLS migrations; (3.4) indexing protections. Each migration is an additive policy replacement carrying the prior policy definition in a comment. Stop at the first failed acceptance gate and revert only that step.
+
+## H. Explicitly deferred
+Real bank hard-token/OTP integration; password reset and self-service credential flows; httpOnly cookie session bridge and full SSR auth; full retirement of legacy `app_role`/`has_role` on non-identity tables (`suggestions`, `feedback`, `certificates`, `acknowledgments`, `approved_quotes`, `teams`); AI containment, Source Vault, Canonical Registry, conflict governance, Knowledge Hub rebuild, Mission Control, assessments, QA workflows, corpus migration, UAT and publication.
