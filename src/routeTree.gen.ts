@@ -9,87 +9,38 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TownhallRouteImport } from './routes/townhall'
-import { Route as SuggestionsRouteImport } from './routes/suggestions'
-import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as ScenariosRouteImport } from './routes/scenarios'
-import { Route as QaCoachingRouteImport } from './routes/qa-coaching'
-import { Route as ProfileRouteImport } from './routes/profile'
-import { Route as PerformanceIntelligenceRouteImport } from './routes/performance-intelligence'
-import { Route as NotificationsRouteImport } from './routes/notifications'
-import { Route as MyActivityRouteImport } from './routes/my-activity'
 import { Route as MfaRouteImport } from './routes/mfa'
-import { Route as MemosRouteImport } from './routes/memos'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as LeadershipRouteImport } from './routes/leadership'
-import { Route as HelpRouteImport } from './routes/help'
-import { Route as HallOfFameRouteImport } from './routes/hall-of-fame'
-import { Route as FaqRouteImport } from './routes/faq'
-import { Route as AssessmentsRouteImport } from './routes/assessments'
-import { Route as AnalyticsRouteImport } from './routes/analytics'
-import { Route as AlertsRouteImport } from './routes/alerts'
-import { Route as AdministrationRouteImport } from './routes/administration'
-import { Route as AdminRouteImport } from './routes/admin'
-import { Route as AchievementsRouteImport } from './routes/achievements'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as KnowledgeHubIndexRouteImport } from './routes/knowledge-hub.index'
-import { Route as KnowledgeHubSopIdRouteImport } from './routes/knowledge-hub.$sopId'
-import { Route as KnowledgeHubProductCategoryIdRouteImport } from './routes/knowledge-hub.product.$categoryId'
-import { Route as KnowledgeHubProductCategoryIdProductIdRouteImport } from './routes/knowledge-hub.product.$categoryId.$productId'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedTownhallRouteImport } from './routes/_authenticated/townhall'
+import { Route as AuthenticatedSuggestionsRouteImport } from './routes/_authenticated/suggestions'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedScenariosRouteImport } from './routes/_authenticated/scenarios'
+import { Route as AuthenticatedQaCoachingRouteImport } from './routes/_authenticated/qa-coaching'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedPerformanceIntelligenceRouteImport } from './routes/_authenticated/performance-intelligence'
+import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
+import { Route as AuthenticatedMyActivityRouteImport } from './routes/_authenticated/my-activity'
+import { Route as AuthenticatedMemosRouteImport } from './routes/_authenticated/memos'
+import { Route as AuthenticatedLeadershipRouteImport } from './routes/_authenticated/leadership'
+import { Route as AuthenticatedHelpRouteImport } from './routes/_authenticated/help'
+import { Route as AuthenticatedHallOfFameRouteImport } from './routes/_authenticated/hall-of-fame'
+import { Route as AuthenticatedFaqRouteImport } from './routes/_authenticated/faq'
+import { Route as AuthenticatedAssessmentsRouteImport } from './routes/_authenticated/assessments'
+import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
+import { Route as AuthenticatedAlertsRouteImport } from './routes/_authenticated/alerts'
+import { Route as AuthenticatedAdministrationRouteImport } from './routes/_authenticated/administration'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedAchievementsRouteImport } from './routes/_authenticated/achievements'
+import { Route as AuthenticatedKnowledgeHubIndexRouteImport } from './routes/_authenticated/knowledge-hub.index'
+import { Route as AuthenticatedKnowledgeHubSopIdRouteImport } from './routes/_authenticated/knowledge-hub.$sopId'
+import { Route as AuthenticatedKnowledgeHubProductCategoryIdRouteImport } from './routes/_authenticated/knowledge-hub.product.$categoryId'
+import { Route as AuthenticatedKnowledgeHubProductCategoryIdProductIdRouteImport } from './routes/_authenticated/knowledge-hub.product.$categoryId.$productId'
 
-const TownhallRoute = TownhallRouteImport.update({
-  id: '/townhall',
-  path: '/townhall',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SuggestionsRoute = SuggestionsRouteImport.update({
-  id: '/suggestions',
-  path: '/suggestions',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ScenariosRoute = ScenariosRouteImport.update({
-  id: '/scenarios',
-  path: '/scenarios',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const QaCoachingRoute = QaCoachingRouteImport.update({
-  id: '/qa-coaching',
-  path: '/qa-coaching',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PerformanceIntelligenceRoute = PerformanceIntelligenceRouteImport.update({
-  id: '/performance-intelligence',
-  path: '/performance-intelligence',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NotificationsRoute = NotificationsRouteImport.update({
-  id: '/notifications',
-  path: '/notifications',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MyActivityRoute = MyActivityRouteImport.update({
-  id: '/my-activity',
-  path: '/my-activity',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const MfaRoute = MfaRouteImport.update({
   id: '/mfa',
   path: '/mfa',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MemosRoute = MemosRouteImport.update({
-  id: '/memos',
-  path: '/memos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -97,176 +48,241 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LeadershipRoute = LeadershipRouteImport.update({
-  id: '/leadership',
-  path: '/leadership',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const HelpRoute = HelpRouteImport.update({
-  id: '/help',
-  path: '/help',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HallOfFameRoute = HallOfFameRouteImport.update({
-  id: '/hall-of-fame',
-  path: '/hall-of-fame',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FaqRoute = FaqRouteImport.update({
-  id: '/faq',
-  path: '/faq',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AssessmentsRoute = AssessmentsRouteImport.update({
-  id: '/assessments',
-  path: '/assessments',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AnalyticsRoute = AnalyticsRouteImport.update({
-  id: '/analytics',
-  path: '/analytics',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AlertsRoute = AlertsRouteImport.update({
-  id: '/alerts',
-  path: '/alerts',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdministrationRoute = AdministrationRouteImport.update({
-  id: '/administration',
-  path: '/administration',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AchievementsRoute = AchievementsRouteImport.update({
-  id: '/achievements',
-  path: '/achievements',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const KnowledgeHubIndexRoute = KnowledgeHubIndexRouteImport.update({
-  id: '/knowledge-hub/',
-  path: '/knowledge-hub/',
-  getParentRoute: () => rootRouteImport,
+const AuthenticatedTownhallRoute = AuthenticatedTownhallRouteImport.update({
+  id: '/townhall',
+  path: '/townhall',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const KnowledgeHubSopIdRoute = KnowledgeHubSopIdRouteImport.update({
-  id: '/knowledge-hub/$sopId',
-  path: '/knowledge-hub/$sopId',
-  getParentRoute: () => rootRouteImport,
+const AuthenticatedSuggestionsRoute =
+  AuthenticatedSuggestionsRouteImport.update({
+    id: '/suggestions',
+    path: '/suggestions',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const KnowledgeHubProductCategoryIdRoute =
-  KnowledgeHubProductCategoryIdRouteImport.update({
+const AuthenticatedScenariosRoute = AuthenticatedScenariosRouteImport.update({
+  id: '/scenarios',
+  path: '/scenarios',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedQaCoachingRoute = AuthenticatedQaCoachingRouteImport.update({
+  id: '/qa-coaching',
+  path: '/qa-coaching',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPerformanceIntelligenceRoute =
+  AuthenticatedPerformanceIntelligenceRouteImport.update({
+    id: '/performance-intelligence',
+    path: '/performance-intelligence',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedNotificationsRoute =
+  AuthenticatedNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedMyActivityRoute = AuthenticatedMyActivityRouteImport.update({
+  id: '/my-activity',
+  path: '/my-activity',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMemosRoute = AuthenticatedMemosRouteImport.update({
+  id: '/memos',
+  path: '/memos',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedLeadershipRoute = AuthenticatedLeadershipRouteImport.update({
+  id: '/leadership',
+  path: '/leadership',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedHelpRoute = AuthenticatedHelpRouteImport.update({
+  id: '/help',
+  path: '/help',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedHallOfFameRoute = AuthenticatedHallOfFameRouteImport.update({
+  id: '/hall-of-fame',
+  path: '/hall-of-fame',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedFaqRoute = AuthenticatedFaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAssessmentsRoute =
+  AuthenticatedAssessmentsRouteImport.update({
+    id: '/assessments',
+    path: '/assessments',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAnalyticsRoute = AuthenticatedAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAlertsRoute = AuthenticatedAlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdministrationRoute =
+  AuthenticatedAdministrationRouteImport.update({
+    id: '/administration',
+    path: '/administration',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAchievementsRoute =
+  AuthenticatedAchievementsRouteImport.update({
+    id: '/achievements',
+    path: '/achievements',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedKnowledgeHubIndexRoute =
+  AuthenticatedKnowledgeHubIndexRouteImport.update({
+    id: '/knowledge-hub/',
+    path: '/knowledge-hub/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedKnowledgeHubSopIdRoute =
+  AuthenticatedKnowledgeHubSopIdRouteImport.update({
+    id: '/knowledge-hub/$sopId',
+    path: '/knowledge-hub/$sopId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedKnowledgeHubProductCategoryIdRoute =
+  AuthenticatedKnowledgeHubProductCategoryIdRouteImport.update({
     id: '/knowledge-hub/product/$categoryId',
     path: '/knowledge-hub/product/$categoryId',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const KnowledgeHubProductCategoryIdProductIdRoute =
-  KnowledgeHubProductCategoryIdProductIdRouteImport.update({
+const AuthenticatedKnowledgeHubProductCategoryIdProductIdRoute =
+  AuthenticatedKnowledgeHubProductCategoryIdProductIdRouteImport.update({
     id: '/$productId',
     path: '/$productId',
-    getParentRoute: () => KnowledgeHubProductCategoryIdRoute,
+    getParentRoute: () => AuthenticatedKnowledgeHubProductCategoryIdRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/achievements': typeof AchievementsRoute
-  '/admin': typeof AdminRoute
-  '/administration': typeof AdministrationRoute
-  '/alerts': typeof AlertsRoute
-  '/analytics': typeof AnalyticsRoute
-  '/assessments': typeof AssessmentsRoute
-  '/faq': typeof FaqRoute
-  '/hall-of-fame': typeof HallOfFameRoute
-  '/help': typeof HelpRoute
-  '/leadership': typeof LeadershipRoute
+  '/': typeof AuthenticatedIndexRoute
   '/login': typeof LoginRoute
-  '/memos': typeof MemosRoute
   '/mfa': typeof MfaRoute
-  '/my-activity': typeof MyActivityRoute
-  '/notifications': typeof NotificationsRoute
-  '/performance-intelligence': typeof PerformanceIntelligenceRoute
-  '/profile': typeof ProfileRoute
-  '/qa-coaching': typeof QaCoachingRoute
-  '/scenarios': typeof ScenariosRoute
-  '/settings': typeof SettingsRoute
-  '/suggestions': typeof SuggestionsRoute
-  '/townhall': typeof TownhallRoute
-  '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
-  '/knowledge-hub/': typeof KnowledgeHubIndexRoute
-  '/knowledge-hub/product/$categoryId': typeof KnowledgeHubProductCategoryIdRouteWithChildren
-  '/knowledge-hub/product/$categoryId/$productId': typeof KnowledgeHubProductCategoryIdProductIdRoute
+  '/achievements': typeof AuthenticatedAchievementsRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/administration': typeof AuthenticatedAdministrationRoute
+  '/alerts': typeof AuthenticatedAlertsRoute
+  '/analytics': typeof AuthenticatedAnalyticsRoute
+  '/assessments': typeof AuthenticatedAssessmentsRoute
+  '/faq': typeof AuthenticatedFaqRoute
+  '/hall-of-fame': typeof AuthenticatedHallOfFameRoute
+  '/help': typeof AuthenticatedHelpRoute
+  '/leadership': typeof AuthenticatedLeadershipRoute
+  '/memos': typeof AuthenticatedMemosRoute
+  '/my-activity': typeof AuthenticatedMyActivityRoute
+  '/notifications': typeof AuthenticatedNotificationsRoute
+  '/performance-intelligence': typeof AuthenticatedPerformanceIntelligenceRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/qa-coaching': typeof AuthenticatedQaCoachingRoute
+  '/scenarios': typeof AuthenticatedScenariosRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/suggestions': typeof AuthenticatedSuggestionsRoute
+  '/townhall': typeof AuthenticatedTownhallRoute
+  '/knowledge-hub/$sopId': typeof AuthenticatedKnowledgeHubSopIdRoute
+  '/knowledge-hub/': typeof AuthenticatedKnowledgeHubIndexRoute
+  '/knowledge-hub/product/$categoryId': typeof AuthenticatedKnowledgeHubProductCategoryIdRouteWithChildren
+  '/knowledge-hub/product/$categoryId/$productId': typeof AuthenticatedKnowledgeHubProductCategoryIdProductIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/achievements': typeof AchievementsRoute
-  '/admin': typeof AdminRoute
-  '/administration': typeof AdministrationRoute
-  '/alerts': typeof AlertsRoute
-  '/analytics': typeof AnalyticsRoute
-  '/assessments': typeof AssessmentsRoute
-  '/faq': typeof FaqRoute
-  '/hall-of-fame': typeof HallOfFameRoute
-  '/help': typeof HelpRoute
-  '/leadership': typeof LeadershipRoute
   '/login': typeof LoginRoute
-  '/memos': typeof MemosRoute
   '/mfa': typeof MfaRoute
-  '/my-activity': typeof MyActivityRoute
-  '/notifications': typeof NotificationsRoute
-  '/performance-intelligence': typeof PerformanceIntelligenceRoute
-  '/profile': typeof ProfileRoute
-  '/qa-coaching': typeof QaCoachingRoute
-  '/scenarios': typeof ScenariosRoute
-  '/settings': typeof SettingsRoute
-  '/suggestions': typeof SuggestionsRoute
-  '/townhall': typeof TownhallRoute
-  '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
-  '/knowledge-hub': typeof KnowledgeHubIndexRoute
-  '/knowledge-hub/product/$categoryId': typeof KnowledgeHubProductCategoryIdRouteWithChildren
-  '/knowledge-hub/product/$categoryId/$productId': typeof KnowledgeHubProductCategoryIdProductIdRoute
+  '/achievements': typeof AuthenticatedAchievementsRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/administration': typeof AuthenticatedAdministrationRoute
+  '/alerts': typeof AuthenticatedAlertsRoute
+  '/analytics': typeof AuthenticatedAnalyticsRoute
+  '/assessments': typeof AuthenticatedAssessmentsRoute
+  '/faq': typeof AuthenticatedFaqRoute
+  '/hall-of-fame': typeof AuthenticatedHallOfFameRoute
+  '/help': typeof AuthenticatedHelpRoute
+  '/leadership': typeof AuthenticatedLeadershipRoute
+  '/memos': typeof AuthenticatedMemosRoute
+  '/my-activity': typeof AuthenticatedMyActivityRoute
+  '/notifications': typeof AuthenticatedNotificationsRoute
+  '/performance-intelligence': typeof AuthenticatedPerformanceIntelligenceRoute
+  '/profile': typeof AuthenticatedProfileRoute
+  '/qa-coaching': typeof AuthenticatedQaCoachingRoute
+  '/scenarios': typeof AuthenticatedScenariosRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/suggestions': typeof AuthenticatedSuggestionsRoute
+  '/townhall': typeof AuthenticatedTownhallRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/knowledge-hub/$sopId': typeof AuthenticatedKnowledgeHubSopIdRoute
+  '/knowledge-hub': typeof AuthenticatedKnowledgeHubIndexRoute
+  '/knowledge-hub/product/$categoryId': typeof AuthenticatedKnowledgeHubProductCategoryIdRouteWithChildren
+  '/knowledge-hub/product/$categoryId/$productId': typeof AuthenticatedKnowledgeHubProductCategoryIdProductIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/achievements': typeof AchievementsRoute
-  '/admin': typeof AdminRoute
-  '/administration': typeof AdministrationRoute
-  '/alerts': typeof AlertsRoute
-  '/analytics': typeof AnalyticsRoute
-  '/assessments': typeof AssessmentsRoute
-  '/faq': typeof FaqRoute
-  '/hall-of-fame': typeof HallOfFameRoute
-  '/help': typeof HelpRoute
-  '/leadership': typeof LeadershipRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/login': typeof LoginRoute
-  '/memos': typeof MemosRoute
   '/mfa': typeof MfaRoute
-  '/my-activity': typeof MyActivityRoute
-  '/notifications': typeof NotificationsRoute
-  '/performance-intelligence': typeof PerformanceIntelligenceRoute
-  '/profile': typeof ProfileRoute
-  '/qa-coaching': typeof QaCoachingRoute
-  '/scenarios': typeof ScenariosRoute
-  '/settings': typeof SettingsRoute
-  '/suggestions': typeof SuggestionsRoute
-  '/townhall': typeof TownhallRoute
-  '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
-  '/knowledge-hub/': typeof KnowledgeHubIndexRoute
-  '/knowledge-hub/product/$categoryId': typeof KnowledgeHubProductCategoryIdRouteWithChildren
-  '/knowledge-hub/product/$categoryId/$productId': typeof KnowledgeHubProductCategoryIdProductIdRoute
+  '/_authenticated/achievements': typeof AuthenticatedAchievementsRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/administration': typeof AuthenticatedAdministrationRoute
+  '/_authenticated/alerts': typeof AuthenticatedAlertsRoute
+  '/_authenticated/analytics': typeof AuthenticatedAnalyticsRoute
+  '/_authenticated/assessments': typeof AuthenticatedAssessmentsRoute
+  '/_authenticated/faq': typeof AuthenticatedFaqRoute
+  '/_authenticated/hall-of-fame': typeof AuthenticatedHallOfFameRoute
+  '/_authenticated/help': typeof AuthenticatedHelpRoute
+  '/_authenticated/leadership': typeof AuthenticatedLeadershipRoute
+  '/_authenticated/memos': typeof AuthenticatedMemosRoute
+  '/_authenticated/my-activity': typeof AuthenticatedMyActivityRoute
+  '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
+  '/_authenticated/performance-intelligence': typeof AuthenticatedPerformanceIntelligenceRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/qa-coaching': typeof AuthenticatedQaCoachingRoute
+  '/_authenticated/scenarios': typeof AuthenticatedScenariosRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/suggestions': typeof AuthenticatedSuggestionsRoute
+  '/_authenticated/townhall': typeof AuthenticatedTownhallRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/knowledge-hub/$sopId': typeof AuthenticatedKnowledgeHubSopIdRoute
+  '/_authenticated/knowledge-hub/': typeof AuthenticatedKnowledgeHubIndexRoute
+  '/_authenticated/knowledge-hub/product/$categoryId': typeof AuthenticatedKnowledgeHubProductCategoryIdRouteWithChildren
+  '/_authenticated/knowledge-hub/product/$categoryId/$productId': typeof AuthenticatedKnowledgeHubProductCategoryIdProductIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/login'
+    | '/mfa'
     | '/achievements'
     | '/admin'
     | '/administration'
@@ -277,9 +293,7 @@ export interface FileRouteTypes {
     | '/hall-of-fame'
     | '/help'
     | '/leadership'
-    | '/login'
     | '/memos'
-    | '/mfa'
     | '/my-activity'
     | '/notifications'
     | '/performance-intelligence'
@@ -295,7 +309,8 @@ export interface FileRouteTypes {
     | '/knowledge-hub/product/$categoryId/$productId'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
+    | '/login'
+    | '/mfa'
     | '/achievements'
     | '/admin'
     | '/administration'
@@ -306,9 +321,7 @@ export interface FileRouteTypes {
     | '/hall-of-fame'
     | '/help'
     | '/leadership'
-    | '/login'
     | '/memos'
-    | '/mfa'
     | '/my-activity'
     | '/notifications'
     | '/performance-intelligence'
@@ -318,147 +331,56 @@ export interface FileRouteTypes {
     | '/settings'
     | '/suggestions'
     | '/townhall'
+    | '/'
     | '/knowledge-hub/$sopId'
     | '/knowledge-hub'
     | '/knowledge-hub/product/$categoryId'
     | '/knowledge-hub/product/$categoryId/$productId'
   id:
     | '__root__'
-    | '/'
-    | '/achievements'
-    | '/admin'
-    | '/administration'
-    | '/alerts'
-    | '/analytics'
-    | '/assessments'
-    | '/faq'
-    | '/hall-of-fame'
-    | '/help'
-    | '/leadership'
+    | '/_authenticated'
     | '/login'
-    | '/memos'
     | '/mfa'
-    | '/my-activity'
-    | '/notifications'
-    | '/performance-intelligence'
-    | '/profile'
-    | '/qa-coaching'
-    | '/scenarios'
-    | '/settings'
-    | '/suggestions'
-    | '/townhall'
-    | '/knowledge-hub/$sopId'
-    | '/knowledge-hub/'
-    | '/knowledge-hub/product/$categoryId'
-    | '/knowledge-hub/product/$categoryId/$productId'
+    | '/_authenticated/achievements'
+    | '/_authenticated/admin'
+    | '/_authenticated/administration'
+    | '/_authenticated/alerts'
+    | '/_authenticated/analytics'
+    | '/_authenticated/assessments'
+    | '/_authenticated/faq'
+    | '/_authenticated/hall-of-fame'
+    | '/_authenticated/help'
+    | '/_authenticated/leadership'
+    | '/_authenticated/memos'
+    | '/_authenticated/my-activity'
+    | '/_authenticated/notifications'
+    | '/_authenticated/performance-intelligence'
+    | '/_authenticated/profile'
+    | '/_authenticated/qa-coaching'
+    | '/_authenticated/scenarios'
+    | '/_authenticated/settings'
+    | '/_authenticated/suggestions'
+    | '/_authenticated/townhall'
+    | '/_authenticated/'
+    | '/_authenticated/knowledge-hub/$sopId'
+    | '/_authenticated/knowledge-hub/'
+    | '/_authenticated/knowledge-hub/product/$categoryId'
+    | '/_authenticated/knowledge-hub/product/$categoryId/$productId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AchievementsRoute: typeof AchievementsRoute
-  AdminRoute: typeof AdminRoute
-  AdministrationRoute: typeof AdministrationRoute
-  AlertsRoute: typeof AlertsRoute
-  AnalyticsRoute: typeof AnalyticsRoute
-  AssessmentsRoute: typeof AssessmentsRoute
-  FaqRoute: typeof FaqRoute
-  HallOfFameRoute: typeof HallOfFameRoute
-  HelpRoute: typeof HelpRoute
-  LeadershipRoute: typeof LeadershipRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
-  MemosRoute: typeof MemosRoute
   MfaRoute: typeof MfaRoute
-  MyActivityRoute: typeof MyActivityRoute
-  NotificationsRoute: typeof NotificationsRoute
-  PerformanceIntelligenceRoute: typeof PerformanceIntelligenceRoute
-  ProfileRoute: typeof ProfileRoute
-  QaCoachingRoute: typeof QaCoachingRoute
-  ScenariosRoute: typeof ScenariosRoute
-  SettingsRoute: typeof SettingsRoute
-  SuggestionsRoute: typeof SuggestionsRoute
-  TownhallRoute: typeof TownhallRoute
-  KnowledgeHubSopIdRoute: typeof KnowledgeHubSopIdRoute
-  KnowledgeHubIndexRoute: typeof KnowledgeHubIndexRoute
-  KnowledgeHubProductCategoryIdRoute: typeof KnowledgeHubProductCategoryIdRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/townhall': {
-      id: '/townhall'
-      path: '/townhall'
-      fullPath: '/townhall'
-      preLoaderRoute: typeof TownhallRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/suggestions': {
-      id: '/suggestions'
-      path: '/suggestions'
-      fullPath: '/suggestions'
-      preLoaderRoute: typeof SuggestionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/scenarios': {
-      id: '/scenarios'
-      path: '/scenarios'
-      fullPath: '/scenarios'
-      preLoaderRoute: typeof ScenariosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/qa-coaching': {
-      id: '/qa-coaching'
-      path: '/qa-coaching'
-      fullPath: '/qa-coaching'
-      preLoaderRoute: typeof QaCoachingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/performance-intelligence': {
-      id: '/performance-intelligence'
-      path: '/performance-intelligence'
-      fullPath: '/performance-intelligence'
-      preLoaderRoute: typeof PerformanceIntelligenceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/notifications': {
-      id: '/notifications'
-      path: '/notifications'
-      fullPath: '/notifications'
-      preLoaderRoute: typeof NotificationsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/my-activity': {
-      id: '/my-activity'
-      path: '/my-activity'
-      fullPath: '/my-activity'
-      preLoaderRoute: typeof MyActivityRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/mfa': {
       id: '/mfa'
       path: '/mfa'
       fullPath: '/mfa'
       preLoaderRoute: typeof MfaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/memos': {
-      id: '/memos'
-      path: '/memos'
-      fullPath: '/memos'
-      preLoaderRoute: typeof MemosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -468,168 +390,270 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/leadership': {
-      id: '/leadership'
-      path: '/leadership'
-      fullPath: '/leadership'
-      preLoaderRoute: typeof LeadershipRouteImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/help': {
-      id: '/help'
-      path: '/help'
-      fullPath: '/help'
-      preLoaderRoute: typeof HelpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/hall-of-fame': {
-      id: '/hall-of-fame'
-      path: '/hall-of-fame'
-      fullPath: '/hall-of-fame'
-      preLoaderRoute: typeof HallOfFameRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/faq': {
-      id: '/faq'
-      path: '/faq'
-      fullPath: '/faq'
-      preLoaderRoute: typeof FaqRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/assessments': {
-      id: '/assessments'
-      path: '/assessments'
-      fullPath: '/assessments'
-      preLoaderRoute: typeof AssessmentsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/analytics': {
-      id: '/analytics'
-      path: '/analytics'
-      fullPath: '/analytics'
-      preLoaderRoute: typeof AnalyticsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/alerts': {
-      id: '/alerts'
-      path: '/alerts'
-      fullPath: '/alerts'
-      preLoaderRoute: typeof AlertsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/administration': {
-      id: '/administration'
-      path: '/administration'
-      fullPath: '/administration'
-      preLoaderRoute: typeof AdministrationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/achievements': {
-      id: '/achievements'
-      path: '/achievements'
-      fullPath: '/achievements'
-      preLoaderRoute: typeof AchievementsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
+    '/_authenticated/': {
+      id: '/_authenticated/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/knowledge-hub/': {
-      id: '/knowledge-hub/'
+    '/_authenticated/townhall': {
+      id: '/_authenticated/townhall'
+      path: '/townhall'
+      fullPath: '/townhall'
+      preLoaderRoute: typeof AuthenticatedTownhallRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/suggestions': {
+      id: '/_authenticated/suggestions'
+      path: '/suggestions'
+      fullPath: '/suggestions'
+      preLoaderRoute: typeof AuthenticatedSuggestionsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/scenarios': {
+      id: '/_authenticated/scenarios'
+      path: '/scenarios'
+      fullPath: '/scenarios'
+      preLoaderRoute: typeof AuthenticatedScenariosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/qa-coaching': {
+      id: '/_authenticated/qa-coaching'
+      path: '/qa-coaching'
+      fullPath: '/qa-coaching'
+      preLoaderRoute: typeof AuthenticatedQaCoachingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/performance-intelligence': {
+      id: '/_authenticated/performance-intelligence'
+      path: '/performance-intelligence'
+      fullPath: '/performance-intelligence'
+      preLoaderRoute: typeof AuthenticatedPerformanceIntelligenceRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/notifications': {
+      id: '/_authenticated/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof AuthenticatedNotificationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/my-activity': {
+      id: '/_authenticated/my-activity'
+      path: '/my-activity'
+      fullPath: '/my-activity'
+      preLoaderRoute: typeof AuthenticatedMyActivityRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/memos': {
+      id: '/_authenticated/memos'
+      path: '/memos'
+      fullPath: '/memos'
+      preLoaderRoute: typeof AuthenticatedMemosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/leadership': {
+      id: '/_authenticated/leadership'
+      path: '/leadership'
+      fullPath: '/leadership'
+      preLoaderRoute: typeof AuthenticatedLeadershipRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/help': {
+      id: '/_authenticated/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof AuthenticatedHelpRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/hall-of-fame': {
+      id: '/_authenticated/hall-of-fame'
+      path: '/hall-of-fame'
+      fullPath: '/hall-of-fame'
+      preLoaderRoute: typeof AuthenticatedHallOfFameRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/faq': {
+      id: '/_authenticated/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof AuthenticatedFaqRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/assessments': {
+      id: '/_authenticated/assessments'
+      path: '/assessments'
+      fullPath: '/assessments'
+      preLoaderRoute: typeof AuthenticatedAssessmentsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/analytics': {
+      id: '/_authenticated/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AuthenticatedAnalyticsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/alerts': {
+      id: '/_authenticated/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AuthenticatedAlertsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/administration': {
+      id: '/_authenticated/administration'
+      path: '/administration'
+      fullPath: '/administration'
+      preLoaderRoute: typeof AuthenticatedAdministrationRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/achievements': {
+      id: '/_authenticated/achievements'
+      path: '/achievements'
+      fullPath: '/achievements'
+      preLoaderRoute: typeof AuthenticatedAchievementsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/knowledge-hub/': {
+      id: '/_authenticated/knowledge-hub/'
       path: '/knowledge-hub'
       fullPath: '/knowledge-hub/'
-      preLoaderRoute: typeof KnowledgeHubIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedKnowledgeHubIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/knowledge-hub/$sopId': {
-      id: '/knowledge-hub/$sopId'
+    '/_authenticated/knowledge-hub/$sopId': {
+      id: '/_authenticated/knowledge-hub/$sopId'
       path: '/knowledge-hub/$sopId'
       fullPath: '/knowledge-hub/$sopId'
-      preLoaderRoute: typeof KnowledgeHubSopIdRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedKnowledgeHubSopIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/knowledge-hub/product/$categoryId': {
-      id: '/knowledge-hub/product/$categoryId'
+    '/_authenticated/knowledge-hub/product/$categoryId': {
+      id: '/_authenticated/knowledge-hub/product/$categoryId'
       path: '/knowledge-hub/product/$categoryId'
       fullPath: '/knowledge-hub/product/$categoryId'
-      preLoaderRoute: typeof KnowledgeHubProductCategoryIdRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedKnowledgeHubProductCategoryIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/knowledge-hub/product/$categoryId/$productId': {
-      id: '/knowledge-hub/product/$categoryId/$productId'
+    '/_authenticated/knowledge-hub/product/$categoryId/$productId': {
+      id: '/_authenticated/knowledge-hub/product/$categoryId/$productId'
       path: '/$productId'
       fullPath: '/knowledge-hub/product/$categoryId/$productId'
-      preLoaderRoute: typeof KnowledgeHubProductCategoryIdProductIdRouteImport
-      parentRoute: typeof KnowledgeHubProductCategoryIdRoute
+      preLoaderRoute: typeof AuthenticatedKnowledgeHubProductCategoryIdProductIdRouteImport
+      parentRoute: typeof AuthenticatedKnowledgeHubProductCategoryIdRoute
     }
   }
 }
 
-interface KnowledgeHubProductCategoryIdRouteChildren {
-  KnowledgeHubProductCategoryIdProductIdRoute: typeof KnowledgeHubProductCategoryIdProductIdRoute
+interface AuthenticatedKnowledgeHubProductCategoryIdRouteChildren {
+  AuthenticatedKnowledgeHubProductCategoryIdProductIdRoute: typeof AuthenticatedKnowledgeHubProductCategoryIdProductIdRoute
 }
 
-const KnowledgeHubProductCategoryIdRouteChildren: KnowledgeHubProductCategoryIdRouteChildren =
+const AuthenticatedKnowledgeHubProductCategoryIdRouteChildren: AuthenticatedKnowledgeHubProductCategoryIdRouteChildren =
   {
-    KnowledgeHubProductCategoryIdProductIdRoute:
-      KnowledgeHubProductCategoryIdProductIdRoute,
+    AuthenticatedKnowledgeHubProductCategoryIdProductIdRoute:
+      AuthenticatedKnowledgeHubProductCategoryIdProductIdRoute,
   }
 
-const KnowledgeHubProductCategoryIdRouteWithChildren =
-  KnowledgeHubProductCategoryIdRoute._addFileChildren(
-    KnowledgeHubProductCategoryIdRouteChildren,
+const AuthenticatedKnowledgeHubProductCategoryIdRouteWithChildren =
+  AuthenticatedKnowledgeHubProductCategoryIdRoute._addFileChildren(
+    AuthenticatedKnowledgeHubProductCategoryIdRouteChildren,
   )
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAchievementsRoute: typeof AuthenticatedAchievementsRoute
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedAdministrationRoute: typeof AuthenticatedAdministrationRoute
+  AuthenticatedAlertsRoute: typeof AuthenticatedAlertsRoute
+  AuthenticatedAnalyticsRoute: typeof AuthenticatedAnalyticsRoute
+  AuthenticatedAssessmentsRoute: typeof AuthenticatedAssessmentsRoute
+  AuthenticatedFaqRoute: typeof AuthenticatedFaqRoute
+  AuthenticatedHallOfFameRoute: typeof AuthenticatedHallOfFameRoute
+  AuthenticatedHelpRoute: typeof AuthenticatedHelpRoute
+  AuthenticatedLeadershipRoute: typeof AuthenticatedLeadershipRoute
+  AuthenticatedMemosRoute: typeof AuthenticatedMemosRoute
+  AuthenticatedMyActivityRoute: typeof AuthenticatedMyActivityRoute
+  AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
+  AuthenticatedPerformanceIntelligenceRoute: typeof AuthenticatedPerformanceIntelligenceRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedQaCoachingRoute: typeof AuthenticatedQaCoachingRoute
+  AuthenticatedScenariosRoute: typeof AuthenticatedScenariosRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedSuggestionsRoute: typeof AuthenticatedSuggestionsRoute
+  AuthenticatedTownhallRoute: typeof AuthenticatedTownhallRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedKnowledgeHubSopIdRoute: typeof AuthenticatedKnowledgeHubSopIdRoute
+  AuthenticatedKnowledgeHubIndexRoute: typeof AuthenticatedKnowledgeHubIndexRoute
+  AuthenticatedKnowledgeHubProductCategoryIdRoute: typeof AuthenticatedKnowledgeHubProductCategoryIdRouteWithChildren
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAchievementsRoute: AuthenticatedAchievementsRoute,
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedAdministrationRoute: AuthenticatedAdministrationRoute,
+  AuthenticatedAlertsRoute: AuthenticatedAlertsRoute,
+  AuthenticatedAnalyticsRoute: AuthenticatedAnalyticsRoute,
+  AuthenticatedAssessmentsRoute: AuthenticatedAssessmentsRoute,
+  AuthenticatedFaqRoute: AuthenticatedFaqRoute,
+  AuthenticatedHallOfFameRoute: AuthenticatedHallOfFameRoute,
+  AuthenticatedHelpRoute: AuthenticatedHelpRoute,
+  AuthenticatedLeadershipRoute: AuthenticatedLeadershipRoute,
+  AuthenticatedMemosRoute: AuthenticatedMemosRoute,
+  AuthenticatedMyActivityRoute: AuthenticatedMyActivityRoute,
+  AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
+  AuthenticatedPerformanceIntelligenceRoute:
+    AuthenticatedPerformanceIntelligenceRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedQaCoachingRoute: AuthenticatedQaCoachingRoute,
+  AuthenticatedScenariosRoute: AuthenticatedScenariosRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedSuggestionsRoute: AuthenticatedSuggestionsRoute,
+  AuthenticatedTownhallRoute: AuthenticatedTownhallRoute,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedKnowledgeHubSopIdRoute: AuthenticatedKnowledgeHubSopIdRoute,
+  AuthenticatedKnowledgeHubIndexRoute: AuthenticatedKnowledgeHubIndexRoute,
+  AuthenticatedKnowledgeHubProductCategoryIdRoute:
+    AuthenticatedKnowledgeHubProductCategoryIdRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AchievementsRoute: AchievementsRoute,
-  AdminRoute: AdminRoute,
-  AdministrationRoute: AdministrationRoute,
-  AlertsRoute: AlertsRoute,
-  AnalyticsRoute: AnalyticsRoute,
-  AssessmentsRoute: AssessmentsRoute,
-  FaqRoute: FaqRoute,
-  HallOfFameRoute: HallOfFameRoute,
-  HelpRoute: HelpRoute,
-  LeadershipRoute: LeadershipRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   LoginRoute: LoginRoute,
-  MemosRoute: MemosRoute,
   MfaRoute: MfaRoute,
-  MyActivityRoute: MyActivityRoute,
-  NotificationsRoute: NotificationsRoute,
-  PerformanceIntelligenceRoute: PerformanceIntelligenceRoute,
-  ProfileRoute: ProfileRoute,
-  QaCoachingRoute: QaCoachingRoute,
-  ScenariosRoute: ScenariosRoute,
-  SettingsRoute: SettingsRoute,
-  SuggestionsRoute: SuggestionsRoute,
-  TownhallRoute: TownhallRoute,
-  KnowledgeHubSopIdRoute: KnowledgeHubSopIdRoute,
-  KnowledgeHubIndexRoute: KnowledgeHubIndexRoute,
-  KnowledgeHubProductCategoryIdRoute:
-    KnowledgeHubProductCategoryIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
