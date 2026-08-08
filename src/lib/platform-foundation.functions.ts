@@ -1,200 +1,122 @@
 import { createServerFn } from "@tanstack/react-start";
-import { createClient } from "@supabase/supabase-js";
-import { getRequestIP, getRequestHeader } from "@tanstack/react-start/server";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import type { Database } from "@/integrations/supabase/types";
 
 // ---------------- Network classification ----------------
-// Compares the caller's IP against the CIDRs stored in trusted_networks.
-// Returns { classification, ip }. Falls back to "external" if IP or DB is unavailable.
-function ipv4ToInt(ip: string): number | null {
-  const parts = ip.split(".");
-  if (parts.length !== 4) return null;
-  let n = 0;
-  for (const p of parts) {
-    const v = Number(p);
-    if (!Number.isInteger(v) || v < 0 || v > 255) return null;
-    n = (n << 8) + v;
-  }
-  return n >>> 0;
-}
-function ipInCidr(ip: string, cidr: string): boolean {
-  const [base, bitsStr] = cidr.split("/");
-  const bits = Number(bitsStr);
-  const ipN = ipv4ToInt(ip);
-  const baseN = ipv4ToInt(base ?? "");
-  if (ipN === null || baseN === null || !Number.isInteger(bits) || bits < 0 || bits > 32) return false;
-  if (bits === 0) return true;
-  const mask = (~0 << (32 - bits)) >>> 0;
-  return (ipN & mask) === (baseN & mask);
-}
-
+// CIDR lookup happens server-side only (privileged client). The browser
+// receives the classification, never the trusted-network list.
 export const classifyNetwork = createServerFn({ method: "GET" }).handler(async () => {
-  let ip: string | null = null;
-  try {
-    ip = getRequestIP({ xForwardedFor: true }) ?? getRequestHeader("x-forwarded-for") ?? null;
-    if (ip && ip.includes(",")) ip = ip.split(",")[0].trim();
-  } catch {
-    ip = null;
-  }
-
-  const SUPABASE_URL = process.env.SUPABASE_URL;
-  const SUPABASE_PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY;
-  if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
-    return { classification: "external" as const, ip };
-  }
-  const key = SUPABASE_PUBLISHABLE_KEY;
-  const supa = createClient<Database>(SUPABASE_URL, key, {
-    auth: { persistSession: false, autoRefreshToken: false },
-    global: {
-      fetch: (input, init) => {
-        const h = new Headers(init?.headers);
-        if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
-        h.set("apikey", key);
-        return fetch(input, { ...init, headers: h });
-      },
-    },
-  });
-  const { data } = await supa.from("trusted_networks").select("cidr").eq("is_active", true);
-  const cidrs = (data ?? []).map((r) => r.cidr);
-
-  let classification: "internal" | "external" = "external";
-  if (ip && cidrs.some((c) => ipInCidr(ip!, c))) classification = "internal";
-  return { classification, ip };
+  const { classifyRequestNetwork } = await import("@/lib/network.server");
+  const { classification } = await classifyRequestNetwork();
+  return { classification };
 });
 
 // ---------------- Audit logging ----------------
+/**
+ * Authenticated audit event. Identity is taken from the verified bearer
+ * token — never from client-supplied email/role — and inserted as the caller
+ * so the `user_id = auth.uid()` RLS check applies.
+ */
 export const logAuditEvent = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((data: {
     event_type: string;
     outcome: "success" | "failure";
     action?: string;
-    user_email?: string;
-    role?: string;
-    session_id?: string | null;
     device?: string;
     browser?: string;
-    network_classification?: string;
     metadata?: Record<string, unknown>;
   }) => data)
-  .handler(async ({ data }) => {
-    let ip: string | null = null;
-    try {
-      ip = getRequestIP({ xForwardedFor: true }) ?? null;
-      if (ip && ip.includes(",")) ip = ip.split(",")[0].trim();
-    } catch {
-      ip = null;
-    }
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    // Best-effort lookup of user_id from email via Auth admin API.
-    let user_id: string | null = null;
-    if (data.user_email) {
-      try {
-        const { data: page } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 200 });
-        const match = page?.users?.find((u) => u.email?.toLowerCase() === data.user_email!.toLowerCase());
-        user_id = match?.id ?? null;
-      } catch {
-        user_id = null;
-      }
-    }
-    await supabaseAdmin.from("audit_events").insert({
-      user_id,
-      user_email: data.user_email ?? null,
-      role: data.role ?? null,
-      session_id: data.session_id ?? null,
+  .handler(async ({ data, context }) => {
+    const { classifyRequestNetwork } = await import("@/lib/network.server");
+    const net = await classifyRequestNetwork();
+    const email = typeof context.claims.email === "string" ? context.claims.email : null;
+    await context.supabase.from("audit_events").insert({
+      user_id: context.userId,
+      user_email: email,
       event_type: data.event_type,
       outcome: data.outcome,
       action: data.action ?? null,
       device: data.device ?? null,
       browser: data.browser ?? null,
-      ip_address: ip,
-      network_classification: data.network_classification ?? null,
+      ip_address: net.ip,
+      network_classification: net.classification,
       metadata: (data.metadata ?? {}) as never,
     });
     return { ok: true as const };
   });
 
+/**
+ * Unauthenticated authentication-failure audit. There is no verified identity
+ * yet, so the row is written by server-only privileged code with
+ * `user_id = null`, retaining only the attempted email.
+ */
+export const logAuthFailure = createServerFn({ method: "POST" })
+  .inputValidator((data: { attempted_email?: string; action?: string }) => data)
+  .handler(async ({ data }) => {
+    const { classifyRequestNetwork } = await import("@/lib/network.server");
+    const net = await classifyRequestNetwork();
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    await supabaseAdmin.from("audit_events").insert({
+      user_id: null,
+      user_email: data.attempted_email?.slice(0, 320) ?? null,
+      event_type: "login_failed",
+      outcome: "failure",
+      action: data.action ?? "Sign-in rejected",
+      ip_address: net.ip,
+      network_classification: net.classification,
+      metadata: {} as never,
+    });
+    return { ok: true as const };
+  });
+
 // ---------------- Session lifecycle ----------------
+/**
+ * Opens an application session for the authenticated caller. Network
+ * classification and MFA state are decided server-side; the client cannot
+ * assert that it is MFA-verified.
+ */
 export const createSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: {
-    device?: string;
-    browser?: string;
-    network_classification: "internal" | "external";
-    mfa_verified: boolean;
-  }) => data)
+  .inputValidator((data: { device?: string; browser?: string }) => data ?? {})
   .handler(async ({ data, context }) => {
-    let ip: string | null = null;
-    try {
-      ip = getRequestIP({ xForwardedFor: true }) ?? null;
-      if (ip && ip.includes(",")) ip = ip.split(",")[0].trim();
-    } catch {
-      ip = null;
-    }
+    const { classifyRequestNetwork } = await import("@/lib/network.server");
+    const net = await classifyRequestNetwork();
+    // External networks require hard-token verification, which cannot be
+    // performed until a genuine verifier is integrated → fail closed.
+    const mfa_verified = net.classification === "internal";
     const { data: row, error } = await context.supabase
       .from("user_sessions")
       .insert({
         user_id: context.userId,
-        device: data.device ?? null,
-        browser: data.browser ?? null,
-        ip_address: ip,
-        network_classification: data.network_classification,
-        mfa_verified: data.mfa_verified,
+        device: data.device?.slice(0, 120) ?? null,
+        browser: data.browser?.slice(0, 200) ?? null,
+        ip_address: net.ip,
+        network_classification: net.classification,
+        mfa_verified,
       })
       .select("id")
       .single();
     if (error) throw new Error(error.message);
-    return { session_id: row.id };
-  });
-
-export const touchSession = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((data: { session_id: string }) => data)
-  .handler(async ({ data, context }) => {
-    await context.supabase
-      .from("user_sessions")
-      .update({ last_activity_at: new Date().toISOString() })
-      .eq("id", data.session_id)
-      .eq("user_id", context.userId);
-    return { ok: true as const };
-  });
-
-export const endSession = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((data: { session_id: string }) => data)
-  .handler(async ({ data, context }) => {
-    await context.supabase
-      .from("user_sessions")
-      .update({ ended_at: new Date().toISOString() })
-      .eq("id", data.session_id)
-      .eq("user_id", context.userId);
-    return { ok: true as const };
+    return {
+      session_id: row.id,
+      classification: net.classification,
+      mfa_verified,
+    };
   });
 
 // ---------------- MFA verification (hard-token secure-pass) ----------------
-// The UBA hard-token generates a rolling 6-digit code; server-side we accept a
-// well-formed 6-digit numeric string against an active token registration.
-// Real cryptographic validation would call the bank's token server.
+/**
+ * FAIL-CLOSED. UBA hard tokens emit an 8-digit rolling code that can only be
+ * validated by the bank's token-verification service. No such integration
+ * exists in this project, so no code — however well-formed — may be treated
+ * as proof of possession. This function never returns success.
+ */
 export const verifyHardToken = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: { code: string; session_id: string }) => {
-    if (!/^\d{6}$/.test(data.code)) throw new Error("Enter the 6-digit code from your hard token.");
-    if (!data.session_id) throw new Error("Missing session context.");
-    return data;
-  })
-  .handler(async ({ data, context }) => {
-    const { data: token } = await context.supabase
-      .from("hard_tokens")
-      .select("id, is_active")
-      .eq("user_id", context.userId)
-      .maybeSingle();
-    if (!token || !token.is_active) {
-      return { ok: false as const, reason: "no_token" };
-    }
-    await context.supabase
-      .from("user_sessions")
-      .update({ mfa_verified: true, last_activity_at: new Date().toISOString() })
-      .eq("id", data.session_id)
-      .eq("user_id", context.userId);
-    return { ok: true as const };
+  .inputValidator((data: { code: string }) => data)
+  .handler(async () => {
+    return {
+      ok: false as const,
+      reason: "verifier_not_configured" as const,
+    };
   });
