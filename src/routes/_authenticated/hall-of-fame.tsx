@@ -10,16 +10,15 @@ import { DEPARTMENTS_WITH_STAFF } from "@/lib/leaderboards";
 import { champions, departmentalRecognition, spotlightStory, type ChampionCategory } from "@/lib/recognition";
 import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createFileRoute("/hall-of-fame")({
+export const Route = createFileRoute("/_authenticated/hall-of-fame")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Hall of Excellence — UBA CoreSphere" },
       { name: "description", content: "Celebrate champions of learning, operational readiness and continuous improvement across UBA Customer Fulfilment on CoreSphere." },
       { property: "og:title", content: "Hall of Excellence — UBA CoreSphere" },
       { property: "og:description", content: "Recognition wall, monthly ceremonies and departmental champions across UBA Customer Fulfilment." },
-      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/hall-of-fame" },
     ],
-    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/hall-of-fame" }],
   }),
   component: HallOfExcellence,
 });

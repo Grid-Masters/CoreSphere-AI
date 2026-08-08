@@ -8,16 +8,15 @@ import { PanelCard } from "@/components/ui-bits/Card";
 import { useActiveUser, type ActiveUser } from "@/lib/active-user";
 import { assessScenario, SCENARIO_LIBRARY, type ScenarioAssessment, type ScenarioPrompt } from "@/lib/coresphere-scenario.functions";
 
-export const Route = createFileRoute("/scenarios")({
+export const Route = createFileRoute("/_authenticated/scenarios")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Scenario Simulator — UBA CoreSphere" },
       { name: "description", content: "Practice realistic customer scenarios with the CoreSphere AI scenario simulator and coach." },
       { property: "og:title", content: "Scenario Simulator — UBA CoreSphere" },
       { property: "og:description", content: "Practice realistic customer scenarios with the CoreSphere AI scenario simulator and coach." },
-      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/scenarios" },
     ],
-    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/scenarios" }],
   }),
   component: Scenarios,
 });

@@ -5,16 +5,15 @@ import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, StatCard } from "@/components/ui-bits/Card";
 import { ALERT_CATEGORIES, operationalAlerts, incidentLessons, type AlertCategory } from "@/lib/alerts";
 
-export const Route = createFileRoute("/alerts")({
+export const Route = createFileRoute("/_authenticated/alerts")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Operational Alert Center — UBA CoreSphere" },
       { name: "description", content: "Live operational alerts across transfers, cards, fraud, channels and compliance, plus an incident learning center for UBA Customer Fulfilment." },
       { property: "og:title", content: "Operational Alert Center — UBA CoreSphere" },
       { property: "og:description", content: "Operational alerts and incident learning for UBA Customer Fulfilment on CoreSphere." },
-      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/alerts" },
     ],
-    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/alerts" }],
   }),
   component: AlertCenter,
 });

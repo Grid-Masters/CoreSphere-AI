@@ -7,16 +7,15 @@ import { useActiveUser, type ActiveUser } from "@/lib/active-user";
 import { faqs, failedSearches, faqPermissions, type FaqStatus } from "@/lib/faq";
 import { knowledgeDecay } from "@/lib/alerts";
 
-export const Route = createFileRoute("/faq")({
+export const Route = createFileRoute("/_authenticated/faq")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "FAQ Governance — UBA CoreSphere" },
       { name: "description", content: "Governed FAQ knowledge base with approved answers for UBA operations on CoreSphere AI." },
       { property: "og:title", content: "FAQ Governance — UBA CoreSphere" },
       { property: "og:description", content: "Governed FAQ knowledge base with approved answers for UBA operations on CoreSphere AI." },
-      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/faq" },
     ],
-    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/faq" }],
   }),
   component: FaqCenter,
 });

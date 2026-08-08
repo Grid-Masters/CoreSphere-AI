@@ -4,16 +4,15 @@ import { Send, Video, Calendar, ShieldCheck, MessageSquare } from "lucide-react"
 import { AppShell } from "@/components/layout/AppShell";
 import { coachingThreads } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/qa-coaching")({
+export const Route = createFileRoute("/_authenticated/qa-coaching")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "QA Coaching Hub — UBA CoreSphere" },
       { name: "description", content: "Structured 1:1 QA coaching with your officer on CoreSphere — sessions logged for compliance." },
       { property: "og:title", content: "QA Coaching Hub — UBA CoreSphere" },
       { property: "og:description", content: "Structured 1:1 QA coaching with your officer on CoreSphere — sessions logged for compliance." },
-      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/qa-coaching" },
     ],
-    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/qa-coaching" }],
   }),
   component: CoachingHub,
 });

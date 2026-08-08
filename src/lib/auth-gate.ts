@@ -1,32 +1,9 @@
-import { useEffect } from "react";
-import { useNavigate, useRouterState } from "@tanstack/react-router";
-import { supabase } from "@/integrations/supabase/client";
-
 /**
- * Client-only auth gate backed by a real Supabase session. Redirects to
- * /login when no authenticated session exists. Runs in `useEffect` so SSR
- * markup is unaffected, and also reacts to sign-out events.
+ * Deprecated (Batch 3). Route protection now lives in the `_authenticated`
+ * pathless layout (`src/routes/_authenticated/route.tsx`), which validates a
+ * real Supabase session plus server-derived session assurance. No browser
+ * flag (sessionStorage/localStorage) may ever grant access.
  */
 export function useAuthGate() {
-  const navigate = useNavigate();
-  const path = useRouterState({ select: (s) => s.location.pathname });
-  useEffect(() => {
-    if (path === "/login" || path === "/mfa") return;
-    let active = true;
-    supabase.auth.getSession().then(({ data }) => {
-      if (active && !data.session) navigate({ to: "/login", replace: true });
-      // External-network sessions must complete hard-token MFA before entering the app.
-      if (active && data.session) {
-        const verified = typeof window !== "undefined" && sessionStorage.getItem("coresphere:mfa") === "1";
-        if (!verified) navigate({ to: "/mfa", replace: true });
-      }
-    });
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) navigate({ to: "/login", replace: true });
-    });
-    return () => {
-      active = false;
-      sub.subscription.unsubscribe();
-    };
-  }, [navigate, path]);
+  /* intentionally empty — see module docs */
 }

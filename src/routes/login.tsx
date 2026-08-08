@@ -5,11 +5,11 @@ import { ShieldCheck, Lock, Mail, ArrowRight, Sparkles } from "lucide-react";
 import { UbaLogo } from "@/components/brand/UbaLogo";
 import { demoProfiles } from "@/lib/demo-profiles";
 import { supabase } from "@/integrations/supabase/client";
-import { demoSignIn } from "@/lib/demo-auth.functions";
+import { demoSignIn, demoAccessStatus } from "@/lib/demo-auth.functions";
 import {
-  classifyNetwork,
   createSession,
   logAuditEvent,
+  logAuthFailure,
 } from "@/lib/platform-foundation.functions";
 import { quotes } from "@/lib/quotes";
 import {
@@ -30,9 +30,8 @@ export const Route = createFileRoute("/login")({
       { name: "description", content: "Sign in to CoreSphere AI with your UBA enterprise credentials to access operations intelligence and knowledge tools." },
       { property: "og:title", content: "Sign in — UBA CoreSphere" },
       { property: "og:description", content: "Sign in to CoreSphere AI with your UBA enterprise credentials to access operations intelligence and knowledge tools." },
-      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/login" },
+      { name: "robots", content: "noindex, nofollow" },
     ],
-    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/login" }],
   }),
   component: LoginPage,
 });
@@ -58,9 +57,10 @@ const slides = [
 function LoginPage() {
   const navigate = useNavigate();
   const requestDemoSession = useServerFn(demoSignIn);
-  const classify = useServerFn(classifyNetwork);
   const startSession = useServerFn(createSession);
   const audit = useServerFn(logAuditEvent);
+  const auditFailure = useServerFn(logAuthFailure);
+  const demoStatus = useServerFn(demoAccessStatus);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -68,6 +68,13 @@ function LoginPage() {
   const [demoOpen, setDemoOpen] = useState(false);
   const [slide, setSlide] = useState(0);
   const [quote, setQuote] = useState(0);
+  const [demoAvailable, setDemoAvailable] = useState(false);
+
+  useEffect(() => {
+    void demoStatus()
+      .then((r) => setDemoAvailable(r.enabled))
+      .catch(() => setDemoAvailable(false));
+  }, [demoStatus]);
 
   useEffect(() => {
     const t = setInterval(() => setSlide((s) => (s + 1) % slides.length), 5500);
@@ -86,49 +93,32 @@ function LoginPage() {
     };
   }
 
-  async function afterSignIn(targetEmail: string, opts: { isDemo: boolean }) {
+  async function afterSignIn(_targetEmail: string, opts: { isDemo: boolean }) {
     const info = browserInfo();
-    let net: { classification: "internal" | "external"; ip: string | null } = {
-      classification: "external",
-      ip: null,
-    };
-    try {
-      const r = await classify();
-      net = { classification: r.classification, ip: r.ip };
-    } catch {
-      // fall back to external → MFA required
+    // Demo sessions are opened server-side by demoSignIn.
+    let requireMfa = false;
+    if (!opts.isDemo) {
+      try {
+        const res = await startSession({ data: { device: info.device, browser: info.browser } });
+        requireMfa = !res.mfa_verified;
+      } catch {
+        requireMfa = true;
+      }
+      await audit({
+        data: {
+          event_type: "login_success",
+          outcome: "success",
+          action: "Password sign-in",
+          device: info.device,
+          browser: info.browser,
+        },
+      }).catch(() => {});
     }
-    // Demo personas bypass MFA to preserve the existing preview flow.
-    const requireMfa = net.classification === "external" && !opts.isDemo;
-
-    let sessionId: string | null = null;
-    try {
-      const res = await startSession({ data: {
-        device: info.device,
-        browser: info.browser,
-        network_classification: net.classification,
-        mfa_verified: !requireMfa,
-      }});
-      sessionId = res.session_id;
-      sessionStorage.setItem("coresphere:sid", sessionId);
-    } catch {
-      // non-fatal — dashboard still renders
-    }
-
-    await audit({ data: {
-      event_type: "login_success", outcome: "success",
-      action: opts.isDemo ? "Demo sign-in" : "Password sign-in",
-      user_email: targetEmail,
-      device: info.device, browser: info.browser,
-      network_classification: net.classification,
-      session_id: sessionId,
-    }}).catch(() => {});
 
     if (requireMfa) {
       navigate({ to: "/mfa" });
       return;
     }
-    sessionStorage.setItem("coresphere:mfa", "1");
     try {
       sessionStorage.setItem("coresphere:justSignedIn", "1");
     } catch {
@@ -146,10 +136,9 @@ function LoginPage() {
     });
     if (signInError) {
       setBusy(false);
-      await audit({ data: {
-        event_type: "login_failed", outcome: "failure",
+      await auditFailure({ data: {
+        attempted_email: targetEmail,
         action: "Password sign-in rejected",
-        user_email: targetEmail,
       }}).catch(() => {});
       setError("Invalid credentials. Check your enterprise email and password.");
       return;
@@ -298,14 +287,6 @@ function LoginPage() {
               </div>
             </div>
             {error && <div className="text-xs text-destructive">{error}</div>}
-            <div className="flex items-center justify-between text-xs">
-              <label className="flex items-center gap-2 text-muted-foreground">
-                <input type="checkbox" className="rounded border-input" /> Remember this device
-              </label>
-              <a href="#" className="text-primary hover:underline">
-                Forgot password?
-              </a>
-            </div>
             <button
               type="submit"
               disabled={busy}
@@ -322,7 +303,8 @@ function LoginPage() {
               “{quotes[quote]}”
             </blockquote>
 
-            {/* Discreet demo access */}
+            {/* Discreet demo access — non-production only */}
+            {demoAvailable && (
             <div className="text-center">
               <button
                 type="button"
@@ -332,6 +314,7 @@ function LoginPage() {
                 Demo Access — preview a role
               </button>
             </div>
+            )}
           </div>
 
           <div className="mt-8 pt-6 border-t text-[11px] text-muted-foreground flex items-center gap-2">

@@ -3,9 +3,10 @@ import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard } from "@/components/ui-bits/Card";
 import { LifeBuoy, BookOpen, MessagesSquare, ShieldAlert } from "lucide-react";
 
-export const Route = createFileRoute("/help")({
+export const Route = createFileRoute("/_authenticated/help")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Help & Support — UBA CoreSphere" },
       { name: "description", content: "Find enterprise support channels for CoreSphere: FAQ, coaching, and Group Governance." },
     ],

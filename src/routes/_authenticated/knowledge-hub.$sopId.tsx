@@ -23,22 +23,21 @@ import { PanelCard, ProgressBar, StatusBadge } from "@/components/ui-bits/Card";
 import { sops, currentUser, overallProgress } from "@/lib/mock-data";
 import { useTheoryProgress, useVideoProgress } from "@/lib/progress-store";
 
-export const Route = createFileRoute("/knowledge-hub/$sopId")({
+export const Route = createFileRoute("/_authenticated/knowledge-hub/$sopId")({
   head: ({ params }) => {
     const sop = sops.find((x) => x.id === params.sopId);
     const title = sop?.title ?? params.sopId;
     const desc = sop?.summary ?? "UBA standard operating procedure on CoreSphere AI.";
-    const url = `https://ubacoresphere-pulse.lovable.app/knowledge-hub/${params.sopId}`;
+    const url = "";
     return {
       meta: [
+      { name: "robots", content: "noindex, nofollow" },
         { title: `${title} — UBA CoreSphere` },
         { name: "description", content: desc },
         { property: "og:title", content: `${title} — UBA CoreSphere` },
         { property: "og:description", content: desc },
         { property: "og:type", content: "article" },
-        { property: "og:url", content: url },
       ],
-      links: [{ rel: "canonical", href: url }],
       scripts: sop
         ? [
             {

@@ -23,16 +23,15 @@ import {
   type AdminOrgUnit,
 } from "@/lib/administration-registry";
 
-export const Route = createFileRoute("/administration")({
+export const Route = createFileRoute("/_authenticated/administration")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Administration Center — UBA CoreSphere" },
       { name: "description", content: "CoreSphere Administration Center for user, role, department, security and AI governance management." },
       { property: "og:title", content: "Administration Center — UBA CoreSphere" },
       { property: "og:description", content: "CoreSphere Administration Center for user, role, department, security and AI governance management." },
-      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/administration" },
     ],
-    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/administration" }],
   }),
   component: GuardedAdministrationCenter,
 });

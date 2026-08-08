@@ -39,16 +39,15 @@ function thumbFor(cat: string) {
   return categoryStyles[cat] ?? { gradient: "from-primary via-primary/80 to-rose-900", icon: BookOpen };
 }
 
-export const Route = createFileRoute("/knowledge-hub/")({
+export const Route = createFileRoute("/_authenticated/knowledge-hub/")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Enterprise Knowledge Hub — UBA CoreSphere" },
       { name: "description", content: "Search approved UBA SOPs, policies, operational playbooks and product intelligence with AI-powered guidance in the CoreSphere Enterprise Knowledge Hub." },
       { property: "og:title", content: "Enterprise Knowledge Hub — UBA CoreSphere" },
       { property: "og:description", content: "Search approved UBA SOPs, policies, operational playbooks and product intelligence with AI-powered guidance in the CoreSphere Enterprise Knowledge Hub." },
-      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/knowledge-hub" },
     ],
-    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/knowledge-hub" }],
   }),
   component: KnowledgeHub,
 });

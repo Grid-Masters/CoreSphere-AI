@@ -4,16 +4,15 @@ import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, StatCard, StatusBadge } from "@/components/ui-bits/Card";
 import { assessments } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/assessments")({
+export const Route = createFileRoute("/_authenticated/assessments")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Assessments — UBA CoreSphere" },
       { name: "description", content: "Complete role-based assessments and quizzes to validate SOP knowledge on CoreSphere AI." },
       { property: "og:title", content: "Assessments — UBA CoreSphere" },
       { property: "og:description", content: "Complete role-based assessments and quizzes to validate SOP knowledge on CoreSphere AI." },
-      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/assessments" },
     ],
-    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/assessments" }],
   }),
   component: Assessments,
 });

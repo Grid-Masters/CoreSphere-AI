@@ -5,21 +5,20 @@ import { PanelCard, StatusBadge } from "@/components/ui-bits/Card";
 import { currentUser } from "@/lib/mock-data";
 import { getTile } from "@/lib/product-knowledge";
 
-export const Route = createFileRoute("/knowledge-hub/product/$categoryId")({
+export const Route = createFileRoute("/_authenticated/knowledge-hub/product/$categoryId")({
   head: ({ params }) => {
     const tile = getTile(params.categoryId);
     const title = tile ? `${tile.name} — Product Knowledge` : "Product Knowledge";
     const desc = tile?.description ?? "UBA product knowledge in the Enterprise Knowledge Hub.";
-    const url = `https://ubacoresphere-pulse.lovable.app/knowledge-hub/product/${params.categoryId}`;
+    const url = "";
     return {
       meta: [
+      { name: "robots", content: "noindex, nofollow" },
         { title: `${title} — UBA CoreSphere` },
         { name: "description", content: desc },
         { property: "og:title", content: `${title} — UBA CoreSphere` },
         { property: "og:description", content: desc },
-        { property: "og:url", content: url },
       ],
-      links: [{ rel: "canonical", href: url }],
     };
   },
   loader: ({ params }) => {
