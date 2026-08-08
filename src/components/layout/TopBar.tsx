@@ -60,21 +60,18 @@ export function TopBar({ onOpenMobile, onToggleCollapsed, collapsed }: Props) {
   const signOut = async () => {
     // Best-effort: record logout in the immutable audit log and end the session row.
     try {
-      const sid = typeof window !== "undefined" ? sessionStorage.getItem("coresphere:sid") : null;
-      const { logAuditEvent, endSession } = await import("@/lib/platform-foundation.functions");
-      if (sid) await endSession({ data: { session_id: sid } }).catch(() => {});
+      
+      const { logAuditEvent } = await import("@/lib/platform-foundation.functions");
+      const { endActiveSession } = await import("@/lib/session-assurance.functions");
+      await endActiveSession().catch(() => {});
       await logAuditEvent({ data: {
         event_type: "logout", outcome: "success",
         action: "User signed out",
-        user_email: user.email,
-        session_id: sid,
-      }}).catch(() => {});
+                      }}).catch(() => {});
     } catch {
       // non-critical
     }
     try {
-      sessionStorage.removeItem("coresphere:mfa");
-      sessionStorage.removeItem("coresphere:sid");
     } catch {
       // non-critical
     }
