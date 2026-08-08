@@ -7,6 +7,7 @@ import { Clock } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/my-activity")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "My Activity — UBA CoreSphere" },
       { name: "description", content: "A history of your recent activity across CoreSphere." },
     ],

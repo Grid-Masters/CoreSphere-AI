@@ -7,13 +7,12 @@ import { qaScores } from "@/lib/mock-data";
 export const Route = createFileRoute("/_authenticated/performance-intelligence")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Performance Intelligence — UBA CoreSphere" },
       { name: "description", content: "Performance intelligence — trends, scorecards and coaching insights for UBA operations on CoreSphere." },
       { property: "og:title", content: "Performance Intelligence — UBA CoreSphere" },
       { property: "og:description", content: "Performance intelligence — trends, scorecards and coaching insights for UBA operations on CoreSphere." },
-      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/performance-intelligence" },
     ],
-    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/performance-intelligence" }],
   }),
   component: PerformanceIntelligence,
 });

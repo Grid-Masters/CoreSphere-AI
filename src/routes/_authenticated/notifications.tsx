@@ -23,13 +23,12 @@ import {
 export const Route = createFileRoute("/_authenticated/notifications")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Notifications — UBA CoreSphere" },
       { name: "description", content: "Your CoreSphere notifications — scorecards, memos, missions and operational alerts." },
       { property: "og:title", content: "Notifications — UBA CoreSphere" },
       { property: "og:description", content: "Your CoreSphere notifications — scorecards, memos, missions and operational alerts." },
-      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/notifications" },
     ],
-    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/notifications" }],
   }),
   component: Notifications,
 });

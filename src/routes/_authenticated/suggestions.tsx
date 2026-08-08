@@ -19,13 +19,12 @@ import {
 export const Route = createFileRoute("/_authenticated/suggestions")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Digital Suggestion Box — UBA CoreSphere" },
       { name: "description", content: "Share ideas to improve UBA Customer Fulfilment operations. AI auto-categorises every suggestion and leadership tracks trends — anonymous to peers." },
       { property: "og:title", content: "Digital Suggestion Box — UBA CoreSphere" },
       { property: "og:description", content: "Submit operational improvement ideas; AI categorises and leadership acts on trends." },
-      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/suggestions" },
     ],
-    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/suggestions" }],
   }),
   component: SuggestionBox,
 });

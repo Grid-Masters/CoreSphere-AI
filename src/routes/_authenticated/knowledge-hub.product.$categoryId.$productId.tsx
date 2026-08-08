@@ -15,17 +15,16 @@ export const Route = createFileRoute("/_authenticated/knowledge-hub/product/$cat
     const p = getProduct(params.productId);
     const title = p ? `${p.name} — ${p.categoryName}` : "Product Knowledge";
     const desc = p?.overview ?? "UBA product knowledge in the Enterprise Knowledge Hub.";
-    const url = `https://ubacoresphere-pulse.lovable.app/knowledge-hub/product/${params.categoryId}/${params.productId}`;
+    const url = "";
     return {
       meta: [
+      { name: "robots", content: "noindex, nofollow" },
         { title: `${title} — UBA CoreSphere` },
         { name: "description", content: desc },
         { property: "og:title", content: `${title} — UBA CoreSphere` },
         { property: "og:description", content: desc },
         { property: "og:type", content: "article" },
-        { property: "og:url", content: url },
       ],
-      links: [{ rel: "canonical", href: url }],
     };
   },
   loader: ({ params }) => {

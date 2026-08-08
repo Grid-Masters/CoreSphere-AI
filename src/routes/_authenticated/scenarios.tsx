@@ -11,13 +11,12 @@ import { assessScenario, SCENARIO_LIBRARY, type ScenarioAssessment, type Scenari
 export const Route = createFileRoute("/_authenticated/scenarios")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Scenario Simulator — UBA CoreSphere" },
       { name: "description", content: "Practice realistic customer scenarios with the CoreSphere AI scenario simulator and coach." },
       { property: "og:title", content: "Scenario Simulator — UBA CoreSphere" },
       { property: "og:description", content: "Practice realistic customer scenarios with the CoreSphere AI scenario simulator and coach." },
-      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/scenarios" },
     ],
-    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/scenarios" }],
   }),
   component: Scenarios,
 });

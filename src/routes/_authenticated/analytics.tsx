@@ -9,13 +9,12 @@ import { PRODUCT_ITEMS, isDueForReview, type ProductDetail } from "@/lib/product
 export const Route = createFileRoute("/_authenticated/analytics")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Analytics — UBA CoreSphere" },
       { name: "description", content: "Operational analytics and performance insights across UBA Customer Fulfillment on CoreSphere AI." },
       { property: "og:title", content: "Analytics — UBA CoreSphere" },
       { property: "og:description", content: "Operational analytics and performance insights across UBA Customer Fulfillment on CoreSphere AI." },
-      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/analytics" },
     ],
-    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/analytics" }],
   }),
   component: GuardedAnalytics,
 });

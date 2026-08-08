@@ -10,13 +10,12 @@ import { levelFor, pulsePoints, readinessScore, streakFor, LEVELS } from "@/lib/
 export const Route = createFileRoute("/_authenticated/achievements")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Achievements — UBA CoreSphere" },
       { name: "description", content: "Track your CoreSphere badges, milestones and recognition across UBA operations learning and performance." },
       { property: "og:title", content: "Achievements — UBA CoreSphere" },
       { property: "og:description", content: "Track your CoreSphere badges, milestones and recognition across UBA operations learning and performance." },
-      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/achievements" },
     ],
-    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/achievements" }],
   }),
   component: Achievements,
 });

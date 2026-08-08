@@ -7,6 +7,7 @@ import { User, Mail, Building2, Users, Briefcase, Shield } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "My Profile — UBA CoreSphere" },
       { name: "description", content: "Your CoreSphere profile: name, role, department, team and reporting line." },
     ],

@@ -8,13 +8,12 @@ import { useActiveUser, type ActiveUser } from "@/lib/active-user";
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Settings — UBA CoreSphere" },
       { name: "description", content: "Manage your CoreSphere profile, preferences and account settings." },
       { property: "og:title", content: "Settings — UBA CoreSphere" },
       { property: "og:description", content: "Manage your CoreSphere profile, preferences and account settings." },
-      { property: "og:url", content: "https://ubacoresphere-pulse.lovable.app/settings" },
     ],
-    links: [{ rel: "canonical", href: "https://ubacoresphere-pulse.lovable.app/settings" }],
   }),
   component: Settings,
 });
