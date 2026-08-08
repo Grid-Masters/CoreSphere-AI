@@ -4,7 +4,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard } from "@/components/ui-bits/Card";
 import { announcements } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/leadership")({
+export const Route = createFileRoute("/_authenticated/leadership")({
   head: () => ({
     meta: [
       { title: "Leadership Board — UBA CoreSphere" },

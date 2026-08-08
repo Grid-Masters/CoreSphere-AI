@@ -6,7 +6,7 @@ import { AckButton } from "@/components/governance/AckButton";
 import { useAcknowledged } from "@/lib/ack-store";
 import { memos } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/memos")({
+export const Route = createFileRoute("/_authenticated/memos")({
   head: () => ({
     meta: [
       { title: "Operations Memos — UBA CoreSphere" },

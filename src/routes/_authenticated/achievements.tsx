@@ -7,7 +7,7 @@ import { useActiveUser, type ActiveUser } from "@/lib/active-user";
 import { badgesForUser, badgeStats, type BadgeCategory } from "@/lib/badges";
 import { levelFor, pulsePoints, readinessScore, streakFor, LEVELS } from "@/lib/gamification";
 
-export const Route = createFileRoute("/achievements")({
+export const Route = createFileRoute("/_authenticated/achievements")({
   head: () => ({
     meta: [
       { title: "Achievements — UBA CoreSphere" },

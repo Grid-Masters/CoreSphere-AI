@@ -10,7 +10,7 @@ import { DEPARTMENTS_WITH_STAFF } from "@/lib/leaderboards";
 import { champions, departmentalRecognition, spotlightStory, type ChampionCategory } from "@/lib/recognition";
 import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createFileRoute("/hall-of-fame")({
+export const Route = createFileRoute("/_authenticated/hall-of-fame")({
   head: () => ({
     meta: [
       { title: "Hall of Excellence — UBA CoreSphere" },

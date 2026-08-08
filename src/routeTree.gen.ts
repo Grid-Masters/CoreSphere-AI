@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TownhallRouteImport } from './routes/townhall'
 import { Route as SuggestionsRouteImport } from './routes/suggestions'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ScenariosRouteImport } from './routes/scenarios'
 import { Route as QaCoachingRouteImport } from './routes/qa-coaching'
@@ -46,11 +45,6 @@ const TownhallRoute = TownhallRouteImport.update({
 const SuggestionsRoute = SuggestionsRouteImport.update({
   id: '/suggestions',
   path: '/suggestions',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -203,7 +197,6 @@ export interface FileRoutesByFullPath {
   '/qa-coaching': typeof QaCoachingRoute
   '/scenarios': typeof ScenariosRoute
   '/settings': typeof SettingsRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/suggestions': typeof SuggestionsRoute
   '/townhall': typeof TownhallRoute
   '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
@@ -233,7 +226,6 @@ export interface FileRoutesByTo {
   '/qa-coaching': typeof QaCoachingRoute
   '/scenarios': typeof ScenariosRoute
   '/settings': typeof SettingsRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/suggestions': typeof SuggestionsRoute
   '/townhall': typeof TownhallRoute
   '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
@@ -264,7 +256,6 @@ export interface FileRoutesById {
   '/qa-coaching': typeof QaCoachingRoute
   '/scenarios': typeof ScenariosRoute
   '/settings': typeof SettingsRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/suggestions': typeof SuggestionsRoute
   '/townhall': typeof TownhallRoute
   '/knowledge-hub/$sopId': typeof KnowledgeHubSopIdRoute
@@ -296,7 +287,6 @@ export interface FileRouteTypes {
     | '/qa-coaching'
     | '/scenarios'
     | '/settings'
-    | '/sitemap.xml'
     | '/suggestions'
     | '/townhall'
     | '/knowledge-hub/$sopId'
@@ -326,7 +316,6 @@ export interface FileRouteTypes {
     | '/qa-coaching'
     | '/scenarios'
     | '/settings'
-    | '/sitemap.xml'
     | '/suggestions'
     | '/townhall'
     | '/knowledge-hub/$sopId'
@@ -356,7 +345,6 @@ export interface FileRouteTypes {
     | '/qa-coaching'
     | '/scenarios'
     | '/settings'
-    | '/sitemap.xml'
     | '/suggestions'
     | '/townhall'
     | '/knowledge-hub/$sopId'
@@ -387,7 +375,6 @@ export interface RootRouteChildren {
   QaCoachingRoute: typeof QaCoachingRoute
   ScenariosRoute: typeof ScenariosRoute
   SettingsRoute: typeof SettingsRoute
-  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SuggestionsRoute: typeof SuggestionsRoute
   TownhallRoute: typeof TownhallRoute
   KnowledgeHubSopIdRoute: typeof KnowledgeHubSopIdRoute
@@ -409,13 +396,6 @@ declare module '@tanstack/react-router' {
       path: '/suggestions'
       fullPath: '/suggestions'
       preLoaderRoute: typeof SuggestionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -633,7 +613,6 @@ const rootRouteChildren: RootRouteChildren = {
   QaCoachingRoute: QaCoachingRoute,
   ScenariosRoute: ScenariosRoute,
   SettingsRoute: SettingsRoute,
-  SitemapDotxmlRoute: SitemapDotxmlRoute,
   SuggestionsRoute: SuggestionsRoute,
   TownhallRoute: TownhallRoute,
   KnowledgeHubSopIdRoute: KnowledgeHubSopIdRoute,

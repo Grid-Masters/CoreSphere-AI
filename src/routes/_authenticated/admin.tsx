@@ -5,7 +5,7 @@ import { Users, ShieldCheck, FileCheck2, Building2, CheckCircle2, XCircle } from
 import { departments } from "@/lib/mock-data";
 import { RoleGuard } from "@/components/auth/RoleGuard";
 
-export const Route = createFileRoute("/admin")({
+export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
       { title: "Admin Panel — UBA CoreSphere" },

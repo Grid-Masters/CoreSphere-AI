@@ -5,7 +5,7 @@ import { PanelCard, StatusBadge } from "@/components/ui-bits/Card";
 import { currentUser } from "@/lib/mock-data";
 import { getTile } from "@/lib/product-knowledge";
 
-export const Route = createFileRoute("/knowledge-hub/product/$categoryId")({
+export const Route = createFileRoute("/_authenticated/knowledge-hub/product/$categoryId")({
   head: ({ params }) => {
     const tile = getTile(params.categoryId);
     const title = tile ? `${tile.name} — Product Knowledge` : "Product Knowledge";

@@ -3,7 +3,7 @@ import { Play, Lock, Search } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { townhallSessions } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/townhall")({
+export const Route = createFileRoute("/_authenticated/townhall")({
   head: () => ({
     meta: [
       { title: "Townhall Hub — UBA CoreSphere" },

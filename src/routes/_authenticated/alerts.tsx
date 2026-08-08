@@ -5,7 +5,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, StatCard } from "@/components/ui-bits/Card";
 import { ALERT_CATEGORIES, operationalAlerts, incidentLessons, type AlertCategory } from "@/lib/alerts";
 
-export const Route = createFileRoute("/alerts")({
+export const Route = createFileRoute("/_authenticated/alerts")({
   head: () => ({
     meta: [
       { title: "Operational Alert Center — UBA CoreSphere" },

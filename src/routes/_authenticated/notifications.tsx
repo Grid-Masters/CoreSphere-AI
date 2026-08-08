@@ -20,7 +20,7 @@ import {
   MANDATORY_NOTIF_CATEGORIES,
 } from "@/lib/workspace-prefs";
 
-export const Route = createFileRoute("/notifications")({
+export const Route = createFileRoute("/_authenticated/notifications")({
   head: () => ({
     meta: [
       { title: "Notifications — UBA CoreSphere" },

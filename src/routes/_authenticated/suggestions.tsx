@@ -16,7 +16,7 @@ import {
   type SuggestionCategory,
 } from "@/lib/suggestions.functions";
 
-export const Route = createFileRoute("/suggestions")({
+export const Route = createFileRoute("/_authenticated/suggestions")({
   head: () => ({
     meta: [
       { title: "Digital Suggestion Box — UBA CoreSphere" },

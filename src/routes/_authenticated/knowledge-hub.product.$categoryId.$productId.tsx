@@ -10,7 +10,7 @@ import { currentUser } from "@/lib/mock-data";
 import { getProduct, getTile, isDueForReview } from "@/lib/product-knowledge";
 import { OPEN_AI_EVENT } from "@/components/CoreSphereAI";
 
-export const Route = createFileRoute("/knowledge-hub/product/$categoryId/$productId")({
+export const Route = createFileRoute("/_authenticated/knowledge-hub/product/$categoryId/$productId")({
   head: ({ params }) => {
     const p = getProduct(params.productId);
     const title = p ? `${p.name} — ${p.categoryName}` : "Product Knowledge";

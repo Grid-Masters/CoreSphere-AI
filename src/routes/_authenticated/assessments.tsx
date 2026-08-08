@@ -4,7 +4,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, StatCard, StatusBadge } from "@/components/ui-bits/Card";
 import { assessments } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/assessments")({
+export const Route = createFileRoute("/_authenticated/assessments")({
   head: () => ({
     meta: [
       { title: "Assessments — UBA CoreSphere" },

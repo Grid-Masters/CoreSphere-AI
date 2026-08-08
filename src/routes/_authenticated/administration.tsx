@@ -23,7 +23,7 @@ import {
   type AdminOrgUnit,
 } from "@/lib/administration-registry";
 
-export const Route = createFileRoute("/administration")({
+export const Route = createFileRoute("/_authenticated/administration")({
   head: () => ({
     meta: [
       { title: "Administration Center — UBA CoreSphere" },

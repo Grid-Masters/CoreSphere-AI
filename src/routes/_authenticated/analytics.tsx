@@ -6,7 +6,7 @@ import { qaScores } from "@/lib/mock-data";
 import { RoleGuard } from "@/components/auth/RoleGuard";
 import { PRODUCT_ITEMS, isDueForReview, type ProductDetail } from "@/lib/product-knowledge";
 
-export const Route = createFileRoute("/analytics")({
+export const Route = createFileRoute("/_authenticated/analytics")({
   head: () => ({
     meta: [
       { title: "Analytics — UBA CoreSphere" },

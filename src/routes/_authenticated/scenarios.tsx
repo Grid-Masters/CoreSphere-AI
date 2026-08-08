@@ -8,7 +8,7 @@ import { PanelCard } from "@/components/ui-bits/Card";
 import { useActiveUser, type ActiveUser } from "@/lib/active-user";
 import { assessScenario, SCENARIO_LIBRARY, type ScenarioAssessment, type ScenarioPrompt } from "@/lib/coresphere-scenario.functions";
 
-export const Route = createFileRoute("/scenarios")({
+export const Route = createFileRoute("/_authenticated/scenarios")({
   head: () => ({
     meta: [
       { title: "Scenario Simulator — UBA CoreSphere" },

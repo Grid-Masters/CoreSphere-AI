@@ -7,7 +7,7 @@ import { useActiveUser, type ActiveUser } from "@/lib/active-user";
 import { faqs, failedSearches, faqPermissions, type FaqStatus } from "@/lib/faq";
 import { knowledgeDecay } from "@/lib/alerts";
 
-export const Route = createFileRoute("/faq")({
+export const Route = createFileRoute("/_authenticated/faq")({
   head: () => ({
     meta: [
       { title: "FAQ Governance — UBA CoreSphere" },

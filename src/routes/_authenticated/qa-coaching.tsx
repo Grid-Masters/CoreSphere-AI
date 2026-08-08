@@ -4,7 +4,7 @@ import { Send, Video, Calendar, ShieldCheck, MessageSquare } from "lucide-react"
 import { AppShell } from "@/components/layout/AppShell";
 import { coachingThreads } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/qa-coaching")({
+export const Route = createFileRoute("/_authenticated/qa-coaching")({
   head: () => ({
     meta: [
       { title: "QA Coaching Hub — UBA CoreSphere" },

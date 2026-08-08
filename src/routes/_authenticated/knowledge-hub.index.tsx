@@ -39,7 +39,7 @@ function thumbFor(cat: string) {
   return categoryStyles[cat] ?? { gradient: "from-primary via-primary/80 to-rose-900", icon: BookOpen };
 }
 
-export const Route = createFileRoute("/knowledge-hub/")({
+export const Route = createFileRoute("/_authenticated/knowledge-hub/")({
   head: () => ({
     meta: [
       { title: "Enterprise Knowledge Hub — UBA CoreSphere" },

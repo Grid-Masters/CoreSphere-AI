@@ -4,7 +4,7 @@ import { PanelCard } from "@/components/ui-bits/Card";
 import { useRecent } from "@/lib/workspace-prefs";
 import { Clock } from "lucide-react";
 
-export const Route = createFileRoute("/my-activity")({
+export const Route = createFileRoute("/_authenticated/my-activity")({
   head: () => ({
     meta: [
       { title: "My Activity — UBA CoreSphere" },

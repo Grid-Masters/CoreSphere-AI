@@ -4,7 +4,7 @@ import { PanelCard } from "@/components/ui-bits/Card";
 import { useActiveUser, type ActiveUser } from "@/lib/active-user";
 import { User, Mail, Building2, Users, Briefcase, Shield } from "lucide-react";
 
-export const Route = createFileRoute("/profile")({
+export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
     meta: [
       { title: "My Profile — UBA CoreSphere" },

@@ -23,7 +23,7 @@ import { PanelCard, ProgressBar, StatusBadge } from "@/components/ui-bits/Card";
 import { sops, currentUser, overallProgress } from "@/lib/mock-data";
 import { useTheoryProgress, useVideoProgress } from "@/lib/progress-store";
 
-export const Route = createFileRoute("/knowledge-hub/$sopId")({
+export const Route = createFileRoute("/_authenticated/knowledge-hub/$sopId")({
   head: ({ params }) => {
     const sop = sops.find((x) => x.id === params.sopId);
     const title = sop?.title ?? params.sopId;

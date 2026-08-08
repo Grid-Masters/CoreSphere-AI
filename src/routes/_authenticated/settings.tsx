@@ -5,7 +5,7 @@ import { Bell, Lock, User, Monitor, ShieldCheck } from "lucide-react";
 import { useTheme, type ThemeMode } from "@/lib/theme";
 import { useActiveUser, type ActiveUser } from "@/lib/active-user";
 
-export const Route = createFileRoute("/settings")({
+export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
     meta: [
       { title: "Settings — UBA CoreSphere" },
