@@ -67,7 +67,7 @@ export const demoSignIn = createServerFn({ method: "POST" })
       ip_address: net.ip,
       network_classification: net.classification,
       mfa_verified: true,
-      is_demo: true,
+      // is_demo: pending Batch 3 migration
     });
     await supabaseAdmin.from("audit_events").insert({
       user_id: userId,
