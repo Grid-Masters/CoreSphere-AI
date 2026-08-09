@@ -448,8 +448,8 @@ function AdministrationCenter() {
                   { k: "Organization", v: "United Bank for Africa" },
                   { k: "Default Timezone", v: "West Africa Time (WAT)" },
                   { k: "Branding", v: "UBA Enterprise Theme" },
-                  { k: "Data Retention", v: "7 years (regulatory)" },
-                  { k: "Maintenance Window", v: "Sundays 01:00–03:00 WAT" },
+                  { k: "Data Retention Policy", v: "Not configured" },
+                  { k: "Maintenance Window", v: "Not configured" },
                 ].map((c) => (
                   <div key={c.k} className="flex items-center justify-between rounded-md border bg-card px-3 py-2.5">
                     <div className="text-sm font-medium">{c.k}</div>
