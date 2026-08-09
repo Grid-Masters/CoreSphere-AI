@@ -18,7 +18,13 @@ import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, StatCard, StatusBadge } from "@/components/ui-bits/Card";
 import { RoleGuard } from "@/components/auth/RoleGuard";
 import {
-  loadAdministrationRegistry,
+  getAdministrationRegistry,
+  getAuditTrail,
+  getLoginActivity,
+  type AuditRow,
+  type LoginRow,
+} from "@/lib/administration.functions";
+import {
   type AdministrationRegistry,
   type AdminOrgUnit,
 } from "@/lib/administration-registry";
@@ -67,31 +73,33 @@ const modules: { id: ModuleId; label: string; icon: any; desc: string }[] = [
   { id: "config", label: "Enterprise Configuration", icon: SlidersHorizontal, desc: "Platform-wide settings" },
 ];
 
-const auditTrail = [
-  { who: "Daniel Obi", action: "Updated QA scorecard weighting", at: "2 min ago", tone: "info" },
-  { who: "Chioma Paul", action: "Published SOP-012 — Card Dispute Flow", at: "26 min ago", tone: "info" },
-  { who: "Platform", action: "Failed login threshold exceeded (m.audit@…)", at: "1 hr ago", tone: "warn" },
-  { who: "Aliyu Yusuf", action: "Approved townhall broadcast", at: "3 hrs ago", tone: "info" },
-  { who: "Ibrahim Sadiq", action: "Rotated platform API credentials", at: "Yesterday", tone: "info" },
-];
-
-const loginEvents = [
-  { user: "a.okafor@ubagroup.com", ip: "197.210.x.x", device: "Chrome • Windows", status: "Success", at: "08:42" },
-  { user: "d.obi@ubagroup.com", ip: "102.89.x.x", device: "Edge • Windows", status: "Success", at: "08:31" },
-  { user: "unknown@ext.com", ip: "45.227.x.x", device: "Unknown", status: "Blocked", at: "07:58" },
-  { user: "s.eze@ubagroup.com", ip: "197.210.x.x", device: "Safari • macOS", status: "Success", at: "07:44" },
-];
+/**
+ * No telemetry is fabricated on this screen. Every value is either read from
+ * the database through a capability-controlled server function, or shown as a
+ * truthful "not configured / no verified source" state.
+ */
+function formatWhen(iso: string) {
+  try {
+    return new Date(iso).toLocaleString();
+  } catch {
+    return iso;
+  }
+}
 
 function AdministrationCenter() {
   const [active, setActive] = useState<ModuleId>("users");
   const [query, setQuery] = useState("");
   const [registry, setRegistry] = useState<AdministrationRegistry | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [audit, setAudit] = useState<AuditRow[] | null>(null);
+  const [auditError, setAuditError] = useState<string | null>(null);
+  const [logins, setLogins] = useState<LoginRow[] | null>(null);
+  const [loginError, setLoginError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    loadAdministrationRegistry()
-      .then((data) => {
+    getAdministrationRegistry()
+      .then((data: AdministrationRegistry) => {
         if (!cancelled) setRegistry(data);
       })
       .catch((error: unknown) => {
@@ -102,6 +110,32 @@ function AdministrationCenter() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (active !== "audit" || audit || auditError) return;
+    let cancelled = false;
+    getAuditTrail()
+      .then((rows: AuditRow[]) => !cancelled && setAudit(rows))
+      .catch((e: unknown) =>
+        !cancelled && setAuditError(e instanceof Error ? e.message : "Audit data unavailable"),
+      );
+    return () => {
+      cancelled = true;
+    };
+  }, [active, audit, auditError]);
+
+  useEffect(() => {
+    if (active !== "logins" || logins || loginError) return;
+    let cancelled = false;
+    getLoginActivity()
+      .then((rows: LoginRow[]) => !cancelled && setLogins(rows))
+      .catch((e: unknown) =>
+        !cancelled && setLoginError(e instanceof Error ? e.message : "Session data unavailable"),
+      );
+    return () => {
+      cancelled = true;
+    };
+  }, [active, logins, loginError]);
 
   const users = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -132,7 +166,7 @@ function AdministrationCenter() {
         <StatCard label="Active Profiles" value={registry?.users.length ?? "—"} icon={Users} tone="primary" />
         <StatCard label="Organisation Units" value={countUnits(registry?.orgTree ?? []) || "—"} icon={Building2} />
         <StatCard label="Positions" value={registry?.positions.length ?? "—"} icon={ShieldCheck} />
-        <StatCard label="Security Alerts" value={1} icon={AlertTriangle} tone="warning" />
+        <StatCard label="Security Alerts" value="—" icon={AlertTriangle} />
       </div>
 
       <div className="grid lg:grid-cols-[260px_1fr] gap-4">
