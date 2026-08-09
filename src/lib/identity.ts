@@ -110,16 +110,21 @@ function toRef(row: any): OrgUnitRef {
   };
 }
 
-/** Best-effort audit trail. Never blocks the resolved identity state. */
+/**
+ * Best-effort audit trail. Audit rows have no client INSERT path; the write
+ * is delegated to the server function, which derives identity from the
+ * verified bearer token. Never blocks the resolved identity state.
+ */
 async function auditProvisioningFailure(userId: string | null, email: string | null, reason: string) {
   try {
-    await supabase.from("audit_events").insert({
-      user_id: userId,
-      user_email: email,
-      event_type: "IDENTITY_PROVISIONING",
-      outcome: "DENIED",
-      action: reason,
-      metadata: { source: "identity-provider" },
+    const { logAuditEvent } = await import("@/lib/platform-foundation.functions");
+    await logAuditEvent({
+      data: {
+        event_type: "IDENTITY_PROVISIONING",
+        outcome: "failure",
+        action: reason,
+        metadata: { source: "identity-provider" },
+      },
     });
   } catch {
     /* audit failures must not affect the access state */

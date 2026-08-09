@@ -13,8 +13,9 @@ export const classifyNetwork = createServerFn({ method: "GET" }).handler(async (
 // ---------------- Audit logging ----------------
 /**
  * Authenticated audit event. Identity is taken from the verified bearer
- * token — never from client-supplied email/role — and inserted as the caller
- * so the `user_id = auth.uid()` RLS check applies.
+ * token — never from client-supplied email/role. `audit_events` has no
+ * client INSERT path at all, so the row is written by server-only
+ * privileged code after the caller has been verified.
  */
 export const logAuditEvent = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -29,8 +30,9 @@ export const logAuditEvent = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { classifyRequestNetwork } = await import("@/lib/network.server");
     const net = await classifyRequestNetwork();
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const email = typeof context.claims.email === "string" ? context.claims.email : null;
-    await context.supabase.from("audit_events").insert({
+    await supabaseAdmin.from("audit_events").insert({
       user_id: context.userId,
       user_email: email,
       event_type: data.event_type,
@@ -73,7 +75,7 @@ export const logAuthFailure = createServerFn({ method: "POST" })
 /**
  * Opens an application session for the authenticated caller. Network
  * classification and MFA state are decided server-side; the client cannot
- * assert that it is MFA-verified.
+ * assert that it is MFA-verified, `is_demo`, or that a session has ended.
  */
 export const createSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -84,7 +86,17 @@ export const createSession = createServerFn({ method: "POST" })
     // External networks require hard-token verification, which cannot be
     // performed until a genuine verifier is integrated → fail closed.
     const mfa_verified = net.classification === "internal";
-    const { data: row, error } = await context.supabase
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // Resolve any prior active session so session assurance has exactly one
+    // authoritative row for this user.
+    await supabaseAdmin
+      .from("user_sessions")
+      .update({ ended_at: new Date().toISOString() })
+      .eq("user_id", context.userId)
+      .is("ended_at", null);
+
+    const { data: row, error } = await supabaseAdmin
       .from("user_sessions")
       .insert({
         user_id: context.userId,
@@ -93,6 +105,7 @@ export const createSession = createServerFn({ method: "POST" })
         ip_address: net.ip,
         network_classification: net.classification,
         mfa_verified,
+        is_demo: false,
       })
       .select("id")
       .single();

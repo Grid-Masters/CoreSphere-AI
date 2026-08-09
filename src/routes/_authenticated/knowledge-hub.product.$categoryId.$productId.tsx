@@ -75,7 +75,9 @@ function Bullets({ items }: { items: string[] }) {
 }
 
 function ProductDetailPage() {
-  const { product: p, tile } = Route.useLoaderData();
+  const loaded = Route.useLoaderData();
+  if (!loaded) throw notFound();
+  const { product: p, tile } = loaded;
   const due = isDueForReview(p);
 
   const askAI = () => window.dispatchEvent(new CustomEvent(OPEN_AI_EVENT));

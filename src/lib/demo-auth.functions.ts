@@ -67,7 +67,9 @@ export const demoSignIn = createServerFn({ method: "POST" })
       ip_address: net.ip,
       network_classification: net.classification,
       mfa_verified: true,
-      // is_demo: pending Batch 3 migration
+      // Environment-isolated demo access only; never available unless the
+      // server explicitly sets DEMO_ACCESS_ENABLED=true.
+      is_demo: true,
     });
     await supabaseAdmin.from("audit_events").insert({
       user_id: userId,

@@ -1101,6 +1101,7 @@ export type Database = {
           ended_at: string | null
           id: string
           ip_address: string | null
+          is_demo: boolean
           last_activity_at: string
           login_at: string
           mfa_verified: boolean
@@ -1115,6 +1116,7 @@ export type Database = {
           ended_at?: string | null
           id?: string
           ip_address?: string | null
+          is_demo?: boolean
           last_activity_at?: string
           login_at?: string
           mfa_verified?: boolean
@@ -1129,6 +1131,7 @@ export type Database = {
           ended_at?: string | null
           id?: string
           ip_address?: string | null
+          is_demo?: boolean
           last_activity_at?: string
           login_at?: string
           mfa_verified?: boolean
@@ -1143,6 +1146,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_view_profile: { Args: { _target_user: string }; Returns: boolean }
       has_capability: {
         Args: { _code: string; _user_id: string }
         Returns: boolean
@@ -1153,6 +1157,12 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      org_unit_and_descendants: {
+        Args: { _root: string }
+        Returns: {
+          unit_id: string
+        }[]
       }
     }
     Enums: {

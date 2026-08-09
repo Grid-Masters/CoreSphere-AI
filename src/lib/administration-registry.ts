@@ -1,11 +1,18 @@
-import { supabase } from "@/integrations/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/integrations/supabase/types";
 
 /**
  * Read-only, database-backed registry powering the Platform Administration
- * identity/organisation modules. Every read goes through the signed-in
- * Supabase client, so RLS applies (the administrator's
- * `platform.identity.manage` capability unlocks the profiles register).
+ * identity/organisation modules.
+ *
+ * This module is a pure builder: it receives an already-authorised Supabase
+ * client. The security boundary is the server function in
+ * `administration.functions.ts`, which verifies the bearer-token caller and
+ * their `platform.identity.manage` capability before calling in. RLS applies
+ * on top of that.
  */
+
+export type AdminSupabase = SupabaseClient<Database>;
 
 export type AdminUserRow = {
   userId: string;
@@ -61,7 +68,9 @@ function initialsOf(name: string) {
     .join("");
 }
 
-export async function loadAdministrationRegistry(): Promise<AdministrationRegistry> {
+export async function buildAdministrationRegistry(
+  supabase: AdminSupabase,
+): Promise<AdministrationRegistry> {
   const today = new Date().toISOString().slice(0, 10);
 
   const [profilesRes, assignmentsRes, positionsRes, posCapsRes, unitsRes] = await Promise.all([
