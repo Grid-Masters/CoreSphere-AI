@@ -27,7 +27,11 @@ export const getSessionAssurance = createServerFn({ method: "POST" })
     const net = await classifyRequestNetwork();
     const mfa_required = net.classification === "external";
 
-    const { data: rows } = await context.supabase
+    // Session security state is server-owned: it is read and written with the
+    // privileged server-only client, always scoped to the verified caller.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const { data: rows } = await supabaseAdmin
       .from("user_sessions")
       .select("id, login_at, last_activity_at, ended_at, mfa_verified")
       .eq("user_id", context.userId)
@@ -52,7 +56,7 @@ export const getSessionAssurance = createServerFn({ method: "POST" })
     const absoluteExpired = now - new Date(row.login_at).getTime() > ABSOLUTE_MAX_MS;
 
     if (idleExpired || absoluteExpired) {
-      await context.supabase
+      await supabaseAdmin
         .from("user_sessions")
         .update({ ended_at: new Date().toISOString() })
         .eq("id", row.id)
@@ -67,7 +71,7 @@ export const getSessionAssurance = createServerFn({ method: "POST" })
       };
     }
 
-    await context.supabase
+    await supabaseAdmin
       .from("user_sessions")
       .update({ last_activity_at: new Date().toISOString() })
       .eq("id", row.id)
@@ -87,7 +91,8 @@ export const getSessionAssurance = createServerFn({ method: "POST" })
 export const endActiveSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    await context.supabase
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    await supabaseAdmin
       .from("user_sessions")
       .update({ ended_at: new Date().toISOString() })
       .eq("user_id", context.userId)
