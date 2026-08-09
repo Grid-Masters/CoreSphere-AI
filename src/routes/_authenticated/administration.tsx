@@ -290,14 +290,34 @@ function AdministrationCenter() {
 
           {active === "security" && (
             <PanelCard title="Security Center">
+              <p className="text-[11px] text-muted-foreground mb-3">
+                Only implemented, verifiable controls are shown. Items without a
+                connected source are reported as not configured.
+              </p>
               <div className="grid sm:grid-cols-2 gap-3">
                 {[
-                  { k: "MFA Enforcement", v: "Enabled for all roles", ok: true },
-                  { k: "Password Policy", v: "12+ chars, 90-day rotation", ok: true },
-                  { k: "Session Timeout", v: "15 minutes idle", ok: true },
-                  { k: "Threat Posture", v: "1 blocked intrusion today", ok: false },
-                  { k: "Data Encryption", v: "At rest & in transit", ok: true },
-                  { k: "Access Reviews", v: "Quarterly — due in 12 days", ok: true },
+                  {
+                    k: "Session timeout",
+                    v: "30 minutes idle, 12 hours absolute (enforced server-side)",
+                    ok: true,
+                  },
+                  {
+                    k: "External-network access",
+                    v: "Blocked — hard-token verification required and no verifier connected",
+                    ok: true,
+                  },
+                  {
+                    k: "Hard-token verification service",
+                    v: "Not configured — no bank token verifier connected",
+                    ok: false,
+                  },
+                  { k: "Password policy", v: "Not configured in CoreSphere", ok: false },
+                  { k: "Corporate SSO", v: "Not configured", ok: false },
+                  {
+                    k: "Threat monitoring",
+                    v: "No verified telemetry source connected",
+                    ok: false,
+                  },
                 ].map((s) => (
                   <div key={s.k} className="rounded-md border bg-card p-3 flex items-start gap-2">
                     {s.ok ? (
@@ -317,63 +337,80 @@ function AdministrationCenter() {
 
           {active === "audit" && (
             <PanelCard title="Audit Center">
-              <ul className="divide-y -my-2">
-                {auditTrail.map((a, i) => (
-                  <li key={i} className="py-3 flex items-center gap-3">
-                    <ScrollText
-                      className={`h-4 w-4 shrink-0 ${a.tone === "warn" ? "text-[color:var(--warning)]" : "text-muted-foreground"}`}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm truncate">
-                        <span className="font-medium">{a.who}</span> — {a.action}
+              <ModuleState
+                error={auditError}
+                loading={!audit && !auditError}
+                empty={(audit?.length ?? 0) === 0}
+                emptyLabel="No audit records have been recorded yet."
+              >
+                <ul className="divide-y -my-2">
+                  {audit?.map((a) => (
+                    <li key={a.id} className="py-3 flex items-center gap-3">
+                      <ScrollText
+                        className={`h-4 w-4 shrink-0 ${a.outcome === "failure" ? "text-[color:var(--warning)]" : "text-muted-foreground"}`}
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm truncate">
+                          <span className="font-medium">{a.who ?? "Unattributed"}</span> —{" "}
+                          {a.action ?? a.eventType}
+                        </div>
+                        <div className="text-[11px] text-muted-foreground truncate">
+                          {a.eventType} • {a.outcome} • {a.network ?? "unknown network"}
+                        </div>
                       </div>
-                    </div>
-                    <span className="text-[11px] text-muted-foreground shrink-0">{a.at}</span>
-                  </li>
-                ))}
-              </ul>
+                      <span className="text-[11px] text-muted-foreground shrink-0">
+                        {formatWhen(a.at)}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </ModuleState>
             </PanelCard>
           )}
 
           {active === "ai" && (
             <PanelCard title="AI Governance Center">
-              <div className="grid sm:grid-cols-3 gap-3 mb-4">
-                <StatCard label="AI Queries (30d)" value="4,820" icon={Bot} tone="primary" />
-                <StatCard label="Guardrail Blocks" value="37" icon={ShieldCheck} />
-                <StatCard label="Avg Response" value="1.4s" icon={Bot} />
+              <div className="flex items-start gap-2 rounded-md border bg-card p-3">
+                <Bot className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+                <div>
+                  <div className="text-sm font-medium">No verified AI telemetry source connected</div>
+                  <p className="text-[11px] text-muted-foreground mt-1">
+                    AI usage metrics, guardrail outcomes and grounding evidence become
+                    available after the governed AI containment and canonical knowledge
+                    modules are delivered. No estimated or illustrative figures are shown.
+                  </p>
+                </div>
               </div>
-              <ul className="space-y-2 text-sm">
-                {[
-                  "Responses grounded in approved SOP & policy corpus only.",
-                  "PII redaction enforced on all prompts and logs.",
-                  "Human-in-the-loop required for customer-facing drafts.",
-                  "Model usage audited and attributed per department.",
-                ].map((t) => (
-                  <li key={t} className="flex items-start gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-[color:var(--success)] mt-0.5 shrink-0" />
-                    <span>{t}</span>
-                  </li>
-                ))}
-              </ul>
             </PanelCard>
           )}
 
           {active === "logins" && (
             <PanelCard title="Login Monitoring">
-              <div className="divide-y -my-2">
-                {loginEvents.map((l, i) => (
-                  <div key={i} className="py-3 flex items-center gap-3">
-                    <LogIn className="h-4 w-4 text-muted-foreground shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium truncate">{l.user}</div>
-                      <div className="text-[11px] text-muted-foreground truncate">
-                        {l.device} • {l.ip} • {l.at}
+              <ModuleState
+                error={loginError}
+                loading={!logins && !loginError}
+                empty={(logins?.length ?? 0) === 0}
+                emptyLabel="No application sessions have been recorded yet."
+              >
+                <div className="divide-y -my-2">
+                  {logins?.map((l) => (
+                    <div key={l.id} className="py-3 flex items-center gap-3">
+                      <LogIn className="h-4 w-4 text-muted-foreground shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium truncate">
+                          {formatWhen(l.at)}
+                          {l.isDemo ? " • DEMO" : ""}
+                        </div>
+                        <div className="text-[11px] text-muted-foreground truncate">
+                          {l.browser ?? "Unknown browser"} • {l.device ?? "Unknown device"} •{" "}
+                          {l.network} • {l.mfaVerified ? "assured" : "not assured"}
+                        </div>
                       </div>
+                      <StatusBadge status={l.active ? "On Duty" : "Off Duty"} />
                     </div>
-                    <StatusBadge status={l.status === "Success" ? "On Duty" : "Failed"} />
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              </ModuleState>
             </PanelCard>
           )}
 
