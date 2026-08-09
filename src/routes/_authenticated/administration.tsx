@@ -406,7 +406,7 @@ function AdministrationCenter() {
                           {l.network} • {l.mfaVerified ? "assured" : "not assured"}
                         </div>
                       </div>
-                      <StatusBadge status={l.active ? "On Duty" : "Off Duty"} />
+                      <StatusBadge status={l.active ? "On Duty" : "Completed"} />
                     </div>
                   ))}
                 </div>
