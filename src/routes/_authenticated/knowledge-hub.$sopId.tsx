@@ -108,7 +108,9 @@ export const Route = createFileRoute("/_authenticated/knowledge-hub/$sopId")({
 });
 
 function SopDetail() {
-  const sop = Route.useLoaderData();
+  const loaded = Route.useLoaderData();
+  if (!loaded) throw notFound();
+  const sop = loaded;
   const [tab, setTab] = useState<"theory" | "video">("theory");
   const [theoryPct, setTheoryPct] = useTheoryProgress(sop.id, sop.theoryProgress);
   const [videoPct] = useVideoProgress(sop.id, sop.videoProgress);

@@ -47,7 +47,9 @@ function CatalogueNotFound() {
 }
 
 function Catalogue() {
-  const { tile } = Route.useLoaderData();
+  const loaded = Route.useLoaderData();
+  if (!loaded) throw notFound();
+  const { tile } = loaded;
   const Icon = tile.icon;
   return (
     <AppShell>
