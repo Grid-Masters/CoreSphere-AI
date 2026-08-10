@@ -13,32 +13,6 @@ export const Route = createFileRoute("/_authenticated/leadership")({
       { property: "og:title", content: "Leadership Board — UBA CoreSphere" },
       { property: "og:description", content: "Strategic announcements and operational updates from UBA Group Heads on the CoreSphere Leadership Board." },
     ],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "CollectionPage",
-          name: "Leadership Board",
-          description: "Strategic announcements and operational updates from UBA Group Heads.",
-          mainEntity: {
-            "@type": "ItemList",
-            itemListElement: announcements.map((a, i) => ({
-              "@type": "ListItem",
-              position: i + 1,
-              item: {
-                "@type": "Article",
-                headline: a.title,
-                author: { "@type": "Person", name: a.author },
-                datePublished: a.time,
-                articleBody: a.body,
-                publisher: { "@type": "Organization", name: "United Bank for Africa" },
-              },
-            })),
-          },
-        }),
-      },
-    ],
   }),
   component: Leadership,
 });

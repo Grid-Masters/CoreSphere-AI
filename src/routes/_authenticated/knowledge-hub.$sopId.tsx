@@ -38,55 +38,6 @@ export const Route = createFileRoute("/_authenticated/knowledge-hub/$sopId")({
         { property: "og:description", content: desc },
         { property: "og:type", content: "article" },
       ],
-      scripts: sop
-        ? [
-            {
-              type: "application/ld+json",
-              children: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "HowTo",
-                name: sop.title,
-                description: sop.summary,
-                category: sop.category,
-                audience: {
-                  "@type": "BusinessAudience",
-                  audienceType: sop.department,
-                },
-                publisher: {
-                  "@type": "Organization",
-                  name: "United Bank for Africa",
-                },
-                step: [
-                  {
-                    "@type": "HowToStep",
-                    name: "Authentication & Verification",
-                    text: "Authenticate caller using 3-step verification before initiating any account-impacting action.",
-                  },
-                  {
-                    "@type": "HowToStep",
-                    name: "Intent Classification",
-                    text: "Capture intent and classify into approved category based on the request type.",
-                  },
-                  {
-                    "@type": "HowToStep",
-                    name: "Action Request",
-                    text: "Action request within authorised limits and approved procedures.",
-                  },
-                  {
-                    "@type": "HowToStep",
-                    name: "Documentation & Audit",
-                    text: "Document outcome in core system and audit log for compliance and traceability.",
-                  },
-                  {
-                    "@type": "HowToStep",
-                    name: "Customer Acknowledgement",
-                    text: "Acknowledge customer with reference number and confirm resolution.",
-                  },
-                ],
-              }),
-            },
-          ]
-        : [],
     };
   },
   component: SopDetail,
