@@ -6,6 +6,7 @@ import { PanelCard, StatCard } from "@/components/ui-bits/Card";
 import { useActiveUser, type ActiveUser } from "@/lib/active-user";
 import { faqs, failedSearches, faqPermissions, type FaqStatus } from "@/lib/faq";
 import { knowledgeDecay } from "@/lib/alerts";
+import { FixtureNotice } from "@/components/ui-bits/FixtureNotice";
 
 export const Route = createFileRoute("/_authenticated/faq")({
   head: () => ({
@@ -53,6 +54,7 @@ function FaqCenterBody({ user }: { user: ActiveUser }) {
       <div className="mb-6">
         <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Knowledge Governance</div>
         <h1 className="text-2xl font-semibold tracking-tight mt-1">FAQ Center</h1>
+        <FixtureNotice className="mt-2" />
         <p className="text-sm text-muted-foreground mt-1">{perms.scopeNote}</p>
       </div>
 

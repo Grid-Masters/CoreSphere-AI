@@ -21,6 +21,7 @@ import { PanelCard, ProgressBar, StatusBadge } from "@/components/ui-bits/Card";
 import { sops, currentUser } from "@/lib/mock-data";
 import { useVideoProgress, useTheoryProgress } from "@/lib/progress-store";
 import { PRODUCT_TILES } from "@/lib/product-knowledge";
+import { FixtureNotice } from "@/components/ui-bits/FixtureNotice";
 
 const categoryStyles: Record<
   string,
@@ -65,6 +66,7 @@ function KnowledgeHub() {
             Operational Knowledge
           </div>
           <h1 className="text-2xl font-semibold tracking-tight mt-1">Enterprise Knowledge Hub</h1>
+        <FixtureNotice className="mt-2" />
           <p className="text-sm text-muted-foreground mt-1">
             Approved SOPs, policies, playbooks and product knowledge for your role.
           </p>

@@ -3,6 +3,7 @@ import { Award, TrendingUp, ThumbsUp, AlertCircle, CheckCircle2, Sparkles } from
 import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, StatCard } from "@/components/ui-bits/Card";
 import { qaScores } from "@/lib/mock-data";
+import { FixtureNotice } from "@/components/ui-bits/FixtureNotice";
 
 export const Route = createFileRoute("/_authenticated/performance-intelligence")({
   head: () => ({
@@ -33,6 +34,7 @@ function PerformanceIntelligence() {
           <Sparkles className="h-3 w-3 text-primary" /> AI-Powered • Monthly Performance Intelligence
         </div>
         <h1 className="text-2xl font-semibold tracking-tight mt-1">Performance Intelligence</h1>
+        <FixtureNotice className="mt-2" />
         <p className="text-sm text-muted-foreground mt-1">
           Enterprise performance insights — monthly scorecards, trends, and AI-assisted coaching notes.
         </p>
