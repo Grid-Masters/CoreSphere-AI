@@ -15,31 +15,6 @@ export const Route = createFileRoute("/_authenticated/memos")({
       { property: "og:title", content: "Operations Memos — UBA CoreSphere" },
       { property: "og:description", content: "Operational notices, compliance alerts and memos for the UBA Customer Fulfillment Group — acknowledge to confirm read." },
     ],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "CollectionPage",
-          name: "Operations Memos",
-          description: "Notices, compliance alerts, and operational memos for UBA Customer Fulfillment.",
-          mainEntity: {
-            "@type": "ItemList",
-            itemListElement: memos.map((m, i) => ({
-              "@type": "ListItem",
-              position: i + 1,
-              item: {
-                "@type": "Article",
-                headline: m.title,
-                articleSection: m.category,
-                dateModified: m.expires,
-                publisher: { "@type": "Organization", name: "United Bank for Africa" },
-              },
-            })),
-          },
-        }),
-      },
-    ],
   }),
   component: Memos,
 });

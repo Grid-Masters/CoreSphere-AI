@@ -4,6 +4,7 @@ import { AlertTriangle, BookOpen, Radio, ShieldAlert } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard, StatCard } from "@/components/ui-bits/Card";
 import { ALERT_CATEGORIES, operationalAlerts, incidentLessons, type AlertCategory } from "@/lib/alerts";
+import { FixtureNotice } from "@/components/ui-bits/FixtureNotice";
 
 export const Route = createFileRoute("/_authenticated/alerts")({
   head: () => ({
@@ -37,6 +38,7 @@ function AlertCenter() {
       <div className="mb-6">
         <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Knowledge & Product Knowledge</div>
         <h1 className="text-2xl font-semibold tracking-tight mt-1">Operational Alert Center</h1>
+        <FixtureNotice className="mt-2" />
         <p className="text-sm text-muted-foreground mt-1">
           Real-time operational alerts and reusable lessons from resolved incidents.
         </p>

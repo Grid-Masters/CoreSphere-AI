@@ -164,6 +164,7 @@ export function CoreSphereAI() {
     {
       role: "ai",
       answer: {
+        grounded: false,
         summary: `I'm ${AI_NAME} — ${AI_TAGLINE}. Ask me about SOPs, compliance and escalation paths, or use the Writing Assistant to polish memos and customer responses.`,
         requiredActions: [],
         escalationPath: "",
@@ -192,6 +193,7 @@ export function CoreSphereAI() {
     } catch (err) {
       console.error(err);
       setMessages((m) => [...m, { role: "ai", answer: {
+        grounded: false,
         summary: "Sorry — I could not reach the operations knowledge service. Please try again shortly.",
         requiredActions: [], escalationPath: "", slaTimeline: "", complianceNotes: [], relatedSops: [], warnings: ["AI gateway error"], nextSteps: [],
       } }]);

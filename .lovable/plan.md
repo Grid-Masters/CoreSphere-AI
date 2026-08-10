@@ -224,3 +224,43 @@ Checkpoint 3.0 = `b0f1d1fa`. Four independently revertable steps: (3.1) route bo
 
 ## H. Explicitly deferred
 Real bank hard-token/OTP integration; password reset and self-service credential flows; httpOnly cookie session bridge and full SSR auth; full retirement of legacy `app_role`/`has_role` on non-identity tables (`suggestions`, `feedback`, `certificates`, `acknowledgments`, `approved_quotes`, `teams`); AI containment, Source Vault, Canonical Registry, conflict governance, Knowledge Hub rebuild, Mission Control, assessments, QA workflows, corpus migration, UAT and publication.
+
+---
+
+# Batch 3 — CLOSED
+
+RLS repair applied: scoped profile visibility via `org_unit_and_descendants`,
+append-only `audit_events` (server-authored only), server-owned session state
+with `is_demo`, narrowed policies on `trusted_networks`, `certificates`,
+`risk_snapshots`, `approved_quotes`, and capability-based administration gates.
+
+# Package A — Foundation Closure (COMPLETE)
+
+Base checkpoint: `40927ef1aec5414c868e660ea2d5689e98669c6b`. Project remains
+PRIVATE and UNPUBLISHED.
+
+- **A1 Safe UAT demo access.** `demoAccessStatus` / `demoSignIn` enable demo
+  sign-in only for the exact private preview/UAT hosts or an explicit
+  `DEMO_ACCESS_ENABLED=true` server flag. No wildcard host, no published host;
+  unknown/unreadable host fails closed. Demo sessions stay `is_demo = true`
+  and audited; the shared password never reaches the client bundle.
+- **A2 Delegated authority cleanup.** `delegations_capability_only` enforces
+  capability-only, time-bound delegation; a trigger blocks
+  `DELEGATED_APPROVER` from being used as a primary position assignment.
+- **A3 High-risk legacy authority cleanup.** No `sysadmin`-role RLS
+  expressions remain in `public`; operational tables are capability-gated.
+- **A4 Foundation performance / type safety.** Indexes on active sessions and
+  audit lookups; `typecheck` script present and passing.
+- **A5 AI safety containment.** `askCoreSphereAI` and `assessScenario` fail
+  safe with the locked refusal string; no fabricated SOPs, scores, SLAs or
+  escalation routes. Writing Assistant transforms supplied text only.
+- **A6 Fixture / data-truth containment.** Prototype surfaces (Alert Centre,
+  FAQ Centre, Knowledge Hub, QA Coaching Hub, Performance Intelligence) carry
+  a `FixtureNotice` marker; arbitrary personnel fallbacks removed from QA and
+  Team Lead dashboards in favour of truthful empty states.
+- **A7 Internal metadata cleanup.** All JSON-LD/structured data removed from
+  the internal app; `robots.txt` disallows all and every route sends
+  `noindex, nofollow`.
+- **A8 Controlling document sync.** This section.
+
+Next gate: Package B — Knowledge Governance Core.

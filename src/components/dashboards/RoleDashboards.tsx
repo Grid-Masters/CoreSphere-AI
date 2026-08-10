@@ -211,7 +211,7 @@ export function QADashboard({ user }: { user: DirectoryEntry }) {
       <ScenarioBanner />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard label="Assigned Staff" value={assignedStaff.length || 6} delta="This month" icon={Users} tone="primary" />
+        <StatCard label="Assigned Staff" value={assignedStaff.length} delta="This month" icon={Users} tone="primary" />
         <StatCard label="Audits This Month" value={112} delta="+18 vs last month" icon={ClipboardCheck} tone="success" />
         <StatCard label="Compliance Failures" value={4} delta="Open coaching" icon={ShieldAlert} tone="warning" />
         <StatCard label="Avg Scorecard" value="87.4%" delta="Department-wide" icon={Award} />
@@ -235,7 +235,12 @@ export function QADashboard({ user }: { user: DirectoryEntry }) {
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
         <PanelCard className="lg:col-span-2" title="My Assigned Staff" description="QA chat routes only to these staff for the month" action={<MessagesSquare className="h-4 w-4 text-muted-foreground" />}>
           <ul className="divide-y -my-2">
-            {(assignedStaff.length ? assignedStaff : directory.filter((d) => d.role === "staff").slice(0, 4)).map((s) => (
+            {assignedStaff.length === 0 && (
+              <li className="py-6 text-sm text-muted-foreground">
+                No staff are currently allocated to you. Allocations are managed by QA Team Lead.
+              </li>
+            )}
+            {assignedStaff.map((s) => (
               <li key={s.email} className="py-3 flex items-center gap-3">
                 <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center text-xs font-semibold">
                   {s.initials}
@@ -412,7 +417,7 @@ export function TeamLeadDashboard({ user }: { user: DirectoryEntry }) {
       <ScenarioBanner />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard label="Team Size" value={team.length || 8} delta="Direct reports" icon={Users} tone="primary" />
+        <StatCard label="Team Size" value={team.length} delta="Direct reports" icon={Users} tone="primary" />
         <StatCard label="SOP Completion" value="74%" delta="Team average" icon={CheckCircle2} tone="success" />
         <StatCard label="QA Average" value="89%" delta="+3 vs last month" icon={Award} />
         <StatCard label="Escalations Open" value={3} delta="Awaiting your action" icon={ShieldAlert} tone="warning" />
@@ -440,7 +445,12 @@ export function TeamLeadDashboard({ user }: { user: DirectoryEntry }) {
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
         <PanelCard className="lg:col-span-2" title="Team Roster" description="Completion + QA per direct report">
           <ul className="divide-y -my-2">
-            {(team.length ? team : directory.filter((d) => d.role === "staff").slice(0, 4)).map((m) => (
+            {team.length === 0 && (
+              <li className="py-6 text-sm text-muted-foreground">
+                No direct reports are recorded against your position.
+              </li>
+            )}
+            {team.map((m) => (
               <li key={m.email} className="py-3 flex items-center gap-3">
                 <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center text-xs font-semibold">{m.initials}</div>
                 <div className="flex-1 min-w-0">

@@ -1,17 +1,44 @@
 import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
+import { getRequestHeader } from "@tanstack/react-start/server";
 import { demoProfiles } from "./demo-profiles";
 
 /**
  * Server-side DEMO sign-in — non-production only.
  *
- * Disabled unless the server environment explicitly sets
- * `DEMO_ACCESS_ENABLED=true`. Absence of the flag means disabled. The shared
- * demo password never reaches the client bundle, and demo sessions are
- * recorded as demo (`is_demo`) and audited.
+ * Enabled only when the request is positively identified as this project's
+ * private preview/UAT environment, or when the server environment explicitly
+ * sets `DEMO_ACCESS_ENABLED=true`. Host matching is EXACT — no wildcard
+ * `*.lovable.app`, no published/production host, and any unknown or
+ * unreadable host fails closed. The shared demo password never reaches the
+ * client bundle, and demo sessions are recorded as demo (`is_demo`) and
+ * audited.
  */
+const PROJECT_ID = "22d92d5c-d31f-427f-9f00-5c9e88499e04";
+
+/** Exact hosts that constitute the private preview/UAT environment. */
+const UAT_HOSTS = new Set([
+  `id-preview--${PROJECT_ID}.lovable.app`,
+  `preview--${PROJECT_ID}.lovable.app`,
+  `project--${PROJECT_ID}-dev.lovable.app`,
+  "localhost:8080",
+  "127.0.0.1:8080",
+]);
+
+function requestHost(): string | null {
+  try {
+    const host = getRequestHeader("host");
+    return host ? host.trim().toLowerCase() : null;
+  } catch {
+    return null;
+  }
+}
+
 function demoEnabled() {
-  return process.env["DEMO_ACCESS_ENABLED"] === "true";
+  if (process.env["DEMO_ACCESS_ENABLED"] === "true") return true;
+  const host = requestHost();
+  // Fail closed: unknown / published / production hosts never enable demo.
+  return host !== null && UAT_HOSTS.has(host);
 }
 
 export const demoAccessStatus = createServerFn({ method: "GET" }).handler(async () => ({

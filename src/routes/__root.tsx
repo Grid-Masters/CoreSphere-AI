@@ -69,31 +69,6 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
-const orgJsonLd = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Organization",
-      name: "United Bank for Africa",
-      alternateName: "UBA",
-      url: "https://ubacoresphere-pulse.lovable.app",
-      logo: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/650f870f-70ec-4566-bdd4-851e00967ad0",
-      description:
-        "United Bank for Africa is a leading pan-African financial institution. CoreSphere AI is its enterprise operations intelligence and knowledge ecosystem.",
-    },
-    {
-      "@type": "WebSite",
-      name: "CoreSphere AI — UBA Enterprise Operations Intelligence",
-      url: "https://ubacoresphere-pulse.lovable.app",
-      publisher: { "@type": "Organization", name: "United Bank for Africa" },
-      about: {
-        "@type": "Thing",
-        name: "Enterprise Operations Intelligence & Knowledge Ecosystem",
-      },
-    },
-  ],
-};
-
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
@@ -116,12 +91,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/assets/uba-logo.png" },
-    ],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify(orgJsonLd),
-      },
     ],
   }),
   shellComponent: RootShell,

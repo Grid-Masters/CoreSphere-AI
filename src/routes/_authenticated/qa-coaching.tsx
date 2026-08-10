@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Send, Video, Calendar, ShieldCheck, MessageSquare } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { coachingThreads } from "@/lib/mock-data";
+import { FixtureNotice } from "@/components/ui-bits/FixtureNotice";
 
 export const Route = createFileRoute("/_authenticated/qa-coaching")({
   head: () => ({
@@ -25,6 +26,7 @@ function CoachingHub() {
       <div className="mb-6">
         <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Performance</div>
         <h1 className="text-2xl font-semibold tracking-tight mt-1">QA Coaching Hub</h1>
+        <FixtureNotice className="mt-2" />
         <p className="text-sm text-muted-foreground mt-1">
           Structured 1:1 coaching with your QA officer. Conversations are logged for compliance.
         </p>
