@@ -135,13 +135,3 @@ function ScenariosBody({ user }: { user: ActiveUser }) {
   );
 }
 
-function Info({ label, value, icon: Icon }: { label: string; value: string; icon: any }) {
-  return (
-    <div className="rounded-lg border bg-background p-3">
-      <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">
-        <Icon className="h-3 w-3" /> {label}
-      </div>
-      <div className="text-xs mt-1">{value}</div>
-    </div>
-  );
-}
