@@ -2,11 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { AlertTriangle, ArrowRight, BadgeCheck, Bot, Loader2, RefreshCw, ShieldAlert } from "lucide-react";
+import { ArrowRight, Bot, Loader2, RefreshCw, ShieldAlert } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { PanelCard } from "@/components/ui-bits/Card";
 import { useActiveUser, type ActiveUser } from "@/lib/active-user";
-import { assessScenario, SCENARIO_LIBRARY, type ScenarioAssessment, type ScenarioPrompt } from "@/lib/coresphere-scenario.functions";
+import { assessScenario, SCENARIO_LIBRARY, type ScenarioPrompt } from "@/lib/coresphere-scenario.functions";
 
 export const Route = createFileRoute("/_authenticated/scenarios")({
   head: () => ({
@@ -27,11 +27,6 @@ const diffTone: Record<ScenarioPrompt["difficulty"], string> = {
   Advanced: "bg-[color:var(--warning)]/20 text-[color:var(--warning)] border-[color:var(--warning)]/40",
 };
 
-const verdictTone: Record<ScenarioAssessment["verdict"], string> = {
-  Excellent: "text-[color:var(--success)]",
-  "On Track": "text-primary",
-  "Needs Work": "text-[color:var(--warning)]",
-};
 
 function Scenarios() {
   const user = useActiveUser();
@@ -67,8 +62,8 @@ function ScenariosBody({ user }: { user: ActiveUser }) {
         <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">AI Coaching</div>
         <h1 className="text-2xl font-semibold tracking-tight mt-1">Banking Scenario Simulator</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Practise real operational scenarios. Submit your response and CoreSphere AI coaches you with the correct
-          handling, SOP reference, escalation path and SLA.
+          Practice surface only. Governed scenario assessment requires approved canonical knowledge and a
+          source-linked rubric, so CoreSphere does not score responses or publish a model answer yet.
         </p>
       </div>
 
@@ -128,32 +123,10 @@ function ScenariosBody({ user }: { user: ActiveUser }) {
             </div>
           </PanelCard>
 
-          {result && (
-            <PanelCard title="CoreSphere AI Assessment" action={<BadgeCheck className="h-4 w-4 text-muted-foreground" />}>
-              <div className="flex items-center gap-4">
-                <div className={`text-2xl font-bold tabular-nums ${verdictTone[result.verdict]}`}>{result.score}%</div>
-                <div>
-                  <div className={`text-sm font-semibold ${verdictTone[result.verdict]}`}>{result.verdict}</div>
-                  <p className="text-xs text-muted-foreground mt-0.5">{result.feedback}</p>
-                </div>
-              </div>
-
-              <div className="mt-4">
-                <div className="text-[11px] uppercase tracking-wider text-muted-foreground mb-2">Correct response</div>
-                <ul className="space-y-1.5">
-                  {result.correctResponse.map((r, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm">
-                      <ArrowRight className="h-3.5 w-3.5 text-primary mt-1 shrink-0" /> {r}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="grid sm:grid-cols-3 gap-3 mt-4">
-                <Info label="SOP Reference" value={result.sopReference} icon={BadgeCheck} />
-                <Info label="Escalation Path" value={result.escalationPath} icon={ShieldAlert} />
-                <Info label="SLA" value={result.slaTimeline} icon={AlertTriangle} />
-              </div>
+          {result && !result.available && (
+            <PanelCard title="Assessment unavailable" action={<ShieldAlert className="h-4 w-4 text-muted-foreground" />}>
+              <p className="text-sm font-medium">{result.message}</p>
+              <p className="text-xs text-muted-foreground mt-2">{result.detail}</p>
             </PanelCard>
           )}
         </div>
