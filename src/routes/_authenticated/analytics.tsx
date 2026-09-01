@@ -1,3 +1,4 @@
+import { FixtureNotice } from "@/components/ui-bits/FixtureNotice";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { TrendingUp, Users, BookOpen, Award, Eye, Search, Sparkles, AlertTriangle, CalendarClock } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
@@ -70,6 +71,7 @@ function Analytics() {
       <div className="mb-6">
         <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Insights</div>
         <h1 className="text-2xl font-semibold tracking-tight mt-1">Analytics Dashboard</h1>
+        <FixtureNotice className="mt-2" label="Demonstration/UAT fixture metrics — not live operational analytics" />
         <p className="text-sm text-muted-foreground mt-1">
           Cross-department learning, QA, and engagement insights.
         </p>

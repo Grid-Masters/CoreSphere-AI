@@ -1,3 +1,4 @@
+import { FixtureNotice } from "@/components/ui-bits/FixtureNotice";
 import { createFileRoute } from "@tanstack/react-router";
 import { CheckCircle2, Clock, XCircle, Lock, GraduationCap, ChevronRight } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
@@ -26,6 +27,7 @@ function Assessments() {
       <div className="mb-6">
         <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Learning</div>
         <h1 className="text-2xl font-semibold tracking-tight mt-1">Assessments</h1>
+        <FixtureNotice className="mt-2" label="Demonstration/UAT fixture content — not governed assessment data" />
         <p className="text-sm text-muted-foreground mt-1">
           Weekly SOP quizzes and monthly L&D assessments. Two failed attempts will lock the
           assessment until reviewed by L&D.

@@ -63,6 +63,7 @@ function Greeting({ user, subtitle }: { user: DirectoryEntry; subtitle: string }
   return (
     <div>
       <h1 className="sr-only">Operational Dashboard</h1>
+      <FixtureNotice className="mb-4" label="Demonstration/UAT fixture metrics — KPIs, QA scores, completion and leaderboards are not operational truth" />
       <WelcomeBanner />
       <p className="-mt-4 mb-4 text-sm text-muted-foreground">{subtitle}</p>
       <div className="grid lg:grid-cols-3 gap-4 mb-4">
