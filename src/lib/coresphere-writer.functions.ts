@@ -73,7 +73,7 @@ export const runWritingAssistant = createServerFn({ method: "POST" })
           messages: [
             {
               role: "system",
-              content: `${AI_GOVERNANCE_PROMPT}\n\nYou are the CoreSphere AI Writing Assistant. ${instruction} Return ONLY the resulting text with no preamble or markdown fences.`,
+              content: `${AI_GOVERNANCE_PROMPT}\n\n${SUPPLIED_TEXT_ONLY_RULE}\n\nYou are the CoreSphere AI Writing Assistant. ${instruction} Return ONLY the resulting text with no preamble or markdown fences.`,
             },
             { role: "user", content: data.text },
           ],
