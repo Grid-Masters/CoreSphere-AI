@@ -59,9 +59,9 @@ export const Route = createFileRoute("/_authenticated/knowledge-hub/$sopId")({
 });
 
 function SopDetail() {
-  const loaded = Route.useLoaderData();
-  if (!loaded) throw notFound();
-  const sop = loaded;
+  const params = Route.useParams();
+  const sop = sops.find((x) => x.id === params.sopId);
+  if (!sop) throw notFound();
   const [tab, setTab] = useState<"theory" | "video">("theory");
   const [theoryPct, setTheoryPct] = useTheoryProgress(sop.id, sop.theoryProgress);
   const [videoPct] = useVideoProgress(sop.id, sop.videoProgress);

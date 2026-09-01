@@ -1,3 +1,4 @@
+import { FixtureNotice } from "@/components/ui-bits/FixtureNotice";
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
@@ -67,6 +68,7 @@ export function MissionControl({ user }: { user: DirectoryEntry }) {
       <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/10 blur-2xl" aria-hidden />
       <div className="relative p-5 sm:p-6">
         <h1 className="sr-only">Operational Dashboard</h1>
+        <FixtureNotice className="mb-3" label="Demonstration/UAT fixture — mission, readiness and points are illustrative, not governed learning records" />
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
             <div className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] text-primary font-semibold">

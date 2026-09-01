@@ -61,7 +61,9 @@ export function faqPermissions(role: Role, department?: string): FaqPermissions 
     case "group_head":
       return { canPublishEnterprise: false, canPublishDepartment: false, canRequest: true, canView: true, scopeNote: "You can view all FAQs and request new ones." };
     case "sysadmin":
-      return { canPublishEnterprise: true, canPublishDepartment: true, canRequest: true, canView: true, scopeNote: "Platform administration access." };
+      // Platform Administration is TECHNICAL-ONLY: no operational FAQ publishing
+      // authority is granted by virtue of the technical role.
+      return { canPublishEnterprise: false, canPublishDepartment: false, canRequest: true, canView: true, scopeNote: "Platform administration is technical-only — you can view FAQs and request answers, but not publish operational content." };
     default:
       return { canPublishEnterprise: false, canPublishDepartment: false, canRequest: true, canView: true, scopeNote: "You can view FAQs and request answers." };
   }

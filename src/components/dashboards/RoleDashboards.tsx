@@ -56,12 +56,14 @@ import {
   sops,
   teamLeadsOnDuty,
 } from "@/lib/mock-data";
-import { directory, type DirectoryEntry } from "@/lib/directory";
+import { type DirectoryEntry } from "@/lib/directory";
+import { FixtureNotice } from "@/components/ui-bits/FixtureNotice";
 
 function Greeting({ user, subtitle }: { user: DirectoryEntry; subtitle: string }) {
   return (
     <div>
       <h1 className="sr-only">Operational Dashboard</h1>
+      <FixtureNotice className="mb-4" label="Demonstration/UAT fixture metrics — KPIs, QA scores, completion and leaderboards are not operational truth" />
       <WelcomeBanner />
       <p className="-mt-4 mb-4 text-sm text-muted-foreground">{subtitle}</p>
       <div className="grid lg:grid-cols-3 gap-4 mb-4">
@@ -77,7 +79,6 @@ function Greeting({ user, subtitle }: { user: DirectoryEntry; subtitle: string }
 // ────────────────────────────────────────────────────────────────────────────
 export function StaffDashboard({ user }: { user: DirectoryEntry }) {
   const maxScore = Math.max(...qaScores.map((s) => s.score));
-  const qaOfficer = directory.find((d) => d.email === user.assignedQAOfficer);
 
   return (
     <>
@@ -124,20 +125,10 @@ export function StaffDashboard({ user }: { user: DirectoryEntry }) {
         </PanelCard>
 
         <PanelCard title="My QA Officer" description="Coaching & scorecard contact">
-          {qaOfficer ? (
-            <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-semibold">
-                {qaOfficer.initials}
-              </div>
-              <div className="min-w-0">
-                <div className="text-sm font-medium truncate">{qaOfficer.name}</div>
-                <div className="text-[11px] text-muted-foreground truncate">{qaOfficer.roleLabel}</div>
-                <div className="text-[11px] text-muted-foreground truncate">{qaOfficer.email}</div>
-              </div>
-            </div>
-          ) : (
-            <div className="text-sm text-muted-foreground">No QA officer assigned this month.</div>
-          )}
+          <div className="text-sm text-muted-foreground">
+            No verified QA allocation is available yet. Your QA Officer will appear here once
+            QA allocations are governed in CoreSphere.
+          </div>
           <Link to="/qa-coaching" className="mt-4 inline-flex items-center gap-2 h-9 px-3 rounded-md bg-primary text-primary-foreground text-xs hover:bg-primary/90">
             <MessagesSquare className="h-3.5 w-3.5" /> Open Coaching Chat
           </Link>
@@ -201,7 +192,6 @@ export function StaffDashboard({ user }: { user: DirectoryEntry }) {
 // QA Officer Dashboard
 // ────────────────────────────────────────────────────────────────────────────
 export function QADashboard({ user }: { user: DirectoryEntry }) {
-  const assignedStaff = directory.filter((d) => d.assignedQAOfficer === user.email);
 
   return (
     <>
@@ -211,7 +201,7 @@ export function QADashboard({ user }: { user: DirectoryEntry }) {
       <ScenarioBanner />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard label="Assigned Staff" value={assignedStaff.length} delta="This month" icon={Users} tone="primary" />
+        <StatCard label="Assigned Staff" value="—" delta="Awaiting governed QA allocation" icon={Users} tone="primary" />
         <StatCard label="Audits This Month" value={112} delta="+18 vs last month" icon={ClipboardCheck} tone="success" />
         <StatCard label="Compliance Failures" value={4} delta="Open coaching" icon={ShieldAlert} tone="warning" />
         <StatCard label="Avg Scorecard" value="87.4%" delta="Department-wide" icon={Award} />
@@ -234,29 +224,10 @@ export function QADashboard({ user }: { user: DirectoryEntry }) {
 
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
         <PanelCard className="lg:col-span-2" title="My Assigned Staff" description="QA chat routes only to these staff for the month" action={<MessagesSquare className="h-4 w-4 text-muted-foreground" />}>
-          <ul className="divide-y -my-2">
-            {assignedStaff.length === 0 && (
-              <li className="py-6 text-sm text-muted-foreground">
-                No staff are currently allocated to you. Allocations are managed by QA Team Lead.
-              </li>
-            )}
-            {assignedStaff.map((s) => (
-              <li key={s.email} className="py-3 flex items-center gap-3">
-                <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center text-xs font-semibold">
-                  {s.initials}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium truncate">{s.name}</div>
-                  <div className="text-[11px] text-muted-foreground truncate">
-                    {s.roleLabel} • {s.department} / {s.unit}
-                  </div>
-                </div>
-                <Link to="/qa-coaching" className="text-xs text-primary hover:underline">
-                  Coach →
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <p className="py-6 text-sm text-muted-foreground">
+            No verified QA allocation is available yet. Allocated staff will appear here once QA
+            allocations are governed in CoreSphere by the QA Team Lead.
+          </p>
         </PanelCard>
 
         <PanelCard title="Quick Actions" description="QA workspace">
@@ -408,7 +379,6 @@ export function LDDashboard({ user }: { user: DirectoryEntry }) {
 // Team Lead Dashboard
 // ────────────────────────────────────────────────────────────────────────────
 export function TeamLeadDashboard({ user }: { user: DirectoryEntry }) {
-  const team = directory.filter((d) => d.reportsTo === user.email);
   return (
     <>
       <div className="mb-6"><ProductsAndNews /></div>
@@ -417,7 +387,7 @@ export function TeamLeadDashboard({ user }: { user: DirectoryEntry }) {
       <ScenarioBanner />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard label="Team Size" value={team.length} delta="Direct reports" icon={Users} tone="primary" />
+        <StatCard label="Team Size" value="—" delta="Awaiting configured reporting lines" icon={Users} tone="primary" />
         <StatCard label="SOP Completion" value="74%" delta="Team average" icon={CheckCircle2} tone="success" />
         <StatCard label="QA Average" value="89%" delta="+3 vs last month" icon={Award} />
         <StatCard label="Escalations Open" value={3} delta="Awaiting your action" icon={ShieldAlert} tone="warning" />
@@ -443,28 +413,13 @@ export function TeamLeadDashboard({ user }: { user: DirectoryEntry }) {
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
-        <PanelCard className="lg:col-span-2" title="Team Roster" description="Completion + QA per direct report">
-          <ul className="divide-y -my-2">
-            {team.length === 0 && (
-              <li className="py-6 text-sm text-muted-foreground">
-                No direct reports are recorded against your position.
-              </li>
-            )}
-            {team.map((m) => (
-              <li key={m.email} className="py-3 flex items-center gap-3">
-                <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center text-xs font-semibold">{m.initials}</div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium truncate">{m.name}</div>
-                  <div className="text-[11px] text-muted-foreground truncate">{m.roleLabel} • {m.unit}</div>
-                </div>
-                <div className="text-right">
-                  <div className="text-xs tabular-nums">QA 91%</div>
-                  <div className="text-[11px] text-muted-foreground tabular-nums">SOP 78%</div>
-                </div>
-              </li>
-            ))}
-          </ul>
+        <PanelCard className="lg:col-span-2" title="Team Roster" description="Direct reports resolved from governed reporting lines">
+          <p className="py-6 text-sm text-muted-foreground">
+            Reporting relationships will appear when configured. CoreSphere does not infer direct
+            reports from fixture personnel data.
+          </p>
         </PanelCard>
+
 
         <PanelCard title="Team Leads On Duty">
           <ul className="space-y-3">
@@ -550,7 +505,7 @@ export function GroupHeadDashboard({ user }: { user: DirectoryEntry }) {
     },
     {
       label: "Fraud Advisories", value: 7, icon: ShieldAlert, tone: "warning", delta: "2 active this week",
-      drill: { title: "Fraud & Risk Advisories", description: "Live typologies and escalations", metric: "7", delta: "2 active this week", rows: [
+      drill: { title: "Fraud & Risk Advisories", description: "Illustrative typologies and escalations", metric: "7", delta: "2 active this week", rows: [
         { label: "SIM-swap impersonation", primary: "Active", trend: 0 }, { label: "Refund social-engineering", primary: "Active", trend: 0 }, { label: "Card-not-present spike", primary: "Monitoring", trend: 0 },
       ] },
     },
@@ -577,7 +532,7 @@ export function GroupHeadDashboard({ user }: { user: DirectoryEntry }) {
   return (
     <>
       <div className="mb-6"><ProductsAndNews /></div>
-      <Greeting user={user} subtitle="Executive Operations Command Center — real-time intelligence across Customer Fulfilment. Click any metric to drill down." />
+      <Greeting user={user} subtitle="Executive Operations Command Center — demonstration/UAT intelligence across Customer Fulfilment. Click any metric to drill down." />
 
       <ScenarioBanner />
 
