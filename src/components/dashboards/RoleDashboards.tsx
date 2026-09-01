@@ -505,7 +505,7 @@ export function GroupHeadDashboard({ user }: { user: DirectoryEntry }) {
     },
     {
       label: "Fraud Advisories", value: 7, icon: ShieldAlert, tone: "warning", delta: "2 active this week",
-      drill: { title: "Fraud & Risk Advisories", description: "Live typologies and escalations", metric: "7", delta: "2 active this week", rows: [
+      drill: { title: "Fraud & Risk Advisories", description: "Illustrative typologies and escalations", metric: "7", delta: "2 active this week", rows: [
         { label: "SIM-swap impersonation", primary: "Active", trend: 0 }, { label: "Refund social-engineering", primary: "Active", trend: 0 }, { label: "Card-not-present spike", primary: "Monitoring", trend: 0 },
       ] },
     },
@@ -532,7 +532,7 @@ export function GroupHeadDashboard({ user }: { user: DirectoryEntry }) {
   return (
     <>
       <div className="mb-6"><ProductsAndNews /></div>
-      <Greeting user={user} subtitle="Executive Operations Command Center — real-time intelligence across Customer Fulfilment. Click any metric to drill down." />
+      <Greeting user={user} subtitle="Executive Operations Command Center — demonstration/UAT intelligence across Customer Fulfilment. Click any metric to drill down." />
 
       <ScenarioBanner />
 
