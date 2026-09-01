@@ -412,28 +412,13 @@ export function TeamLeadDashboard({ user }: { user: DirectoryEntry }) {
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4 mt-4">
-        <PanelCard className="lg:col-span-2" title="Team Roster" description="Completion + QA per direct report">
-          <ul className="divide-y -my-2">
-            {team.length === 0 && (
-              <li className="py-6 text-sm text-muted-foreground">
-                No direct reports are recorded against your position.
-              </li>
-            )}
-            {team.map((m) => (
-              <li key={m.email} className="py-3 flex items-center gap-3">
-                <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center text-xs font-semibold">{m.initials}</div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium truncate">{m.name}</div>
-                  <div className="text-[11px] text-muted-foreground truncate">{m.roleLabel} • {m.unit}</div>
-                </div>
-                <div className="text-right">
-                  <div className="text-xs tabular-nums">QA 91%</div>
-                  <div className="text-[11px] text-muted-foreground tabular-nums">SOP 78%</div>
-                </div>
-              </li>
-            ))}
-          </ul>
+        <PanelCard className="lg:col-span-2" title="Team Roster" description="Direct reports resolved from governed reporting lines">
+          <p className="py-6 text-sm text-muted-foreground">
+            Reporting relationships will appear when configured. CoreSphere does not infer direct
+            reports from fixture personnel data.
+          </p>
         </PanelCard>
+
 
         <PanelCard title="Team Leads On Duty">
           <ul className="space-y-3">
