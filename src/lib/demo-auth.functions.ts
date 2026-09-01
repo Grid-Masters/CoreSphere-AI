@@ -25,21 +25,48 @@ const UAT_HOSTS = new Set([
   "127.0.0.1:8080",
 ]);
 
+/** Normalise a raw header value to a bare `host[:port]` token. */
+function normaliseHost(raw: string | null | undefined): string | null {
+  if (!raw) return null;
+  // Forwarded headers may carry a comma-separated chain — the first entry is
+  // the value observed by the outermost trusted proxy.
+  let v = raw.split(",")[0]!.trim().toLowerCase();
+  if (!v) return null;
+  // Strip any scheme / path that a misconfigured proxy might include.
+  v = v.replace(/^[a-z][a-z0-9+.-]*:\/\//, "");
+  v = v.split("/")[0]!;
+  v = v.replace(/^\[|\]$/g, "");
+  return v || null;
+}
+
+/**
+ * Server-observed request host.
+ *
+ * Only headers set by the platform reverse proxy are consulted — never a
+ * client-supplied body/query value, Origin or Referer. `x-forwarded-host`
+ * is preferred because the Lovable proxy rewrites `Host` on the internal hop.
+ */
 function requestHost(): string | null {
-  try {
-    const host = getRequestHeader("host");
-    return host ? host.trim().toLowerCase() : null;
-  } catch {
-    return null;
+  const candidates = ["x-forwarded-host", "x-original-host", "host"];
+  for (const name of candidates) {
+    try {
+      const h = normaliseHost(getRequestHeader(name));
+      if (h) return h;
+    } catch {
+      // header unreadable in this runtime — try the next one
+    }
   }
+  return null;
 }
 
 function demoEnabled() {
   if (process.env["DEMO_ACCESS_ENABLED"] === "true") return true;
   const host = requestHost();
   // Fail closed: unknown / published / production hosts never enable demo.
+  // Exact match only — no wildcard `*.lovable.app`.
   return host !== null && UAT_HOSTS.has(host);
 }
+
 
 export const demoAccessStatus = createServerFn({ method: "GET" }).handler(async () => ({
   enabled: demoEnabled(),
