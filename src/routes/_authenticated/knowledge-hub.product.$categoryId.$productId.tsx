@@ -75,9 +75,10 @@ function Bullets({ items }: { items: string[] }) {
 }
 
 function ProductDetailPage() {
-  const loaded = Route.useLoaderData();
-  if (!loaded) throw notFound();
-  const { product: p, tile } = loaded;
+  const params = Route.useParams();
+  const p = PRODUCT_ITEMS.find((x) => x.id === params.productId);
+  const tile = PRODUCT_TILES.find((t) => t.id === params.categoryId);
+  if (!p || !tile) throw notFound();
   const due = isDueForReview(p);
 
   const askAI = () => window.dispatchEvent(new CustomEvent(OPEN_AI_EVENT));
