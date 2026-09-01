@@ -76,8 +76,8 @@ function Bullets({ items }: { items: string[] }) {
 
 function ProductDetailPage() {
   const params = Route.useParams();
-  const p = PRODUCT_ITEMS.find((x) => x.id === params.productId);
-  const tile = PRODUCT_TILES.find((t) => t.id === params.categoryId);
+  const p = getProduct(params.productId);
+  const tile = getTile(params.categoryId);
   if (!p || !tile) throw notFound();
   const due = isDueForReview(p);
 

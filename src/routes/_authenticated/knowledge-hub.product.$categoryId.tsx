@@ -48,7 +48,7 @@ function CatalogueNotFound() {
 
 function Catalogue() {
   const params = Route.useParams();
-  const tile = PRODUCT_TILES.find((t) => t.id === params.categoryId);
+  const tile = getTile(params.categoryId);
   if (!tile) throw notFound();
   const Icon = tile.icon;
   return (
