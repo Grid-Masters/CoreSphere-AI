@@ -89,6 +89,70 @@ export type Database = {
         }
         Relationships: []
       }
+      audience_rules: {
+        Row: {
+          country_code: string | null
+          created_at: string
+          created_by: string
+          effective_from: string | null
+          effective_to: string | null
+          id: string
+          include_descendants: boolean
+          knowledge_placement_id: string
+          org_unit_id: string | null
+          position_id: string | null
+          rule_type: string
+        }
+        Insert: {
+          country_code?: string | null
+          created_at?: string
+          created_by: string
+          effective_from?: string | null
+          effective_to?: string | null
+          id?: string
+          include_descendants?: boolean
+          knowledge_placement_id: string
+          org_unit_id?: string | null
+          position_id?: string | null
+          rule_type?: string
+        }
+        Update: {
+          country_code?: string | null
+          created_at?: string
+          created_by?: string
+          effective_from?: string | null
+          effective_to?: string | null
+          id?: string
+          include_descendants?: boolean
+          knowledge_placement_id?: string
+          org_unit_id?: string | null
+          position_id?: string | null
+          rule_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audience_rules_knowledge_placement_id_fkey"
+            columns: ["knowledge_placement_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_placements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "audience_rules_org_unit_id_fkey"
+            columns: ["org_unit_id"]
+            isOneToOne: false
+            referencedRelation: "organisation_units"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "audience_rules_position_id_fkey"
+            columns: ["position_id"]
+            isOneToOne: false
+            referencedRelation: "positions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_events: {
         Row: {
           action: string | null
@@ -344,6 +408,83 @@ export type Database = {
         }
         Relationships: []
       }
+      form_profiles: {
+        Row: {
+          created_at: string
+          customer_facing: boolean
+          form_code: string | null
+          id: string
+          knowledge_record_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_facing?: boolean
+          form_code?: string | null
+          id?: string
+          knowledge_record_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_facing?: boolean
+          form_code?: string | null
+          id?: string
+          knowledge_record_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "form_profiles_knowledge_record_id_fkey"
+            columns: ["knowledge_record_id"]
+            isOneToOne: true
+            referencedRelation: "knowledge_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      form_versions: {
+        Row: {
+          created_at: string
+          display_file_name: string | null
+          download_allowed: boolean
+          id: string
+          knowledge_version_id: string
+          source_version_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          display_file_name?: string | null
+          download_allowed?: boolean
+          id?: string
+          knowledge_version_id: string
+          source_version_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          display_file_name?: string | null
+          download_allowed?: boolean
+          id?: string
+          knowledge_version_id?: string
+          source_version_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "form_versions_knowledge_version_id_fkey"
+            columns: ["knowledge_version_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_record_versions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "form_versions_source_version_id_fkey"
+            columns: ["source_version_id"]
+            isOneToOne: false
+            referencedRelation: "source_document_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hard_tokens: {
         Row: {
           created_at: string
@@ -409,6 +550,334 @@ export type Database = {
           title?: string
         }
         Relationships: []
+      }
+      knowledge_placements: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          created_at: string
+          created_by: string
+          display_order: number | null
+          id: string
+          knowledge_version_id: string
+          module_section_id: string | null
+          placement_status: string
+          platform_module_id: string
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          created_by: string
+          display_order?: number | null
+          id?: string
+          knowledge_version_id: string
+          module_section_id?: string | null
+          placement_status?: string
+          platform_module_id: string
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          created_by?: string
+          display_order?: number | null
+          id?: string
+          knowledge_version_id?: string
+          module_section_id?: string | null
+          placement_status?: string
+          platform_module_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_placements_knowledge_version_id_fkey"
+            columns: ["knowledge_version_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_record_versions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_placements_module_section_id_fkey"
+            columns: ["module_section_id"]
+            isOneToOne: false
+            referencedRelation: "module_sections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_placements_platform_module_id_fkey"
+            columns: ["platform_module_id"]
+            isOneToOne: false
+            referencedRelation: "platform_modules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_record_versions: {
+        Row: {
+          ai_eligible: boolean
+          approved_at: string | null
+          approved_by: string | null
+          assessment_eligible: boolean
+          content_hash: string | null
+          content_text: string | null
+          created_at: string
+          created_by: string
+          effective_from: string | null
+          effective_to: string | null
+          id: string
+          knowledge_record_id: string
+          published_at: string | null
+          published_by: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          scenario_eligible: boolean
+          structured_data: Json
+          summary: string | null
+          title: string
+          updated_at: string
+          version_number: number
+          workflow_status: string
+        }
+        Insert: {
+          ai_eligible?: boolean
+          approved_at?: string | null
+          approved_by?: string | null
+          assessment_eligible?: boolean
+          content_hash?: string | null
+          content_text?: string | null
+          created_at?: string
+          created_by: string
+          effective_from?: string | null
+          effective_to?: string | null
+          id?: string
+          knowledge_record_id: string
+          published_at?: string | null
+          published_by?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          scenario_eligible?: boolean
+          structured_data?: Json
+          summary?: string | null
+          title: string
+          updated_at?: string
+          version_number: number
+          workflow_status?: string
+        }
+        Update: {
+          ai_eligible?: boolean
+          approved_at?: string | null
+          approved_by?: string | null
+          assessment_eligible?: boolean
+          content_hash?: string | null
+          content_text?: string | null
+          created_at?: string
+          created_by?: string
+          effective_from?: string | null
+          effective_to?: string | null
+          id?: string
+          knowledge_record_id?: string
+          published_at?: string | null
+          published_by?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          scenario_eligible?: boolean
+          structured_data?: Json
+          summary?: string | null
+          title?: string
+          updated_at?: string
+          version_number?: number
+          workflow_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_record_versions_knowledge_record_id_fkey"
+            columns: ["knowledge_record_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_records: {
+        Row: {
+          canonical_key: string
+          created_at: string
+          created_by: string
+          id: string
+          is_synthetic: boolean
+          knowledge_type: string
+          owner_org_unit_id: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          canonical_key: string
+          created_at?: string
+          created_by: string
+          id?: string
+          is_synthetic?: boolean
+          knowledge_type: string
+          owner_org_unit_id?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          canonical_key?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          is_synthetic?: boolean
+          knowledge_type?: string
+          owner_org_unit_id?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_records_owner_org_unit_id_fkey"
+            columns: ["owner_org_unit_id"]
+            isOneToOne: false
+            referencedRelation: "organisation_units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_source_links: {
+        Row: {
+          created_at: string
+          created_by: string
+          evidence_note: string | null
+          id: string
+          knowledge_version_id: string
+          relationship_type: string
+          source_section_id: string | null
+          source_version_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          evidence_note?: string | null
+          id?: string
+          knowledge_version_id: string
+          relationship_type: string
+          source_section_id?: string | null
+          source_version_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          evidence_note?: string | null
+          id?: string
+          knowledge_version_id?: string
+          relationship_type?: string
+          source_section_id?: string | null
+          source_version_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_source_links_knowledge_version_id_fkey"
+            columns: ["knowledge_version_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_record_versions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_source_links_source_section_id_fkey"
+            columns: ["source_section_id"]
+            isOneToOne: false
+            referencedRelation: "source_sections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_source_links_source_version_id_fkey"
+            columns: ["source_version_id"]
+            isOneToOne: false
+            referencedRelation: "source_document_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_version_reviews: {
+        Row: {
+          created_at: string
+          decision: string
+          id: string
+          knowledge_version_id: string
+          notes: string | null
+          review_stage: string
+          reviewer_id: string
+        }
+        Insert: {
+          created_at?: string
+          decision: string
+          id?: string
+          knowledge_version_id: string
+          notes?: string | null
+          review_stage: string
+          reviewer_id: string
+        }
+        Update: {
+          created_at?: string
+          decision?: string
+          id?: string
+          knowledge_version_id?: string
+          notes?: string | null
+          review_stage?: string
+          reviewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_version_reviews_knowledge_version_id_fkey"
+            columns: ["knowledge_version_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_record_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      module_sections: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          id: string
+          name: string
+          platform_module_id: string
+          sort_order: number
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          id?: string
+          name: string
+          platform_module_id: string
+          sort_order?: number
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          id?: string
+          name?: string
+          platform_module_id?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "module_sections_platform_module_id_fkey"
+            columns: ["platform_module_id"]
+            isOneToOne: false
+            referencedRelation: "platform_modules"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       onboarding_progress: {
         Row: {
@@ -486,6 +955,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      platform_modules: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          sort_order: number
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          sort_order?: number
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          sort_order?: number
+        }
+        Relationships: []
       }
       position_assignments: {
         Row: {
@@ -622,6 +1121,225 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      procedure_profiles: {
+        Row: {
+          created_at: string
+          id: string
+          knowledge_record_id: string
+          owner_org_unit_id: string | null
+          primary_system: string | null
+          procedure_code: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          knowledge_record_id: string
+          owner_org_unit_id?: string | null
+          primary_system?: string | null
+          procedure_code?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          knowledge_record_id?: string
+          owner_org_unit_id?: string | null
+          primary_system?: string | null
+          procedure_code?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "procedure_profiles_knowledge_record_id_fkey"
+            columns: ["knowledge_record_id"]
+            isOneToOne: true
+            referencedRelation: "knowledge_records"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "procedure_profiles_owner_org_unit_id_fkey"
+            columns: ["owner_org_unit_id"]
+            isOneToOne: false
+            referencedRelation: "organisation_units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      procedure_steps: {
+        Row: {
+          created_at: string
+          expected_outcome: string | null
+          id: string
+          instruction_text: string
+          knowledge_version_id: string
+          step_number: number
+          title: string | null
+          warning_text: string | null
+        }
+        Insert: {
+          created_at?: string
+          expected_outcome?: string | null
+          id?: string
+          instruction_text: string
+          knowledge_version_id: string
+          step_number: number
+          title?: string | null
+          warning_text?: string | null
+        }
+        Update: {
+          created_at?: string
+          expected_outcome?: string | null
+          id?: string
+          instruction_text?: string
+          knowledge_version_id?: string
+          step_number?: number
+          title?: string | null
+          warning_text?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "procedure_steps_knowledge_version_id_fkey"
+            columns: ["knowledge_version_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_record_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_attribute_versions: {
+        Row: {
+          attribute_key: string
+          attribute_label: string
+          created_at: string
+          currency: string | null
+          id: string
+          knowledge_version_id: string
+          unit: string | null
+          value_text: string | null
+        }
+        Insert: {
+          attribute_key: string
+          attribute_label: string
+          created_at?: string
+          currency?: string | null
+          id?: string
+          knowledge_version_id: string
+          unit?: string | null
+          value_text?: string | null
+        }
+        Update: {
+          attribute_key?: string
+          attribute_label?: string
+          created_at?: string
+          currency?: string | null
+          id?: string
+          knowledge_version_id?: string
+          unit?: string | null
+          value_text?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_attribute_versions_knowledge_version_id_fkey"
+            columns: ["knowledge_version_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_record_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_availability_periods: {
+        Row: {
+          available_from: string | null
+          available_to: string | null
+          channel: string | null
+          country_code: string | null
+          created_at: string
+          id: string
+          is_available: boolean
+          knowledge_version_id: string
+          notes: string | null
+        }
+        Insert: {
+          available_from?: string | null
+          available_to?: string | null
+          channel?: string | null
+          country_code?: string | null
+          created_at?: string
+          id?: string
+          is_available?: boolean
+          knowledge_version_id: string
+          notes?: string | null
+        }
+        Update: {
+          available_from?: string | null
+          available_to?: string | null
+          channel?: string | null
+          country_code?: string | null
+          created_at?: string
+          id?: string
+          is_available?: boolean
+          knowledge_version_id?: string
+          notes?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_availability_periods_knowledge_version_id_fkey"
+            columns: ["knowledge_version_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_record_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_profiles: {
+        Row: {
+          created_at: string
+          id: string
+          knowledge_record_id: string
+          owner_org_unit_id: string | null
+          product_category: string | null
+          product_code: string | null
+          product_family: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          knowledge_record_id: string
+          owner_org_unit_id?: string | null
+          product_category?: string | null
+          product_code?: string | null
+          product_family?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          knowledge_record_id?: string
+          owner_org_unit_id?: string | null
+          product_category?: string | null
+          product_code?: string | null
+          product_family?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_profiles_knowledge_record_id_fkey"
+            columns: ["knowledge_record_id"]
+            isOneToOne: true
+            referencedRelation: "knowledge_records"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_profiles_owner_org_unit_id_fkey"
+            columns: ["owner_org_unit_id"]
+            isOneToOne: false
+            referencedRelation: "organisation_units"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -799,6 +1517,41 @@ export type Database = {
         }
         Relationships: []
       }
+      service_standards: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          knowledge_version_id: string
+          measurement_note: string | null
+          standard_text: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: string
+          knowledge_version_id: string
+          measurement_note?: string | null
+          standard_text: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          knowledge_version_id?: string
+          measurement_note?: string | null
+          standard_text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_standards_knowledge_version_id_fkey"
+            columns: ["knowledge_version_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_record_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sop_versions: {
         Row: {
           approved_by: string | null
@@ -831,6 +1584,388 @@ export type Database = {
           version?: string
         }
         Relationships: []
+      }
+      source_document_versions: {
+        Row: {
+          byte_size: number | null
+          checksum_verification_method: string
+          id: string
+          metadata: Json
+          mime_type: string | null
+          original_file_name: string
+          sha256: string | null
+          source_date: string | null
+          source_document_id: string
+          storage_bucket: string
+          storage_object_key: string
+          uploaded_at: string
+          uploaded_by: string
+          version_label: string | null
+          version_number: number
+        }
+        Insert: {
+          byte_size?: number | null
+          checksum_verification_method?: string
+          id?: string
+          metadata?: Json
+          mime_type?: string | null
+          original_file_name: string
+          sha256?: string | null
+          source_date?: string | null
+          source_document_id: string
+          storage_bucket?: string
+          storage_object_key: string
+          uploaded_at?: string
+          uploaded_by: string
+          version_label?: string | null
+          version_number: number
+        }
+        Update: {
+          byte_size?: number | null
+          checksum_verification_method?: string
+          id?: string
+          metadata?: Json
+          mime_type?: string | null
+          original_file_name?: string
+          sha256?: string | null
+          source_date?: string | null
+          source_document_id?: string
+          storage_bucket?: string
+          storage_object_key?: string
+          uploaded_at?: string
+          uploaded_by?: string
+          version_label?: string | null
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "source_document_versions_source_document_id_fkey"
+            columns: ["source_document_id"]
+            isOneToOne: false
+            referencedRelation: "source_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      source_documents: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          confidentiality: string
+          created_at: string
+          description: string | null
+          id: string
+          is_synthetic: boolean
+          parsing_status: string
+          received_at: string
+          registered_by: string
+          requires_redaction: boolean
+          source_date: string | null
+          source_key: string
+          source_owner_name: string | null
+          source_owner_org_unit_id: string | null
+          source_type: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          confidentiality?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_synthetic?: boolean
+          parsing_status?: string
+          received_at?: string
+          registered_by: string
+          requires_redaction?: boolean
+          source_date?: string | null
+          source_key: string
+          source_owner_name?: string | null
+          source_owner_org_unit_id?: string | null
+          source_type: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          confidentiality?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_synthetic?: boolean
+          parsing_status?: string
+          received_at?: string
+          registered_by?: string
+          requires_redaction?: boolean
+          source_date?: string | null
+          source_key?: string
+          source_owner_name?: string | null
+          source_owner_org_unit_id?: string | null
+          source_type?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "source_documents_source_owner_org_unit_id_fkey"
+            columns: ["source_owner_org_unit_id"]
+            isOneToOne: false
+            referencedRelation: "organisation_units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      source_duplicate_groups: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          duplicate_type: string
+          id: string
+          notes: string | null
+          preferred_source_version_id: string | null
+          reason: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          signature: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          duplicate_type: string
+          id?: string
+          notes?: string | null
+          preferred_source_version_id?: string | null
+          reason?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          signature?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          duplicate_type?: string
+          id?: string
+          notes?: string | null
+          preferred_source_version_id?: string | null
+          reason?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          signature?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "source_duplicate_groups_preferred_source_version_id_fkey"
+            columns: ["preferred_source_version_id"]
+            isOneToOne: false
+            referencedRelation: "source_document_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      source_duplicate_members: {
+        Row: {
+          created_at: string
+          evidence_note: string | null
+          group_id: string
+          id: string
+          similarity_score: number | null
+          source_version_id: string
+        }
+        Insert: {
+          created_at?: string
+          evidence_note?: string | null
+          group_id: string
+          id?: string
+          similarity_score?: number | null
+          source_version_id: string
+        }
+        Update: {
+          created_at?: string
+          evidence_note?: string | null
+          group_id?: string
+          id?: string
+          similarity_score?: number | null
+          source_version_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "source_duplicate_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "source_duplicate_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "source_duplicate_members_source_version_id_fkey"
+            columns: ["source_version_id"]
+            isOneToOne: false
+            referencedRelation: "source_document_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      source_redactions: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          id: string
+          is_required: boolean
+          page_number: number | null
+          proposed_at: string
+          proposed_by: string
+          reason: string
+          redaction_type: string
+          replacement_text: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          source_section_id: string | null
+          source_version_id: string
+          status: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          id?: string
+          is_required?: boolean
+          page_number?: number | null
+          proposed_at?: string
+          proposed_by: string
+          reason: string
+          redaction_type: string
+          replacement_text?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          source_section_id?: string | null
+          source_version_id: string
+          status?: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          id?: string
+          is_required?: boolean
+          page_number?: number | null
+          proposed_at?: string
+          proposed_by?: string
+          reason?: string
+          redaction_type?: string
+          replacement_text?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          source_section_id?: string | null
+          source_version_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "source_redactions_source_section_id_fkey"
+            columns: ["source_section_id"]
+            isOneToOne: false
+            referencedRelation: "source_sections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "source_redactions_source_version_id_fkey"
+            columns: ["source_version_id"]
+            isOneToOne: false
+            referencedRelation: "source_document_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      source_registration_reviews: {
+        Row: {
+          created_at: string
+          decision: string
+          id: string
+          notes: string | null
+          review_stage: string
+          reviewer_id: string
+          source_document_id: string
+        }
+        Insert: {
+          created_at?: string
+          decision: string
+          id?: string
+          notes?: string | null
+          review_stage: string
+          reviewer_id: string
+          source_document_id: string
+        }
+        Update: {
+          created_at?: string
+          decision?: string
+          id?: string
+          notes?: string | null
+          review_stage?: string
+          reviewer_id?: string
+          source_document_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "source_registration_reviews_source_document_id_fkey"
+            columns: ["source_document_id"]
+            isOneToOne: false
+            referencedRelation: "source_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      source_sections: {
+        Row: {
+          contains_sensitive_data: boolean
+          content_text: string | null
+          created_at: string
+          heading: string | null
+          id: string
+          page_number: number | null
+          section_hash: string | null
+          section_order: number
+          source_version_id: string
+        }
+        Insert: {
+          contains_sensitive_data?: boolean
+          content_text?: string | null
+          created_at?: string
+          heading?: string | null
+          id?: string
+          page_number?: number | null
+          section_hash?: string | null
+          section_order: number
+          source_version_id: string
+        }
+        Update: {
+          contains_sensitive_data?: boolean
+          content_text?: string | null
+          created_at?: string
+          heading?: string | null
+          id?: string
+          page_number?: number | null
+          section_hash?: string | null
+          section_order?: number
+          source_version_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "source_sections_source_version_id_fkey"
+            columns: ["source_version_id"]
+            isOneToOne: false
+            referencedRelation: "source_document_versions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       sub_departments: {
         Row: {
@@ -1147,6 +2282,10 @@ export type Database = {
     }
     Functions: {
       can_view_profile: { Args: { _target_user: string }; Returns: boolean }
+      has_any_knowledge_capability: {
+        Args: { _codes: string[]; _user_id: string }
+        Returns: boolean
+      }
       has_capability: {
         Args: { _code: string; _user_id: string }
         Returns: boolean
