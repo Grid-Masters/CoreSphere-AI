@@ -264,6 +264,211 @@ export type Database = {
         }
         Relationships: []
       }
+      clarification_requests: {
+        Row: {
+          conflict_case_id: string
+          created_at: string
+          due_date: string | null
+          id: string
+          question: string
+          requested_by: string
+          status: string
+          target_org_unit_id: string | null
+          target_user_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          conflict_case_id: string
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          question: string
+          requested_by: string
+          status?: string
+          target_org_unit_id?: string | null
+          target_user_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          conflict_case_id?: string
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          question?: string
+          requested_by?: string
+          status?: string
+          target_org_unit_id?: string | null
+          target_user_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clarification_requests_conflict_case_id_fkey"
+            columns: ["conflict_case_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_conflict_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clarification_requests_target_org_unit_id_fkey"
+            columns: ["target_org_unit_id"]
+            isOneToOne: false
+            referencedRelation: "organisation_units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clarification_responses: {
+        Row: {
+          clarification_request_id: string
+          created_at: string
+          id: string
+          responder_user_id: string
+          response_text: string
+        }
+        Insert: {
+          clarification_request_id: string
+          created_at?: string
+          id?: string
+          responder_user_id: string
+          response_text: string
+        }
+        Update: {
+          clarification_request_id?: string
+          created_at?: string
+          id?: string
+          responder_user_id?: string
+          response_text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clarification_responses_clarification_request_id_fkey"
+            columns: ["clarification_request_id"]
+            isOneToOne: false
+            referencedRelation: "clarification_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conflict_decisions: {
+        Row: {
+          conflict_case_id: string
+          created_at: string
+          decided_by: string
+          decision_type: string
+          id: string
+          rationale: string
+        }
+        Insert: {
+          conflict_case_id: string
+          created_at?: string
+          decided_by: string
+          decision_type: string
+          id?: string
+          rationale: string
+        }
+        Update: {
+          conflict_case_id?: string
+          created_at?: string
+          decided_by?: string
+          decision_type?: string
+          id?: string
+          rationale?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conflict_decisions_conflict_case_id_fkey"
+            columns: ["conflict_case_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_conflict_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conflict_evidence: {
+        Row: {
+          conflict_case_id: string
+          created_at: string
+          created_by: string
+          evidence_note: string
+          id: string
+          source_version_id: string | null
+        }
+        Insert: {
+          conflict_case_id: string
+          created_at?: string
+          created_by: string
+          evidence_note: string
+          id?: string
+          source_version_id?: string | null
+        }
+        Update: {
+          conflict_case_id?: string
+          created_at?: string
+          created_by?: string
+          evidence_note?: string
+          id?: string
+          source_version_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conflict_evidence_conflict_case_id_fkey"
+            columns: ["conflict_case_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_conflict_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conflict_evidence_source_version_id_fkey"
+            columns: ["source_version_id"]
+            isOneToOne: false
+            referencedRelation: "source_document_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conflict_items: {
+        Row: {
+          conflict_case_id: string
+          created_at: string
+          created_by: string
+          id: string
+          knowledge_version_id: string
+          position_note: string | null
+        }
+        Insert: {
+          conflict_case_id: string
+          created_at?: string
+          created_by: string
+          id?: string
+          knowledge_version_id: string
+          position_note?: string | null
+        }
+        Update: {
+          conflict_case_id?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          knowledge_version_id?: string
+          position_note?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conflict_items_conflict_case_id_fkey"
+            columns: ["conflict_case_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_conflict_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conflict_items_knowledge_version_id_fkey"
+            columns: ["knowledge_version_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_record_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       delegations: {
         Row: {
           accepted_at: string | null
@@ -548,6 +753,54 @@ export type Database = {
           message?: string
           severity?: string
           title?: string
+        }
+        Relationships: []
+      }
+      knowledge_conflict_cases: {
+        Row: {
+          case_key: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          description: string | null
+          id: string
+          registered_by: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          severity: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          case_key: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          description?: string | null
+          id?: string
+          registered_by: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          severity?: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          case_key?: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          description?: string | null
+          id?: string
+          registered_by?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          severity?: string
+          status?: string
+          title?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -1418,6 +1671,232 @@ export type Database = {
           },
         ]
       }
+      publication_assets: {
+        Row: {
+          asset_kind: string
+          byte_size: number | null
+          created_at: string
+          created_by: string
+          id: string
+          mime_type: string | null
+          original_file_name: string
+          publication_id: string
+          storage_bucket: string
+          storage_object_key: string
+        }
+        Insert: {
+          asset_kind?: string
+          byte_size?: number | null
+          created_at?: string
+          created_by: string
+          id?: string
+          mime_type?: string | null
+          original_file_name: string
+          publication_id: string
+          storage_bucket: string
+          storage_object_key: string
+        }
+        Update: {
+          asset_kind?: string
+          byte_size?: number | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          mime_type?: string | null
+          original_file_name?: string
+          publication_id?: string
+          storage_bucket?: string
+          storage_object_key?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "publication_assets_publication_id_fkey"
+            columns: ["publication_id"]
+            isOneToOne: false
+            referencedRelation: "publications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      publication_audience_rules: {
+        Row: {
+          country_code: string | null
+          created_at: string
+          created_by: string
+          id: string
+          include_descendants: boolean
+          org_unit_id: string | null
+          position_id: string | null
+          publication_id: string
+          rule_type: string
+        }
+        Insert: {
+          country_code?: string | null
+          created_at?: string
+          created_by: string
+          id?: string
+          include_descendants?: boolean
+          org_unit_id?: string | null
+          position_id?: string | null
+          publication_id: string
+          rule_type: string
+        }
+        Update: {
+          country_code?: string | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          include_descendants?: boolean
+          org_unit_id?: string | null
+          position_id?: string | null
+          publication_id?: string
+          rule_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "publication_audience_rules_org_unit_id_fkey"
+            columns: ["org_unit_id"]
+            isOneToOne: false
+            referencedRelation: "organisation_units"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "publication_audience_rules_position_id_fkey"
+            columns: ["position_id"]
+            isOneToOne: false
+            referencedRelation: "positions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "publication_audience_rules_publication_id_fkey"
+            columns: ["publication_id"]
+            isOneToOne: false
+            referencedRelation: "publications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      publication_receipts: {
+        Row: {
+          acknowledged_at: string | null
+          created_at: string
+          id: string
+          publication_id: string
+          updated_at: string
+          user_id: string
+          viewed_at: string | null
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          created_at?: string
+          id?: string
+          publication_id: string
+          updated_at?: string
+          user_id: string
+          viewed_at?: string | null
+        }
+        Update: {
+          acknowledged_at?: string | null
+          created_at?: string
+          id?: string
+          publication_id?: string
+          updated_at?: string
+          user_id?: string
+          viewed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "publication_receipts_publication_id_fkey"
+            columns: ["publication_id"]
+            isOneToOne: false
+            referencedRelation: "publications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      publications: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          body: string | null
+          category: string | null
+          created_at: string
+          created_by: string
+          effective_from: string | null
+          effective_to: string | null
+          id: string
+          metadata: Json
+          owner_org_unit_id: string | null
+          priority: string
+          publication_type: string
+          published_at: string | null
+          published_by: string | null
+          requires_acknowledgement: boolean
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          summary: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          body?: string | null
+          category?: string | null
+          created_at?: string
+          created_by: string
+          effective_from?: string | null
+          effective_to?: string | null
+          id?: string
+          metadata?: Json
+          owner_org_unit_id?: string | null
+          priority?: string
+          publication_type: string
+          published_at?: string | null
+          published_by?: string | null
+          requires_acknowledgement?: boolean
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          summary?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          body?: string | null
+          category?: string | null
+          created_at?: string
+          created_by?: string
+          effective_from?: string | null
+          effective_to?: string | null
+          id?: string
+          metadata?: Json
+          owner_org_unit_id?: string | null
+          priority?: string
+          publication_type?: string
+          published_at?: string | null
+          published_by?: string | null
+          requires_acknowledgement?: boolean
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          summary?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "publications_owner_org_unit_id_fkey"
+            columns: ["owner_org_unit_id"]
+            isOneToOne: false
+            referencedRelation: "organisation_units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       recognition_archives: {
         Row: {
           category: string
@@ -2002,6 +2481,41 @@ export type Database = {
           },
         ]
       }
+      suggestion_reviews: {
+        Row: {
+          created_at: string
+          decision: string
+          id: string
+          notes: string | null
+          reviewer_id: string
+          suggestion_id: string
+        }
+        Insert: {
+          created_at?: string
+          decision: string
+          id?: string
+          notes?: string | null
+          reviewer_id: string
+          suggestion_id: string
+        }
+        Update: {
+          created_at?: string
+          decision?: string
+          id?: string
+          notes?: string | null
+          reviewer_id?: string
+          suggestion_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "suggestion_reviews_suggestion_id_fkey"
+            columns: ["suggestion_id"]
+            isOneToOne: false
+            referencedRelation: "suggestions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       suggestions: {
         Row: {
           ai_category: string | null
@@ -2037,6 +2551,61 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      supersession_links: {
+        Row: {
+          conflict_case_id: string | null
+          created_at: string
+          created_by: string
+          effective_from: string
+          id: string
+          note: string | null
+          replacement_version_id: string
+          superseded_version_id: string
+        }
+        Insert: {
+          conflict_case_id?: string | null
+          created_at?: string
+          created_by: string
+          effective_from?: string
+          id?: string
+          note?: string | null
+          replacement_version_id: string
+          superseded_version_id: string
+        }
+        Update: {
+          conflict_case_id?: string | null
+          created_at?: string
+          created_by?: string
+          effective_from?: string
+          id?: string
+          note?: string | null
+          replacement_version_id?: string
+          superseded_version_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "supersession_links_conflict_case_id_fkey"
+            columns: ["conflict_case_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_conflict_cases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "supersession_links_replacement_version_id_fkey"
+            columns: ["replacement_version_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_record_versions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "supersession_links_superseded_version_id_fkey"
+            columns: ["superseded_version_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_record_versions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       team_members: {
         Row: {
@@ -2336,12 +2905,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -2365,11 +2934,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -2390,11 +2959,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -2415,11 +2984,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -2432,11 +3001,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
