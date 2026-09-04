@@ -5,8 +5,9 @@ CONTROLLING DOCUMENT. This file supersedes all earlier planning material, includ
 ## 1. Locked project identity
 1. Official name: CoreSphere AI.
 2. Purpose: internal Customer Fulfilment Centre enterprise knowledge, learning, QA coaching and operations-intelligence platform.
-3. The project remains unpublished until authenticated UAT is formally approved.
-4. Production is internal and non-indexable. Demo behaviour must ultimately be separated by environment.
+3. The project is private and unpublished. It is not approved for production banking use.
+4. Authenticated UAT, information-security review, operational-risk review and formal stakeholder approval are mandatory before any production decision.
+5. Any eventual production environment must remain internal and non-indexable, with demo access disabled and environment-separated.
 
 ## 2. Locked information architecture
 1. No standalone Product Intelligence sidebar item.
@@ -19,7 +20,21 @@ CONTROLLING DOCUMENT. This file supersedes all earlier planning material, includ
 ## 3. Locked role and position hierarchy
 Customer Experience Executive (CEE); Team Lead; Unit Head; QA Officer; QA Team Lead; QA Unit Head; L&D Officer; L&D Team Lead; L&D Unit Head; Head of CFC Operations; Group Head; Platform Administrator; Temporary or Delegated Approver.
 
-QA Officer, QA Team Lead and QA Unit Head must not be collapsed into a single `qa` role. L&D levels must not be collapsed. Platform Administrator holds technical authority only and cannot approve operational knowledge by virtue of technical access.
+The canonical five-tier operational reporting order is:
+
+`Group Head → Head of CFC Operations → Unit Head family → Team Lead family → Officer family`.
+
+Position-family expansion is mandatory:
+
+| Tier | Standard operations | Quality Assurance | Learning and Development |
+| --- | --- | --- | --- |
+| 1 | Group Head | Group Head | Group Head |
+| 2 | Head of CFC Operations | Head of CFC Operations | Head of CFC Operations |
+| 3 | Unit Head | QA Unit Head | L&D Unit Head |
+| 4 | Team Lead | QA Team Lead | L&D Team Lead |
+| 5 | CEE | QA Officer | L&D Officer |
+
+QA Officer, QA Team Lead and QA Unit Head must not be collapsed into a single `qa` role. L&D levels must not be collapsed. The QA Unit Head and L&D Unit Head report to the Head of CFC Operations, which reports to the Group Head. Platform Administrator holds technical authority only, sits outside the operational reporting chain and cannot approve operational knowledge by virtue of technical access. Temporary or Delegated Approver is capability-only and cannot be a standing primary position.
 
 ## 4. Locked organisational structure
 Configurable hierarchy, not a flat hardcoded department list.
@@ -28,12 +43,12 @@ Configurable hierarchy, not a flat hardcoded department list.
 Customer Fulfilment Group
 ├─ Office of the Group Head
 ├─ CFC Operations
+│  ├─ Quality Assurance Team (Q.A)
+│  └─ Learning and Development Team (L & D)
 ├─ Dispute Resolution & Service Recovery Portfolio
 ├─ Alternative Channel Sales Portfolio
 ├─ Inbound
 ├─ Service Recovery
-├─ Quality Assurance
-├─ Learning & Development
 ├─ Video Validation
 ├─ BPI
 ├─ Social Media
@@ -263,4 +278,12 @@ PRIVATE and UNPUBLISHED.
   `noindex, nofollow`.
 - **A8 Controlling document sync.** This section.
 
-Next gate: Package B — Knowledge Governance Core.
+## Current delivery state
+
+- **Package A:** complete and recorded.
+- **Package B:** Knowledge Governance schema/storage foundation is present at checkpoint `260ee71325930be9745e6424ad234fb23c509d13`; end-to-end workflow and acceptance closure are not yet recorded.
+- **Package C:** core database/capability foundation is present at checkpoint `5bf0accb842207c6319bf31f9c8679cc2c8c2953`; server workflows, user interfaces and acceptance closure remain incomplete.
+- **Packages D–F:** not started.
+- No later package may begin until the hierarchy correction is merged, the migration is applied in the controlled environment, and unfinished Package B/C acceptance gates are reconciled.
+
+Next gate: validate this repository/hierarchy alignment, then close the outstanding Package B and Package C acceptance work. No production publication is authorised.
