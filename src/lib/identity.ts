@@ -29,6 +29,36 @@ export const POSITION_CODES = [
 
 export type PositionCode = (typeof POSITION_CODES)[number];
 
+/**
+ * Canonical operational reporting tiers. This is a presentation and validation
+ * baseline only; actual people-to-manager assignments remain database-backed
+ * through `position_assignments.reports_to_assignment_id`, and configurable
+ * position rules live in `position_reporting_rules`.
+ */
+export const OPERATIONAL_REPORTING_HIERARCHY = [
+  { tier: 1, positionCodes: ["GROUP_HEAD"] },
+  { tier: 2, positionCodes: ["HEAD_CFC_OPERATIONS"] },
+  { tier: 3, positionCodes: ["UNIT_HEAD", "QA_UNIT_HEAD", "LD_UNIT_HEAD"] },
+  { tier: 4, positionCodes: ["TEAM_LEAD", "QA_TEAM_LEAD", "LD_TEAM_LEAD"] },
+  { tier: 5, positionCodes: ["CEE", "QA_OFFICER", "LD_OFFICER"] },
+] as const satisfies ReadonlyArray<{
+  tier: 1 | 2 | 3 | 4 | 5;
+  positionCodes: readonly PositionCode[];
+}>;
+
+export const DEFAULT_MANAGER_POSITION_CODE: Readonly<Partial<Record<PositionCode, PositionCode>>> = {
+  HEAD_CFC_OPERATIONS: "GROUP_HEAD",
+  UNIT_HEAD: "HEAD_CFC_OPERATIONS",
+  QA_UNIT_HEAD: "HEAD_CFC_OPERATIONS",
+  LD_UNIT_HEAD: "HEAD_CFC_OPERATIONS",
+  TEAM_LEAD: "UNIT_HEAD",
+  QA_TEAM_LEAD: "QA_UNIT_HEAD",
+  LD_TEAM_LEAD: "LD_UNIT_HEAD",
+  CEE: "TEAM_LEAD",
+  QA_OFFICER: "QA_TEAM_LEAD",
+  LD_OFFICER: "LD_TEAM_LEAD",
+};
+
 export type OrgUnitRef = {
   id: string;
   code: string;

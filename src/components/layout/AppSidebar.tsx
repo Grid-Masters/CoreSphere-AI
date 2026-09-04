@@ -180,7 +180,7 @@ export function AppSidebar({ collapsed, mobileOpen, onCloseMobile, onToggleColla
           {!collapsed && (
             <div className="flex items-center gap-2 text-[11px] text-sidebar-foreground/60">
               <ClipboardCheck className="h-3.5 w-3.5" />
-              Internal Banking Use Only
+              Pre-production • Restricted access
             </div>
           )}
           <Tooltip delayDuration={0}>
@@ -228,7 +228,7 @@ export function AppSidebar({ collapsed, mobileOpen, onCloseMobile, onToggleColla
           <div className="p-4 border-t border-sidebar-border">
             <div className="flex items-center gap-2 text-[11px] text-sidebar-foreground/60">
               <ClipboardCheck className="h-3.5 w-3.5" />
-              Internal Banking Use Only
+              Pre-production • Restricted access
             </div>
           </div>
         </aside>

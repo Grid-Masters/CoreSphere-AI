@@ -4,6 +4,7 @@ import { AppSidebar } from "./AppSidebar";
 import { TopBar } from "./TopBar";
 import { ActivityTicker } from "./ActivityTicker";
 import { OperationalStatusBanner } from "./OperationalStatusBanner";
+import { PreProductionNotice } from "@/components/governance/PreProductionNotice";
 import { CoreSphereAI } from "@/components/CoreSphereAI";
 import { EnterpriseSearch } from "@/components/search/EnterpriseSearch";
 import { useIdentity } from "@/components/identity/IdentityProvider";
@@ -59,6 +60,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         onToggleCollapsed={() => setCollapsed((c) => !c)}
         collapsed={collapsed}
       />
+      <PreProductionNotice />
       <div className="flex flex-1 min-h-0">
         <AppSidebar
           collapsed={collapsed}

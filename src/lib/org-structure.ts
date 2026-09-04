@@ -1,5 +1,5 @@
 // ============================================================================
-// CoreSphere Pulse AI — Official Customer Fulfilment Structure
+// CoreSphere AI — Official Customer Fulfilment Structure
 // Single source of truth for departments, sub-units and country framework.
 // Every dashboard, analytic, leaderboard, readiness metric and recognition
 // module MUST read department/sub-unit data from here.
@@ -69,19 +69,19 @@ export const DEPARTMENTS: Department[] = [
   },
   {
     code: "QA",
-    name: "Quality Assurance",
-    short: "QA",
+    name: "Quality Assurance Team (Q.A)",
+    short: "Q.A",
     operational: false,
     units: ["QA — FHD & Multimedia", "QA — Inbound & Social", "QA — Video Validation"],
-    description: "Quality Assurance governing operational service standards.",
+    description: "Quality Assurance Team (Q.A) governing operational service standards.",
   },
   {
     code: "L&D",
-    name: "Learning & Development",
-    short: "L&D",
+    name: "Learning and Development Team (L & D)",
+    short: "L & D",
     operational: false,
     units: ["Operational Learning"],
-    description: "Learning & Development — enterprise learning and FAQ governance.",
+    description: "Learning and Development Team (L & D) — enterprise learning and FAQ governance.",
   },
 ];
 
