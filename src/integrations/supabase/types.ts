@@ -1342,63 +1342,6 @@ export type Database = {
           },
         ]
       }
-      position_reporting_rules: {
-        Row: {
-          child_position_id: string
-          created_at: string
-          effective_from: string
-          effective_to: string | null
-          id: string
-          is_active: boolean
-          manager_position_id: string | null
-          metadata: Json
-          reporting_family: string
-          reporting_tier: number
-          updated_at: string
-        }
-        Insert: {
-          child_position_id: string
-          created_at?: string
-          effective_from?: string
-          effective_to?: string | null
-          id?: string
-          is_active?: boolean
-          manager_position_id?: string | null
-          metadata?: Json
-          reporting_family: string
-          reporting_tier: number
-          updated_at?: string
-        }
-        Update: {
-          child_position_id?: string
-          created_at?: string
-          effective_from?: string
-          effective_to?: string | null
-          id?: string
-          is_active?: boolean
-          manager_position_id?: string | null
-          metadata?: Json
-          reporting_family?: string
-          reporting_tier?: number
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "position_reporting_rules_child_position_id_fkey"
-            columns: ["child_position_id"]
-            isOneToOne: false
-            referencedRelation: "positions"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "position_reporting_rules_manager_position_id_fkey"
-            columns: ["manager_position_id"]
-            isOneToOne: false
-            referencedRelation: "positions"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       positions: {
         Row: {
           code: string
