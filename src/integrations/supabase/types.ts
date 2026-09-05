@@ -2907,7 +2907,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_manage_publication: {
+        Args: { _pub: string; _user: string }
+        Returns: boolean
+      }
+      can_view_knowledge_version: {
+        Args: { _user: string; _version: string }
+        Returns: boolean
+      }
       can_view_profile: { Args: { _target_user: string }; Returns: boolean }
+      can_view_publication: {
+        Args: { _pub: string; _user: string }
+        Returns: boolean
+      }
+      capability_in_scope: {
+        Args: { _code: string; _org_unit: string; _user: string }
+        Returns: boolean
+      }
       has_any_knowledge_capability: {
         Args: { _codes: string[]; _user_id: string }
         Returns: boolean
@@ -2923,12 +2939,29 @@ export type Database = {
         }
         Returns: boolean
       }
+      knowledge_placement_audience_matches: {
+        Args: { _placement: string; _user: string }
+        Returns: boolean
+      }
+      knowledge_version_serviceable: {
+        Args: { _version: string }
+        Returns: boolean
+      }
       org_unit_and_descendants: {
         Args: { _root: string }
         Returns: {
           unit_id: string
         }[]
       }
+      publication_audience_matches: {
+        Args: { _pub: string; _user: string }
+        Returns: boolean
+      }
+      publication_is_current: { Args: { _pub: string }; Returns: boolean }
+      user_country: { Args: { _user: string }; Returns: string }
+      user_is_enterprise: { Args: { _user: string }; Returns: boolean }
+      user_position_code: { Args: { _user: string }; Returns: string }
+      user_primary_org_unit: { Args: { _user: string }; Returns: string }
     }
     Enums: {
       app_role: "staff" | "qa" | "ld" | "team_lead" | "group_head" | "sysadmin"
