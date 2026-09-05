@@ -2939,6 +2939,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      helper_actor_allowed: { Args: { _user: string }; Returns: boolean }
       knowledge_placement_audience_matches: {
         Args: { _placement: string; _user: string }
         Returns: boolean
