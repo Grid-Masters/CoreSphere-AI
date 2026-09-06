@@ -55,10 +55,12 @@ export async function requireCapabilityInScope(
   code: string,
   orgUnitId: string | null,
 ): Promise<void> {
+  // The generated types type `_org_unit` as non-nullable, but the SQL function
+  // accepts NULL (meaning "no specific org unit").
   const { data, error } = await ctx.supabase.rpc("capability_in_scope", {
     _user: ctx.userId,
     _code: code,
-    _org_unit: orgUnitId,
+    _org_unit: orgUnitId as unknown as string,
   });
   if (error) throw new GovernanceError("Authorisation check failed", "forbidden");
   if (data !== true) forbidden(`Out of scope for capability: ${code}`);
