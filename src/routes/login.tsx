@@ -68,7 +68,7 @@ function LoginPage() {
   const [demoOpen, setDemoOpen] = useState(false);
   const [slide, setSlide] = useState(0);
   const [quote, setQuote] = useState(0);
-  const [demoAvailable, setDemoAvailable] = useState(false);
+  const [demoAvailable, setDemoAvailable] = useState<boolean | "unconfigured">(false);
 
   useEffect(() => {
     void demoStatus()
