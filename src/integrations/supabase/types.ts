@@ -2959,6 +2959,24 @@ export type Database = {
         Returns: boolean
       }
       publication_is_current: { Args: { _pub: string }; Returns: boolean }
+      record_publication_receipt: {
+        Args: { _acknowledge?: boolean; _pub: string }
+        Returns: {
+          acknowledged_at: string | null
+          created_at: string
+          id: string
+          publication_id: string
+          updated_at: string
+          user_id: string
+          viewed_at: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "publication_receipts"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       user_country: { Args: { _user: string }; Returns: string }
       user_is_enterprise: { Args: { _user: string }; Returns: boolean }
       user_position_code: { Args: { _user: string }; Returns: string }
