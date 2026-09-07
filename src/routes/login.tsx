@@ -72,9 +72,10 @@ function LoginPage() {
 
   useEffect(() => {
     void demoStatus()
-      .then((r) => setDemoAvailable(r.enabled))
+      .then((r) => setDemoAvailable(r.enabled ? true : r.reason === "demo_not_configured" ? "unconfigured" : false))
       .catch(() => setDemoAvailable(false));
   }, [demoStatus]);
+
 
   useEffect(() => {
     const t = setInterval(() => setSlide((s) => (s + 1) % slides.length), 5500);
