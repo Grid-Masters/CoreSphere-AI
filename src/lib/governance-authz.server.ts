@@ -90,7 +90,12 @@ export function requireTransition<T extends string>(
   }
 }
 
-/** Governance audit. Always server-authored, never client-asserted. */
+/**
+ * Governance audit. Always server-authored, never client-asserted.
+ *
+ * A failed audit write is a hard failure: the caller must abort (and roll back
+ * its governed mutation) rather than silently proceed unaudited.
+ */
 export async function auditGovernance(
   ctx: AuthedContext,
   eventType: string,
@@ -100,7 +105,7 @@ export async function auditGovernance(
 ): Promise<void> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const email = typeof ctx.claims["email"] === "string" ? (ctx.claims["email"] as string) : null;
-  await supabaseAdmin.from("audit_events").insert({
+  const { error } = await supabaseAdmin.from("audit_events").insert({
     user_id: ctx.userId,
     user_email: email,
     event_type: eventType,
@@ -108,4 +113,8 @@ export async function auditGovernance(
     action,
     metadata: metadata as never,
   });
+  if (error) {
+    throw new GovernanceError(`Audit write failed: ${error.message}`, "conflict");
+  }
 }
+
