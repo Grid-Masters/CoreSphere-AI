@@ -49,22 +49,28 @@ export async function requireAnyCapability(ctx: AuthedContext, codes: string[]):
   return forbidden(`Missing capability: one of ${codes.join(", ")}`);
 }
 
-/** Capability possession AND organisational scope over the target unit. */
+/**
+ * Capability possession AND organisational scope over the target unit.
+ *
+ * `orgUnitId` MUST be the target record's authoritative organisation unit,
+ * read server-side — never a client-supplied value. A missing organisation is
+ * not "unrestricted": the SQL function denies it unless the caller holds
+ * explicit enterprise authority.
+ */
 export async function requireCapabilityInScope(
   ctx: AuthedContext,
   code: string,
-  orgUnitId: string | null,
+  orgUnitId: string,
 ): Promise<void> {
-  // The generated types type `_org_unit` as non-nullable, but the SQL function
-  // accepts NULL (meaning "no specific org unit").
   const { data, error } = await ctx.supabase.rpc("capability_in_scope", {
     _user: ctx.userId,
     _code: code,
-    _org_unit: orgUnitId as unknown as string,
+    _org_unit: orgUnitId,
   });
   if (error) throw new GovernanceError("Authorisation check failed", "forbidden");
   if (data !== true) forbidden(`Out of scope for capability: ${code}`);
 }
+
 
 /** Maker–checker: the actor who produced a record may not approve it. */
 export function requireSeparationOfDuties(actorId: string, makerId: string | null): void {
@@ -84,7 +90,12 @@ export function requireTransition<T extends string>(
   }
 }
 
-/** Governance audit. Always server-authored, never client-asserted. */
+/**
+ * Governance audit. Always server-authored, never client-asserted.
+ *
+ * A failed audit write is a hard failure: the caller must abort (and roll back
+ * its governed mutation) rather than silently proceed unaudited.
+ */
 export async function auditGovernance(
   ctx: AuthedContext,
   eventType: string,
@@ -94,7 +105,7 @@ export async function auditGovernance(
 ): Promise<void> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const email = typeof ctx.claims["email"] === "string" ? (ctx.claims["email"] as string) : null;
-  await supabaseAdmin.from("audit_events").insert({
+  const { error } = await supabaseAdmin.from("audit_events").insert({
     user_id: ctx.userId,
     user_email: email,
     event_type: eventType,
@@ -102,4 +113,8 @@ export async function auditGovernance(
     action,
     metadata: metadata as never,
   });
+  if (error) {
+    throw new GovernanceError(`Audit write failed: ${error.message}`, "conflict");
+  }
 }
+

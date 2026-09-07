@@ -59,18 +59,51 @@ function requestHost(): string | null {
   return null;
 }
 
-function demoEnabled() {
-  if (process.env["DEMO_ACCESS_ENABLED"] === "true") return true;
+/**
+ * Deployment/host gate for the private preview/UAT environment.
+ *
+ * Accepts an explicit server opt-in, an exact known UAT host, or a Lovable
+ * preview host that embeds THIS project's id. It is deliberately not a
+ * wildcard domain rule: a `*.lovable.app` host for any other project, and any
+ * published/production host, still fails closed.
+ */
+const UAT_HOST_PATTERN = new RegExp(
+  `^(?:id-preview--|preview--|project--)?${PROJECT_ID}(?:-dev)?\\.(?:lovable\\.app|lovableproject\\.com)$`,
+);
+
+type DemoGate = { enabled: boolean; reason: "enabled" | "not_uat_environment" | "host_unreadable" };
+
+function demoGate(): DemoGate {
+  if (process.env["DEMO_ACCESS_ENABLED"] === "true") return { enabled: true, reason: "enabled" };
   const host = requestHost();
-  // Fail closed: unknown / published / production hosts never enable demo.
-  // Exact match only — no wildcard `*.lovable.app`.
-  return host !== null && UAT_HOSTS.has(host);
+  if (!host) return { enabled: false, reason: "host_unreadable" };
+  if (UAT_HOSTS.has(host) || UAT_HOST_PATTERN.test(host.split(":")[0]!)) {
+    return { enabled: true, reason: "enabled" };
+  }
+  return { enabled: false, reason: "not_uat_environment" };
 }
 
+function demoEnabled() {
+  return demoGate().enabled;
+}
 
-export const demoAccessStatus = createServerFn({ method: "GET" }).handler(async () => ({
-  enabled: demoEnabled(),
-}));
+/**
+ * Status for the login screen. Never returns the host or the demo password —
+ * only whether preview access is available, and a coarse reason so an
+ * authorised UAT environment can show an accurate unavailable state instead of
+ * silently hiding the control.
+ */
+export const demoAccessStatus = createServerFn({ method: "GET" }).handler(async () => {
+  const gate = demoGate();
+  const configured = Boolean(
+    process.env["SUPABASE_URL"] && process.env["SUPABASE_PUBLISHABLE_KEY"] && process.env["DEMO_PASSWORD"],
+  );
+  if (gate.enabled && !configured) {
+    return { enabled: false as const, reason: "demo_not_configured" as const };
+  }
+  return { enabled: gate.enabled, reason: gate.reason };
+});
+
 
 export const demoSignIn = createServerFn({ method: "POST" })
   .inputValidator((data: { email: string }) => {

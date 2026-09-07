@@ -68,13 +68,14 @@ function LoginPage() {
   const [demoOpen, setDemoOpen] = useState(false);
   const [slide, setSlide] = useState(0);
   const [quote, setQuote] = useState(0);
-  const [demoAvailable, setDemoAvailable] = useState(false);
+  const [demoAvailable, setDemoAvailable] = useState<boolean | "unconfigured">(false);
 
   useEffect(() => {
     void demoStatus()
-      .then((r) => setDemoAvailable(r.enabled))
+      .then((r) => setDemoAvailable(r.enabled ? true : r.reason === "demo_not_configured" ? "unconfigured" : false))
       .catch(() => setDemoAvailable(false));
   }, [demoStatus]);
+
 
   useEffect(() => {
     const t = setInterval(() => setSlide((s) => (s + 1) % slides.length), 5500);
@@ -304,7 +305,7 @@ function LoginPage() {
             </blockquote>
 
             {/* Discreet demo access — non-production only */}
-            {demoAvailable && (
+            {demoAvailable === true && (
             <div className="text-center">
               <button
                 type="button"
@@ -315,6 +316,12 @@ function LoginPage() {
               </button>
             </div>
             )}
+            {demoAvailable === "unconfigured" && (
+              <p className="text-center text-[11px] text-muted-foreground/70">
+                Demo Access is unavailable — preview sign-in is not configured for this environment.
+              </p>
+            )}
+
           </div>
 
           <div className="mt-8 pt-6 border-t text-[11px] text-muted-foreground flex items-center gap-2">
